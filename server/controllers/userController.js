@@ -1,6 +1,6 @@
 import { User } from "../models/userModel.js";
 import bcrypt from "bcrypt";
-
+import generateToken from "../utils/jwt.js";
 export const userRegister = async (req, res) => {
   const { first_name, last_name, gender, email, password, confirm_password } =
     req.body;
@@ -37,7 +37,11 @@ export const userLogin = async (req, res) => {
         .json({ errCode: "INVALID_EMAIL", message: "Your email is incorrect" });
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (isPasswordCorrect) {
-      return res.status(200).json({ message: "Login Successfull" });
+      const payload = { sub: user._id, name: user.name, role: "user" };
+      const accessToken = generateToken(payload);
+      return res
+        .status(200)
+        .json({ message: "Login Successfull", accessToken: accessToken });
     } else {
       return res.status(401).json({
         errCode: "INVALID_PASSWORD",
