@@ -15,7 +15,6 @@ function Login() {
       email: values.email,
       password: values.password,
     };
-    console.log(loginData)
     dispatch(userFetch(loginData))
 
     // if (matchedUser.isAdmin) {
