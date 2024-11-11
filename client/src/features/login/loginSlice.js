@@ -9,6 +9,7 @@ const initialState = {
     loading: false,
     message: "",
     error: "",
+    role: "",
   },
 };
 const loginSlice = createSlice({
@@ -22,6 +23,8 @@ const loginSlice = createSlice({
         state.userFetchValues.error = "";
       })
       .addCase(userFetch.fulfilled, (state, action) => {
+        state.userFetchValues.loading = false;
+        state.userFetchValues.role = action.payload.role;
         state.userFetchValues.message = action.payload.message;
       })
       .addCase(userFetch.rejected, (state, action) => {

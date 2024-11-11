@@ -25,6 +25,7 @@ const Checkout = React.lazy(() => import("./pages/checkout/Checkout"));
 const CategorieDetails = React.lazy(() => import("./pages/CategorieDetails"));
 const ItemDisplay = React.lazy(() => import("./components/ItemDisplay"));
 const ProductDetails = React.lazy(() => import("./pages/ProductDetails"));
+const AllProduct = React.lazy(() => import("./pages/AllProducts"));
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -33,7 +34,17 @@ function App() {
     location.pathname === "/register" ||
     location.pathname.startsWith("/admin");
 
- 
+  // useEffect(() => {
+  //   const role = localStorage.getItem("role");
+  //   if (role) {
+  //     if (role === "admin") {
+  //       navigate("/admin", { replace: true });
+  //     } else if (role === "user") {
+  //       navigate("/", { replace: true });
+  //     }
+  //   }
+  // }, []);
+
   return (
     <>
       <div className={hideComponent ? "" : "container mx-auto"}>
@@ -74,7 +85,8 @@ function App() {
             path="all"
             element={
               <Suspense fallback={<Loading />}>
-                <ItemDisplay />
+                {/* <ItemDisplay /> */}
+                <AllProduct />
               </Suspense>
             }
           />

@@ -15,7 +15,7 @@ import { useSelector } from "react-redux";
 const HeaderDash = () => {
   const navigate = useNavigate();
   const allitems = useSelector((state) => state.allProducts.items.data);
-  const admin = localStorage.getItem("isAdmin");
+  const role = localStorage.getItem("role");
 
   const casualFiltered = allitems.filter(
     (value) => value.category === "CASUAL"
@@ -42,7 +42,7 @@ const HeaderDash = () => {
     navigate("/");
   };
 
-  if (!admin) {
+  if (role !== "admin") {
     return (
       <div className="flex items-center justify-center h-screen bg-gray-100">
         <div className="text-center">

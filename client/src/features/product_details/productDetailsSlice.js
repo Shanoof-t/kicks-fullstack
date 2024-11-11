@@ -1,15 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchItem, updateCartSize } from "./productDetailsAPI";
+import { addToCart, fetchItem, updateCartSize } from "./productDetailsAPI";
 
 const initialState = {
   productDetailsLoading: false,
+  addedMessage: "",
   items: {},
   sizes: [],
-  size: 0,
+  size: null,
   error: {
     sizeError: "",
     updateError: "",
     fetchError: "",
+    addCartError: "",
   },
 };
 const productDetailsSlice = createSlice({
@@ -44,7 +46,16 @@ const productDetailsSlice = createSlice({
       })
       .addCase(fetchItem.rejected, (state, action) => {
         state.productDetailsLoading = false;
-        state.error.fetchError = action.error.message;
+        state.error.fetchError = action.payload;
+      })
+      .addCase(addToCart.pending, (state) => {
+        state.productDetailsLoading = true;
+      })
+      .addCase(addToCart.fulfilled, (state, action) => {
+        state.addedMessage = action.payload;
+      })
+      .addCase(addToCart.rejected, (state, action) => {
+        state.error.addCartError = action.payload;
       });
   },
 });

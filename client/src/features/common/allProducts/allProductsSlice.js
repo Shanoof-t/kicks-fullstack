@@ -20,7 +20,7 @@ const allProductSlice = createSlice({
         state.items.data = action.payload;
       })
       .addCase(fetchAllProducts.rejected, (state, action) => {
-        state.items.error = action.error.message;
+        state.items.error = action.payload;
       });
   },
 });

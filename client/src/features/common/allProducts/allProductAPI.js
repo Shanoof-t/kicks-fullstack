@@ -1,11 +1,16 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { itemsURL } from "../../../utils/API_URL";
 
 export const fetchAllProducts = createAsyncThunk(
   "allProducts/fetchAllProducts",
-  async () => {
-    const res = await axios.get(itemsURL);
-    return res.data;
+  async (_, { rejectWithValues }) => {
+    try {
+      const res = await axios.get(
+        `${process.env.REACT_APP_API_URL}/allProducts`
+      );
+      return res.data;
+    } catch (error) {
+      return rejectWithValues(error.response.data.message);
+    }
   }
 );

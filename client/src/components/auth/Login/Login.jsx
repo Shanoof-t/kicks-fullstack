@@ -10,27 +10,24 @@ function Login() {
   const navigate = useNavigate();
   const LoginValues = useSelector((state) => state.login.formValues);
   const userFetchValues = useSelector((state) => state.login.userFetchValues);
+  
+  useEffect(() => {
+    localStorage.setItem("role", userFetchValues.role);
+    if (userFetchValues.role === "admin") {
+      navigate("/admin", { replace: true });
+    } else if (userFetchValues.role === "user") {
+      navigate("/", { replace: true });
+    }
+  }, [userFetchValues.role]);
+
   const handleSubmit = async (values) => {
     const loginData = {
       email: values.email,
       password: values.password,
     };
-    dispatch(userFetch(loginData))
-
-    // if (matchedUser.isAdmin) {
-    //   localStorage.setItem("adminId", matchedUser.id);
-    //   localStorage.setItem("isAdmin", matchedUser.isAdmin);
-    //   navigate("/admin", { replace: true });
-    // } else {
-    //   localStorage.setItem("userId", matchedUser.id);
-    //   localStorage.setItem("firstName", matchedUser.firstName);
-    //   localStorage.setItem("lastName", matchedUser.lastName);
-    //   localStorage.setItem("email", matchedUser.email);
-    //   localStorage.setItem("isAllowed", matchedUser.isAllowed);
-    //   navigate(-1, { replace: true });
-    // }
-
+    dispatch(userFetch(loginData));
   };
+
   return (
     <div className="flex flex-col items-center justify-center h-screen  ">
       <div className=" p-8 rounded-lg  w-full max-w-md">
