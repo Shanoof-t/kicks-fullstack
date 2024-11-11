@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { fetchCategorieItems } from "./categorieDetailsAPI";
 const initialState = {
-  categrieType: "",
   items: {
     loading: false,
     data: [],
@@ -12,9 +11,6 @@ const categorieDetailsSlice = createSlice({
   name: "categorieDetails",
   initialState,
   reducers: {
-    setCategrieType: (state, action) => {
-      state.categrieType = action.payload;
-    },
     setItems: (state, action) => {
       state.items.data = action.payload;
     },

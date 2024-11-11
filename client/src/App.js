@@ -23,7 +23,6 @@ const Home = React.lazy(() => import("./pages/Home"));
 const HeaderDash = React.lazy(() => import("./admin/components/HeaderDash"));
 const Checkout = React.lazy(() => import("./pages/checkout/Checkout"));
 const CategorieDetails = React.lazy(() => import("./pages/CategorieDetails"));
-const ItemDisplay = React.lazy(() => import("./components/ItemDisplay"));
 const ProductDetails = React.lazy(() => import("./pages/ProductDetails"));
 const AllProduct = React.lazy(() => import("./pages/AllProducts"));
 function App() {
@@ -71,14 +70,6 @@ function App() {
                 </Suspense>
               }
             >
-              <Route
-                index
-                element={
-                  <Suspense fallback={<Loading />}>
-                    <ItemDisplay />
-                  </Suspense>
-                }
-              />
             </Route>
           </Route>
           <Route
