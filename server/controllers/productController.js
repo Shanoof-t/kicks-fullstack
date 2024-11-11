@@ -22,7 +22,26 @@ export const getProduct = async (req, res) => {
       return res.status(401).json({ message: "can't find product" });
     res.status(200).json(product);
   } catch (error) {
-    res
+    res.status(500).json({
+      errCode: "SERVER_ERROR",
+      message: "Something went wrong, please try again later",
+    });
+  }
+};
+
+export const getCategorieProduct = async (req, res) => {
+  const { category, gender } = req.query;
+  if (!category && gender) {
+    res.status(403).json({ errCode: "QUERY_ERROR", message: "check quary" });
+  }
+  try {
+    const products = await Product.aggregate([
+      { $match: { gender, category } },
+    ]);
+    return res.status(200).json(products);
+  } catch (error) {
+    console.log(error);
+    return res
       .status(500)
       .json({
         errCode: "SERVER_ERROR",

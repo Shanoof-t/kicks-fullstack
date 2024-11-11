@@ -15,6 +15,6 @@ export const addToCart = async (req, res) => {
     res.json({ message: "success" });
   } catch (error) {
     console.log(error);
-    res.json(error);
+    res.json(error);  
   }
 };
