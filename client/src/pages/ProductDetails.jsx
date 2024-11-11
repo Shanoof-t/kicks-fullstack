@@ -44,6 +44,7 @@ function ProductDetails() {
     const cartData = {
       ...productDetails.items,
       size: productDetails.size,
+      quantity: 1,
     };
 
     if (!productDetails.size) {

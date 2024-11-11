@@ -6,6 +6,7 @@ const initialState = {
   cartError: "",
   cartItems: [],
   cartTotalPrice: 0,
+  CartProductCount: 0,
 };
 const cartSlice = createSlice({
   name: "cart",
@@ -25,7 +26,9 @@ const cartSlice = createSlice({
       })
       .addCase(fetchCartItems.fulfilled, (state, action) => {
         state.cartLoading = false;
-        state.cartItems = action.payload;
+        state.cartItems = action.payload.cart;
+        state.cartTotalPrice = action.payload.total;
+        state.CartProductCount = action.payload.count;
       })
       .addCase(fetchCartItems.rejected, (state, action) => {
         state.cartLoading = false;
@@ -39,7 +42,7 @@ const cartSlice = createSlice({
       })
       .addCase(updateCartQuantity.rejected, (state, action) => {
         state.cartLoading = false;
-        state.cartError = action.error.message;
+        state.cartError = action.payload;
       })
       .addCase(deleteCartItems.pending, (state) => {
         state.cartLoading = true;

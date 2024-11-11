@@ -39,19 +39,19 @@ function Categorie() {
         <ul className="flex flex-wrap gap-6">
           <li
             onClick={handleInitialLoad}
-            className="text-lg font-semibold hover:text-blue-700 transition duration-300"
+            className="text-lg font-semibold hover:text-blue-700 transition duration-300 hover:cursor-pointer"
           >
             Casual
           </li>
           <li
             onClick={() => navigate(`FOOTBALL`)}
-            className="text-lg font-semibold hover:text-blue-700 transition duration-300"
+            className="text-lg font-semibold hover:text-blue-700 transition duration-300 hover:cursor-pointer"
           >
             Football
           </li>
           <li
             onClick={() => navigate(`RUNNING`)}
-            className="text-lg font-semibold hover:text-blue-700 transition duration-300"
+            className="text-lg font-semibold hover:text-blue-700 transition duration-300 hover:cursor-pointer"
           >
             Running
           </li>

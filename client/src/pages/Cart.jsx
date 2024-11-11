@@ -16,35 +16,27 @@ function Cart() {
     window.scrollTo(0, 0);
   }, []);
   const dispatch = useDispatch();
+
   const cartItem = useSelector((state) => state.cart.cartItems);
   const loading = useSelector((state) => state.cart.cartLoading);
   const totalPrice = useSelector((state) => state.cart.cartTotalPrice);
+  const CartProductCount = useSelector((state) => state.cart.CartProductCount);
   const [user, setUser] = useState("");
   useEffect(() => {
-    const user = localStorage.getItem("userId");
+    const user = localStorage.getItem("role");
     setUser(user);
   }, []);
-  useEffect(() => {
-    if (user) {
-      dispatch(fetchCartItems(user));
-    }
-  }, [user]);
 
   useEffect(() => {
-    const total = cartItem.reduce((acc, val) => {
-      return acc + val.price * val.quantity;
-    }, 0);
-    dispatch(setCartTotalPrice(total));
-  }, [cartItem]);
+    dispatch(fetchCartItems());
+  }, []);
 
   const handleQuantity = (id, newQuantity) => {
-    const updatedCart = cartItem.map((item) =>
-      item.id === id ? { ...item, quantity: newQuantity } : item
-    );
-    dispatch(updateCartQuantity({ user, updatedCart })).then(() => {
-      dispatch(fetchCartItems(user));
+    dispatch(updateCartQuantity({ id, newQuantity })).then(() => {
+      dispatch(fetchCartItems());
     });
   };
+
   const handleDelete = (id) => {
     const updatedCart = cartItem.filter((item) => item.id !== id);
     dispatch(deleteCartItems({ user, updatedCart })).then(() => {
@@ -71,7 +63,7 @@ function Cart() {
             cartItem.map((value) => {
               return (
                 <div
-                  key={value.id}
+                  key={value._id}
                   className="flex items-center justify-between border-b pb-4 mb-6  p-4 rounded-lg "
                 >
                   <div className="w-24 me-3">
@@ -90,7 +82,7 @@ function Cart() {
                         className="bg-thirdColor hover:bg-hoverColor px-3 py-1 rounded"
                         onClick={() => {
                           if (value.quantity > 1) {
-                            handleQuantity(value.id, value.quantity - 1);
+                            handleQuantity(value._id, value.quantity - 1);
                           }
                         }}
                       >
@@ -100,7 +92,7 @@ function Cart() {
                       <button
                         className="bg-thirdColor hover:bg-hoverColor px-3 py-1 rounded"
                         onClick={() => {
-                          handleQuantity(value.id, value.quantity + 1);
+                          handleQuantity(value._id, value.quantity + 1);
                         }}
                       >
                         <span className="text-white">+</span>
@@ -130,7 +122,7 @@ function Cart() {
           <h1 className="text-2xl font-bold mb-6">Order Summary</h1>
           <div className="flex justify-between text-lg mb-4">
             <h5>
-              {cartItem.length} ITEM{cartItem.length > 1 ? "S" : ""}
+              {CartProductCount} ITEM{CartProductCount > 1 ? "S" : ""}
             </h5>
             <h5>${totalPrice}</h5>
           </div>

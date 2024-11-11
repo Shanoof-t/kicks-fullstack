@@ -76,7 +76,6 @@ function App() {
             path="all"
             element={
               <Suspense fallback={<Loading />}>
-                {/* <ItemDisplay /> */}
                 <AllProduct />
               </Suspense>
             }
