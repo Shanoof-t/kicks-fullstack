@@ -12,12 +12,14 @@ export const userRegister = async (req, res) => {
       return res.status(400).json({ message: "You already registered" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
+    const role = email.includes("admin") ? "admin" : "user";
     await User.create({
       first_name,
       last_name,
       gender,
       email,
       password: hashedPassword,
+      role,
     });
     return res.status(201).json({ message: "User registered successfully" });
   } catch (err) {
@@ -37,11 +39,18 @@ export const userLogin = async (req, res) => {
         .json({ errCode: "INVALID_EMAIL", message: "Your email is incorrect" });
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (isPasswordCorrect) {
-      const payload = { sub: user._id, name: user.name, role: "user" };
+      const payload = { sub: user._id, name: user.name, role: user.role };
       const accessToken = generateToken(payload);
+      res.cookie("token", accessToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
+        maxAge: 24 * 60 * 60 * 1000,
+        path: "/",
+      });
       return res
         .status(200)
-        .json({ message: "Login Successfull", accessToken: accessToken });
+        .json({ message: "Login Successfull", role: user.role });
     } else {
       return res.status(401).json({
         errCode: "INVALID_PASSWORD",

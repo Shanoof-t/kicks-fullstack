@@ -22,6 +22,12 @@ const registerSchema = new mongoose.Schema({
     },
   },
   password: { type: String, required: [true, "Password is required"] },
+  role: {
+    type: String,
+    enum: ["admin", "user"],
+    required: [true, "Role is required"],
+  },
+  cart: { type: Array },
 });
 
 export const User = mongoose.model("User", registerSchema);
