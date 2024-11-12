@@ -15,9 +15,6 @@ const cartSlice = createSlice({
     setCartTotalPrice: (state, action) => {
       state.cartTotalPrice = action.payload;
     },
-    setCartItems: (state, action) => {
-      state.cartItems = action.payload;
-    },
   },
   extraReducers: (builder) => {
     builder

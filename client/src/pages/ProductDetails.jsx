@@ -10,7 +10,6 @@ import {
 import {
   addToCart,
   fetchItem,
-  updateCartSize,
 } from "../features/product_details/productDetailsAPI";
 import { fetchCartItems } from "../features/cart/cartAPI";
 function ProductDetails() {
@@ -19,7 +18,6 @@ function ProductDetails() {
   }, []);
   const { productId } = useParams();
   const dispatch = useDispatch();
-  // const cartItems = useSelector((state) => state.cart.cartItems);
   const errors = useSelector((state) => state.productDetails.error);
   const productDetails = useSelector((state) => state.productDetails);
   const [user, setUser] = useState("");
@@ -55,28 +53,15 @@ function ProductDetails() {
       dispatch(setSizeError(""));
     }
 
-    dispatch(addToCart(cartData));
+    dispatch(addToCart(cartData)).then(() => {
+      dispatch(fetchCartItems());
+    });
 
     if (errors.addCartError) {
       toast.error(errors.addCartError, { className: "mt-12" });
     } else {
       toast.success("Product added to cart", { className: "mt-12" });
     }
-    // productDetails.size === 0
-    //   ? dispatch(setSizeError("Choose shoe size"))
-    //   : dispatch(updateCartSize({ user, cartItems, cartData })).then(() => {
-    //       dispatch(fetchCartItems(user)).then(() => {
-    //         if (!errors.UpdateCartError) {
-    //           toast.success("Product added to cart", { className: "mt-12" });
-    //         }
-    //       });
-    //     });
-
-    // if (errors.UpdateCartError) {
-    //   toast.error(errors.UpdateCartError, { className: "mt-12" });
-    // } else if (errors.fetchError) {
-    //   toast.error(errors.fetchError, { className: "mt-12" });
-    // }
   };
 
   return (

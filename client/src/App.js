@@ -12,7 +12,6 @@ import UpdateProduct from "./admin/UpdateProduct";
 import Users from "./admin/Users";
 import OrderList from "./admin/OrderList";
 import Order from "./admin/Order";
-// import UserProvider from "./context/UserProvider";
 import UserProfile from "./admin/UserProfile";
 import React, { lazy, Suspense, useEffect } from "react";
 import Loading from "./components/Loading";

@@ -30,7 +30,7 @@ function Navbar() {
   const filteredItems = useSelector((state) => state.navbar.filteredItems);
   const isSubmit = useSelector((state) => state.navbar.isSubmit);
   const uiFlags = useSelector((state) => state.navbar.navbarUiFlags);
-
+  const CartProductCount = useSelector((state) => state.cart.CartProductCount);
 
   const [user, setUser] = useState("");
   useEffect(() => {
@@ -295,7 +295,8 @@ function Navbar() {
             <button className="relative p-2" aria-label="View Cart">
               <FontAwesomeIcon icon={faCartShopping} className="text-lg" />
               <span className="absolute -top-1 -right-1 bg-secondaryColor text-white rounded-full text-xs px-1.5 py-0.5">
-                {/* {cartItems.length} */}0
+                {/* {cartItems.length} */}
+                {CartProductCount}
               </span>
             </button>
           </Link>

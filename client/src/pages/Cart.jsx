@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,11 +22,6 @@ function Cart() {
   const totalPrice = useSelector((state) => state.cart.cartTotalPrice);
   const CartProductCount = useSelector((state) => state.cart.CartProductCount);
   
-  const [user, setUser] = useState("");
-  useEffect(() => {
-    const user = localStorage.getItem("role");
-    setUser(user);
-  }, []);
 
   useEffect(() => {
     dispatch(fetchCartItems())

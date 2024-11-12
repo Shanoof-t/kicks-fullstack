@@ -7,17 +7,10 @@ import { Field, Form, Formik } from "formik";
 import { checkoutValidationSchema } from "./checkoutValidationSchema";
 import {
   addOrder,
-  fetchUser,
   fetchUserCartDetails,
 } from "../../features/checkout/checkoutAPI";
-import { setCartItems } from "../../features/cart/cartSlice";
-import {
-  setProducts,
-  setTotalPrice,
-  setUser,
-} from "../../features/checkout/checkoutSlice";
-import { v4 as uuidv4 } from "uuid";
-import dayjs from "dayjs";
+import { fetchCartItems } from "../../features/cart/cartAPI";
+
 function Checkout() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -27,7 +20,6 @@ function Checkout() {
   useEffect(() => {
     dispatch(fetchUserCartDetails());
   }, [dispatch]);
-
 
   const handlePlaceOrder = (values) => {
     const user = localStorage.getItem("role");
@@ -40,7 +32,7 @@ function Checkout() {
             className: "mt-12",
             onClose: () => {
               navigate("/");
-              // dispatch(setCartItems([]))
+              dispatch(fetchCartItems());
             },
           });
         })
