@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { fetchAllItem_navbar } from "./navbarAPI";
 const initialState = {
   searchText: "",
+  cartCount: 0,
   filteredItems: [],
   isSubmit: false,
   allItems: {
@@ -22,6 +23,9 @@ const navbarSlice = createSlice({
   reducers: {
     setSearchText: (state, action) => {
       state.searchText = action.payload;
+    },
+    setCartCount: (state, action) => {
+      state.cartCount = action.payload;
     },
     setFillteredItems: (state, action) => {
       state.filteredItems = action.payload;
@@ -56,6 +60,6 @@ const navbarSlice = createSlice({
       });
   },
 });
-export const { setSearchText, setFillteredItems, setIsSubmit, setUiFlags } =
+export const { setSearchText, setFillteredItems, setIsSubmit, setUiFlags,setCartCount } =
   navbarSlice.actions;
 export default navbarSlice.reducer;

@@ -1,41 +1,30 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addOrder, fetchUser } from "./checkoutAPI";
+import { addOrder, fetchUserCartDetails } from "./checkoutAPI";
 const initialState = {
-  fetchUserData: {
-    loading: false,
-    userData: [],
+  loading: false,
+  cartDetails: {
+    totalAmount: 0,
+    cartProducts: [],
+    cartProductCount: 0,
     error: "",
   },
   addOrderData: {
-    loading: false,
     userData: [],
     error: "",
   },
   contactDetails: {
-    userId: "",
-    orderId: "",
     email: "",
     firstName: "",
     lastName: "",
     address: "",
     phone: "",
     paymentMethod: "",
-    status: true,
-    date: "",
-    amount: 0,
-    product: [],
   },
 };
 const checkoutSlice = createSlice({
   name: "checkout",
   initialState,
   reducers: {
-    setTotalPrice: (state, action) => {
-      const total = action.payload.reduce((acc, val) => {
-        return acc + val.price * val.quantity;
-      }, 0);
-      state.contactDetails.amount = total;
-    },
     setUser: (state, action) => {
       state.contactDetails.userId = action.payload;
     },
@@ -45,16 +34,18 @@ const checkoutSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchUser.pending, (state) => {
-        state.fetchUserData.loading = true;
+      .addCase(fetchUserCartDetails.pending, (state) => {
+        state.loading = true;
       })
-      .addCase(fetchUser.fulfilled, (state, action) => {
-        state.fetchUserData.loading = false;
-        state.fetchUserData.userData = action.payload;
+      .addCase(fetchUserCartDetails.fulfilled, (state, action) => {
+        state.loading = false;
+        state.cartDetails.cartProducts = action.payload.cart;
+        state.cartDetails.cartProductCount = action.payload.cartProductCount;
+        state.cartDetails.totalAmount = action.payload.totalAmount;
       })
-      .addCase(fetchUser.rejected, (state, action) => {
-        state.fetchUserData.loading = false;
-        state.fetchUserData.error = action.error.message;
+      .addCase(fetchUserCartDetails.rejected, (state, action) => {
+        state.loading = false;
+        state.addOrderData.error = action.error.message;
       })
       .addCase(addOrder.pending, (state) => {
         state.addOrderData.loading = true;

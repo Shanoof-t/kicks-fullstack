@@ -9,7 +9,7 @@ import {
   updateCartQuantity,
 } from "../features/cart/cartAPI";
 import Loading from "../components/Loading";
-import { setCartTotalPrice, setUser } from "../features/cart/cartSlice";
+
 
 function Cart() {
   useEffect(() => {
@@ -21,6 +21,7 @@ function Cart() {
   const loading = useSelector((state) => state.cart.cartLoading);
   const totalPrice = useSelector((state) => state.cart.cartTotalPrice);
   const CartProductCount = useSelector((state) => state.cart.CartProductCount);
+  
   const [user, setUser] = useState("");
   useEffect(() => {
     const user = localStorage.getItem("role");
@@ -28,7 +29,7 @@ function Cart() {
   }, []);
 
   useEffect(() => {
-    dispatch(fetchCartItems());
+    dispatch(fetchCartItems())
   }, []);
 
   const handleQuantity = (id, newQuantity) => {
@@ -38,11 +39,11 @@ function Cart() {
   };
 
   const handleDelete = (id) => {
-    const updatedCart = cartItem.filter((item) => item.id !== id);
-    dispatch(deleteCartItems({ user, updatedCart })).then(() => {
-      dispatch(fetchCartItems(user));
+    dispatch(deleteCartItems({ id })).then(() => {
+      dispatch(fetchCartItems());
     });
   };
+
   if (loading) {
     return <Loading />;
   }
@@ -102,7 +103,7 @@ function Cart() {
 
                   <div className="flex items-center gap-4">
                     <h1 className="text-xl font-semibold">${value.price}</h1>
-                    <button onClick={() => handleDelete(value.id)}>
+                    <button onClick={() => handleDelete(value._id)}>
                       <FontAwesomeIcon
                         icon={faTrash}
                         className="text-red-500 hover:text-red-700"

@@ -5,7 +5,11 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Field, Form, Formik } from "formik";
 import { checkoutValidationSchema } from "./checkoutValidationSchema";
-import { addOrder, fetchUser } from "../../features/checkout/checkoutAPI";
+import {
+  addOrder,
+  fetchUser,
+  fetchUserCartDetails,
+} from "../../features/checkout/checkoutAPI";
 import { setCartItems } from "../../features/cart/cartSlice";
 import {
   setProducts,
@@ -17,51 +21,26 @@ import dayjs from "dayjs";
 function Checkout() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const userData = useSelector((state) => state.checkout.fetchUserData);
-  const cartItem = useSelector((state) => state.cart.cartItems);
+  const cartDetails = useSelector((state) => state.checkout.cartDetails);
   const contactDetails = useSelector((state) => state.checkout.contactDetails);
-  const user = contactDetails.userId;
-  const currentDate = dayjs().format("YYYY-MM-DD");
 
   useEffect(() => {
-    const userId = localStorage.getItem("userId");
-    dispatch(setUser(userId));
-    dispatch(fetchUser(userId));
+    dispatch(fetchUserCartDetails());
   }, [dispatch]);
 
-  useEffect(() => {
-    dispatch(setTotalPrice(cartItem));
-    const products = cartItem.map((el) => {
-      return {
-        name: el.name,
-        productId: el.id,
-        size: el.size,
-        quantity: el.quantity,
-        imageURL: el.imageURL,
-        price: el.price,
-      };
-    });
-    dispatch(setProducts(products));
-  }, [cartItem, dispatch]);
 
   const handlePlaceOrder = (values) => {
-    values.userId = user;
-    values.orderId = uuidv4();
-    values.date = currentDate;
-    values.amount = contactDetails.amount;
-    values.product = contactDetails.product;
-
-    if (!user) {
+    const user = localStorage.getItem("role");
+    if (user !== "user") {
       navigate("/login");
     } else {
-      const userDetails = userData.userData;
-      dispatch(addOrder({ user, values, userDetails }))
+      dispatch(addOrder({ values }))
         .then(() => {
           toast.success("Your Order is Placed", {
             className: "mt-12",
             onClose: () => {
               navigate("/");
-              dispatch(setCartItems([]));
+              // dispatch(setCartItems([]))
             },
           });
         })
@@ -70,6 +49,7 @@ function Checkout() {
         });
     }
   };
+
   return (
     <div className="min-h-screen py-10 px-6">
       <ToastContainer />
@@ -144,22 +124,34 @@ function Checkout() {
                   <h1 className="text-2xl font-bold">Payment Methods</h1>
                   <div className="flex space-x-6">
                     <label className="inline-flex items-center space-x-2">
-                      <Field
+                      {/* <Field
                         type="checkbox"
                         className="form-checkbox h-4 w-4"
                         checked={values.paymentMethod === "cash"}
                         onChange={() => setFieldValue("paymentMethod", "cash")}
+                      ></Field> */}
+                      <Field
+                        type="radio"
+                        name="paymentMethod"
+                        className="form-radio h-4 w-4"
+                        value="cash"
                       ></Field>
 
                       <span>Cash</span>
                     </label>
 
                     <label className="inline-flex items-center space-x-2">
+                      {/* <Field
+                          type="checkbox"
+                          className="form-checkbox h-4 w-4"
+                          checked={values.paymentMethod === "UPI"}
+                          onChange={() => setFieldValue("paymentMethod", "UPI")}
+                        ></Field> */}
                       <Field
-                        type="checkbox"
-                        className="form-checkbox h-4 w-4"
-                        checked={values.paymentMethod === "UPI"}
-                        onChange={() => setFieldValue("paymentMethod", "UPI")}
+                        type="radio"
+                        name="paymentMethod"
+                        className="form-radio h-4 w-4"
+                        value="UPI"
                       ></Field>
                       <span>UPI</span>
                     </label>
@@ -175,7 +167,7 @@ function Checkout() {
                   className="w-full mt-6 px-6 py-3 bg-thirdColor text-white text-lg font-semibold rounded-lg hover:bg-hoverColor transition duration-300"
                   type="submit"
                 >
-                  Place Order ${contactDetails.amount}
+                  Place Order ${cartDetails.totalAmount}
                 </button>
               </Form>
             )}
@@ -188,13 +180,13 @@ function Checkout() {
           <div className="p-6 rounded-lg border border-gray-300">
             <h1 className="text-2xl font-semibold mb-4">Order Summary</h1>
             <div className="flex justify-between text-lg mb-4">
-              <span>{cartItem.length} ITEMS</span>
-              <span>${contactDetails.amount}</span>
+              <span>{cartDetails.cartProductCount} ITEMS</span>
+              <span>${cartDetails.totalAmount}</span>
             </div>
             <hr className="my-4" />
             <div className="flex justify-between text-xl font-semibold">
               <h2>Total</h2>
-              <h2>${contactDetails.amount}</h2>
+              <h2>${cartDetails.totalAmount}</h2>
             </div>
           </div>
 
@@ -202,9 +194,9 @@ function Checkout() {
           <div className="p-6 rounded-lg border border-gray-300 space-y-4">
             <h1 className="text-2xl font-semibold mb-2">Your Order</h1>
             <div className="space-y-2">
-              {cartItem.map((item) => (
+              {cartDetails.cartProducts.map((item) => (
                 <div
-                  key={item.id}
+                  key={item._id}
                   className="flex justify-between items-center"
                 >
                   <div className="text-lg">{item.name}</div>
@@ -216,7 +208,7 @@ function Checkout() {
             </div>
             <div className="mt-6 flex justify-between text-lg font-semibold">
               <span>Total</span>
-              <span>${contactDetails.amount}</span>
+              <span>${cartDetails.totalAmount}</span>
             </div>
           </div>
         </div>

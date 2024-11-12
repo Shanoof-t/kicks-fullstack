@@ -23,11 +23,14 @@ const cartSlice = createSlice({
     builder
       .addCase(fetchCartItems.pending, (state) => {
         state.cartLoading = true;
+        state.cartItems = []
+        state.cartTotalPrice = 0;
+        state.CartProductCount = 0;
       })
       .addCase(fetchCartItems.fulfilled, (state, action) => {
         state.cartLoading = false;
         state.cartItems = action.payload.cart;
-        state.cartTotalPrice = action.payload.total;
+        state.cartTotalPrice = action.payload.totalAmount;
         state.CartProductCount = action.payload.count;
       })
       .addCase(fetchCartItems.rejected, (state, action) => {
@@ -37,8 +40,9 @@ const cartSlice = createSlice({
       .addCase(updateCartQuantity.pending, (state) => {
         state.cartLoading = true;
       })
-      .addCase(updateCartQuantity.fulfilled, (state) => {
+      .addCase(updateCartQuantity.fulfilled, (state, action) => {
         state.cartLoading = false;
+        state.cartItems = action.payload;
       })
       .addCase(updateCartQuantity.rejected, (state, action) => {
         state.cartLoading = false;

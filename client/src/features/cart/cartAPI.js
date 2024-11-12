@@ -36,8 +36,18 @@ export const updateCartQuantity = createAsyncThunk(
 );
 export const deleteCartItems = createAsyncThunk(
   "cart/deleteCartItems",
-  async ({ user, updatedCart }) => {
-    const res = await axios.patch(`${userURL}/${user}`, { cart: updatedCart });
-    return res.data;
+  async ({ id }, { rejectWithValue }) => {
+    try {
+      const res = await axios.patch(
+        `${process.env.REACT_APP_API_URL}/cart/delete_product`,
+        { id },
+        { withCredentials: true }
+      );
+      console.log(res.data);
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response.data.payload);
+    }
   }
 );

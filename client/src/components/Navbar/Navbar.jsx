@@ -24,7 +24,7 @@ import {
 function Navbar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const cartItems = useSelector((state) => state.cart.cartItems);
+  // const cartItems = useSelector((state) => state.cart.cartItems);
   const searchText = useSelector((state) => state.navbar.searchText);
   const allItems = useSelector((state) => state.navbar.allItems);
   const filteredItems = useSelector((state) => state.navbar.filteredItems);
@@ -295,7 +295,7 @@ function Navbar() {
             <button className="relative p-2" aria-label="View Cart">
               <FontAwesomeIcon icon={faCartShopping} className="text-lg" />
               <span className="absolute -top-1 -right-1 bg-secondaryColor text-white rounded-full text-xs px-1.5 py-0.5">
-                {cartItems.length}
+                {/* {cartItems.length} */}0
               </span>
             </button>
           </Link>
