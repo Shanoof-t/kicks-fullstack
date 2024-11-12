@@ -1,3 +1,4 @@
+import { CLIENT_ERROR, SERVER_ERROR } from "../config/errorCodes.js";
 import { Product } from "../models/productModel.js";
 
 export const getAllProduct = async (req, res) => {
@@ -20,10 +21,10 @@ export const getProduct = async (req, res) => {
     const product = await Product.findOne({ _id: id });
     if (!product)
       return res.status(401).json({ message: "can't find product" });
-    res.status(200).json(product);
+    return res.status(200).json(product);
   } catch (error) {
-    res.status(500).json({
-      errCode: "SERVER_ERROR",
+    return res.status(500).json({
+      errCode: SERVER_ERROR,
       message: "Something went wrong, please try again later",
     });
   }
@@ -32,7 +33,7 @@ export const getProduct = async (req, res) => {
 export const getCategorieProduct = async (req, res) => {
   const { category, gender } = req.query;
   if (!category && gender) {
-    res.status(403).json({ errCode: "QUERY_ERROR", message: "check quary" });
+    res.status(403).json({ errCode: CLIENT_ERROR, message: "check quary" });
   }
   try {
     const products = await Product.aggregate([
@@ -41,11 +42,9 @@ export const getCategorieProduct = async (req, res) => {
     return res.status(200).json(products);
   } catch (error) {
     console.log(error);
-    return res
-      .status(500)
-      .json({
-        errCode: "SERVER_ERROR",
-        message: "Something went wrong, please try again later",
-      });
+    return res.status(500).json({
+      errCode: SERVER_ERROR,
+      message: "Something went wrong, please try again later",
+    });
   }
 };

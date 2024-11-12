@@ -5,8 +5,8 @@ import cookieParser from "cookie-parser";
 import userRoutes from "./routes/userRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
-import https from "https";
-import fs from "fs";
+import checkoutRouter from "./routes/checkoutRoutes.js";
+import orderRouter from "./routes/orderRoutes.js";
 connectDB();
 
 const app = express();
@@ -14,7 +14,7 @@ const app = express();
 app.use(
   cors({
     origin: "http://localhost:3000",
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
   })
 );
@@ -23,16 +23,8 @@ app.use(express.json());
 app.use("/", userRoutes);
 app.use("/", productRoutes);
 app.use("/cart", cartRoutes);
-
-// const server = https.createServer(
-//   {
-//     key: fs.readFileSync("localhost-key.pem"),
-//     cert: fs.readFileSync("localhost.pem"),
-//   },
-//   app
-// );
+app.use("/checkout", checkoutRouter);
+app.use("/orders", orderRouter);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT,()=>{
-  console.log(PORT)
-});
+app.listen(PORT);

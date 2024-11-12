@@ -1,15 +1,16 @@
 import { User } from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import generateToken from "../utils/jwt.js";
+import { CLIENT_ERROR, SERVER_ERROR } from "../config/errorCodes.js";
 export const userRegister = async (req, res) => {
   const { first_name, last_name, gender, email, password, confirm_password } =
     req.body;
   if (password !== confirm_password)
-    return res.status(400).json({ message: "Passowrd does not match" });
+    return res.status(400).json({ errCode: CLIENT_ERROR,message: "Passowrd does not match" });
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser)
-      return res.status(400).json({ message: "You already registered" });
+      return res.status(400).json({errCode: CLIENT_ERROR, message: "You already registered" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const role = email.includes("admin") ? "admin" : "user";
@@ -25,7 +26,7 @@ export const userRegister = async (req, res) => {
   } catch (err) {
     return res
       .status(500)
-      .json({ message: "An error occured ,Please try again" });
+      .json({ errCode: SERVER_ERROR,message: "An error occured ,Please try again" });
   }
 };
 
@@ -36,7 +37,7 @@ export const userLogin = async (req, res) => {
     if (!user)
       return res
         .status(401)
-        .json({ errCode: "INVALID_EMAIL", message: "Your email is incorrect" });
+        .json({ errCode: CLIENT_ERROR, message: "Your email is incorrect" });
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (isPasswordCorrect) {
       const payload = { sub: user._id, name: user.name, role: user.role };
@@ -53,13 +54,13 @@ export const userLogin = async (req, res) => {
         .json({ message: "Login Successfull", role: user.role });
     } else {
       return res.status(401).json({
-        errCode: "INVALID_PASSWORD",
+        errCode: CLIENT_ERROR,
         message: "Check your password again",
       });
     }
   } catch (err) {
     return res.status(500).json({
-      errCode: "SERVER_ERROR",
+      errCode: SERVER_ERROR,
       message: "Something went wrong, please try again later",
     });
   }
