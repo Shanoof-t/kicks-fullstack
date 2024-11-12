@@ -5,24 +5,35 @@ import { CLIENT_ERROR, SERVER_ERROR } from "../config/errorCodes.js";
 export const addToCart = async (req, res) => {
   const { sub } = req.user;
   const { item } = req.body;
+  console.log("item>>>", item);
   if (!item)
     return res
       .status(400)
       .json({ errCode: CLIENT_ERROR, message: "Item is required" });
   try {
-    const result = await User.updateOne(
-      { _id: new mongoose.Types.ObjectId(sub) },
-      { $push: { cart: item } }
+    const updatedCart = await User.updateOne(
+      {
+        _id: new mongoose.Types.ObjectId(sub),
+        "cart._id": item._id,
+      },
+      { $inc: { "cart.$.quantity": item.quantity } }
     );
-    if (!result.acknowledged)
-      return res.status(404).json({
-        errCode: SERVER_ERROR,
-        message: "user cart update has problem",
-      });
-    res.json({ message: "success" });
+
+    if (!updatedCart.acknowledged) {
+      const result = await User.updateOne(
+        { _id: new mongoose.Types.ObjectId(sub) },
+        { $push: { cart: item } }
+      );
+      if (!result.acknowledged)
+        return res.status(404).json({
+          errCode: SERVER_ERROR,
+          message: "user cart update has problem",
+        });
+    }
+    return res.json({ message: "success" });
   } catch (error) {
-    console.log(error);
-    res.json(error);
+    console.error(error);
+    return res.json(error);
   }
 };
 
