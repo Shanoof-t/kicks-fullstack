@@ -1,50 +1,46 @@
-import { CLIENT_ERROR, SERVER_ERROR } from "../config/errorCodes.js";
+import { CLIENT_ERROR } from "../config/errorCodes.js";
 import { Product } from "../models/productModel.js";
+import asynErrorHandler from "../utils/asynErrorHandler.js";
+import CustomError from "../utils/CustomError.js";
 
-export const getAllProduct = async (req, res) => {
-  try {
-    const products = await Product.find();
-    if (!products)
-      return res.status(401).json({ message: "something wrong happened" });
-    res.status(200).json(products);
-  } catch (error) {
-    res.status(500).json({
-      errCode: "SERVER_ERROR",
-      message: "Something went wrong, please try again later",
-    });
+export const getAllProduct = asynErrorHandler(async (req, res, next) => {
+  const products = await Product.find();
+
+  if (!products) {
+    const error = new CustomError("Not product found", 404);
+    return next(error);
   }
-};
+  res.status(200).json(products);
+});
 
-export const getProduct = async (req, res) => {
+export const getProduct = asynErrorHandler(async (req, res, next) => {
   const { id } = req.params;
-  try {
-    const product = await Product.findOne({ _id: id });
-    if (!product)
-      return res.status(401).json({ message: "can't find product" });
-    return res.status(200).json(product);
-  } catch (error) {
-    return res.status(500).json({
-      errCode: SERVER_ERROR,
-      message: "Something went wrong, please try again later",
-    });
-  }
-};
+  const product = await Product.findOne({ _id: id });
 
-export const getCategorieProduct = async (req, res) => {
+  if (!product) {
+    const error = new CustomError("can't find product", 404);
+    return next(error);
+  }
+
+  return res.status(200).json(product);
+});
+
+export const getCategorieProduct = asynErrorHandler(async (req, res, next) => {
   const { category, gender } = req.query;
   if (!category && gender) {
-    res.status(403).json({ errCode: CLIENT_ERROR, message: "check quary" });
+    return res
+      .status(403)
+      .json({ errCode: CLIENT_ERROR, message: "check quary" });
   }
-  try {
-    const products = await Product.aggregate([
-      { $match: { gender, category } },
-    ]);
-    return res.status(200).json(products);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      errCode: SERVER_ERROR,
-      message: "Something went wrong, please try again later",
-    });
+
+  const products = await Product.aggregate([{ $match: { gender, category } }]);
+
+  if (products.length === 0) {
+    const error = new CustomError(
+      "No products found for the specified category and gender",
+      404
+    );
+    return next(error);
   }
-};
+  return res.status(200).json(products);
+});

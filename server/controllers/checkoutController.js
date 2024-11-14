@@ -1,31 +1,32 @@
 import mongoose from "mongoose";
 import { User } from "../models/userModel.js";
-import { SERVER_ERROR } from "../config/errorCodes.js";
+import asynErrorHandler from "../utils/asynErrorHandler.js";
+import CustomError from "../utils/CustomError.js";
 
-export const checkoutDetails = async (req, res) => {
+export const checkoutDetails = asynErrorHandler(async (req, res, next) => {
   const { sub } = req.user;
-  try {
-    const cartDetails = await User.aggregate([
-      { $match: { _id: new mongoose.Types.ObjectId(sub) } },
-      { $unwind: "$cart" },
-      {$addFields:{totalPrice:{$multiply:["$cart.price","$cart.quantity"]}}},
-      {
-        $group: {
-          _id: "$_id",
-          cartProductCount: { $sum: 1 },
-          totalAmount: { $sum: "$totalPrice" },
-          cart: {$push:"$cart"}
-        },
+
+  const cartDetails = await User.aggregate([
+    { $match: { _id: new mongoose.Types.ObjectId(sub) } },
+    { $unwind: "$cart" },
+    {
+      $addFields: {
+        totalPrice: { $multiply: ["$cart.price", "$cart.quantity"] },
       },
-    ]);
-    if (!cartDetails)
-      return res.status(401).json({errCode:SERVER_ERROR, message: "can't find details" });
-    return res.status(200).json(cartDetails[0]);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      errCode: SERVER_ERROR,
-      message: "Something went wrong, please try again later",
-    });
+    },
+    {
+      $group: {
+        _id: "$_id",
+        cartProductCount: { $sum: 1 },
+        totalAmount: { $sum: "$totalPrice" },
+        cart: { $push: "$cart" },
+      },
+    },
+  ]);
+
+  if (cartDetails.length === 0) {
+    const error = new CustomError("Can't find cart details", 404);
+    return next(error);
   }
-};
+  return res.status(200).json(cartDetails[0]);
+});

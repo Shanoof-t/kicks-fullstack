@@ -27,7 +27,58 @@ const registerSchema = new mongoose.Schema({
     enum: ["admin", "user"],
     required: [true, "Role is required"],
   },
-  cart: { type: Array },
+  cart: {
+    type: [
+      {
+        _id: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: [true, "_id is required"],
+        },
+        name: { type: String, required: [true, "name is required"] },
+        brand: { type: String, required: [true, "brand is required"] },
+        gender: {
+          type: String,
+          enum: ["MEN", "WOMEN", "KIDS"],
+          required: [true, "gender is required"],
+        },
+        category: {
+          type: String,
+          enum: ["RUNNING", "FOOTBALL", "CASUAL"],
+          required: [true, "category is required"],
+        },
+        price: {
+          type: Number,
+          required: [true, "price is required"],
+          min: [0, "price cannot be negative"],
+        },
+        items_left: {
+          type: Number,
+          required: [true, "auntity is required"],
+          min: [0, "Items left cannot be negative"],
+        },
+        imageURL: {
+          type: String,
+          required: [true, "image url is required"],
+        },
+        description: {
+          type: String,
+          required: [true, "Description is required"],
+        },
+        available_sizes: {
+          type: Array,
+        },
+        size: {
+          type: String,
+          required: [true, "Size is required"],
+        },
+        quantity: {
+          type: Number,
+          required: [true, "quantity is required"],
+        },
+      },
+    ],
+    default: [],
+  },
 });
 
 export const User = mongoose.model("User", registerSchema);
