@@ -2,7 +2,7 @@ import { SERVER_ERROR } from "../config/errorCodes.js";
 
 const devErrors = (res, error) => {
   console.log(error)
-  res.status(error.status).json({
+  res.status(500).json({
     status: error.statusCode,
     message: error.message,
     stackTrace: error.stack,

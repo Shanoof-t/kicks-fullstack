@@ -1,43 +1,26 @@
 import { CLIENT_ERROR } from "../config/errorCodes.js";
 import { Product } from "../models/productModel.js";
+import {
+  fetchAllProducts,
+  fetchProductById,
+  fetchProductsByCategoryAndGender,
+} from "../services/productService.js";
 import asynErrorHandler from "../utils/asynErrorHandler.js";
 import CustomError from "../utils/CustomError.js";
 
 export const getAllProducts = asynErrorHandler(async (req, res, next) => {
-  const products = await Product.find();
-  if (!products) {
-    const error = new CustomError("Not product found", 404);
-    return next(error);
-  } 
+  const products = await fetchAllProducts();
   res.status(200).json(products);
 });
 
 export const getProductById = asynErrorHandler(async (req, res, next) => {
   const { id } = req.params;
-  const product = await Product.findOne({ _id: id });
-  if (!product) {
-    const error = new CustomError("can't find product", 404);
-    return next(error);
-  }
+  const product = await fetchProductById(id);
   return res.status(200).json(product);
 });
 
 export const getCategorieProducts = asynErrorHandler(async (req, res, next) => {
-  const { category, gender } = req.query;
-  if (!category || !gender) {
-    return res
-      .status(403)
-      .json({ errCode: CLIENT_ERROR, message: "check quary" });
-  }
-
-  const products = await Product.aggregate([{ $match: { gender, category } }]);
-
-  if (products.length === 0) {
-    const error = new CustomError(
-      "No products found for the specified category and gender",
-      404
-    );
-    return next(error);
-  }
+  const queryData = req.query;
+  const products = await fetchProductsByCategoryAndGender(queryData);
   return res.status(200).json(products);
 });

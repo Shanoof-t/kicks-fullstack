@@ -1,9 +1,4 @@
-import { User } from "../models/userModel.js";
-import bcrypt from "bcrypt";
-import generateToken from "../utils/jwt.js";
-import { CLIENT_ERROR } from "../config/errorCodes.js";
 import asynErrorHandler from "../utils/asynErrorHandler.js";
-import CustomError from "../utils/CustomError.js";
 import { authenticateUser, createUser } from "../services/authService.js";
 
 export const userRegister = asynErrorHandler(async (req, res) => {
