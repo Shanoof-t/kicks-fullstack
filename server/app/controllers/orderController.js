@@ -47,7 +47,10 @@ export const createOrder = asynErrorHandler(async (req, res, next) => {
     totalAmount,
     products,
   });
-  
+
   await User.findByIdAndUpdate(sub, { $unset: { cart: 1 } });
   return res.status(201).json({ message: "Your order is placed" });
 });
+
+export const getAllOrders = asynErrorHandler(async (req, res, next) => {});
+export const getOrderById = asynErrorHandler(async (req, res, next) => {})
