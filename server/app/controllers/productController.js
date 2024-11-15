@@ -1,12 +1,10 @@
-import { CLIENT_ERROR } from "../config/errorCodes.js";
-import { Product } from "../models/productModel.js";
 import {
   fetchAllProducts,
   fetchProductById,
   fetchProductsByCategoryAndGender,
 } from "../services/productService.js";
 import asynErrorHandler from "../utils/asynErrorHandler.js";
-import CustomError from "../utils/CustomError.js";
+
 
 export const getAllProducts = asynErrorHandler(async (req, res, next) => {
   const products = await fetchAllProducts();

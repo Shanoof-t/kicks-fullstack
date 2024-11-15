@@ -47,17 +47,18 @@ export const processOrderCreation = async (user, data) => {
 export const retrieveUserOrders = async (user) => {
   const { sub } = user;
   const orders = await Order.find({ userId: sub });
-  if (!orders) throw new CustomError("Can't find orders", 404);
+  if (orders.length === 0) throw new CustomError("Can't find orders", 404);
   return orders;
 };
 
 export const retrieveOrderById = async (user, id) => {
   const { sub } = user;
   if (!id) throw new CustomError("Order id is required", 404);
-  const order = Order.findOne({
+  const order = await Order.findOne({
     userId: sub,
-    _id: new mongoose.Types.ObjectId(id),
+    _id: id,
   });
+
   if (!order) throw new CustomError("Can't find the order", 404);
   return order;
 };

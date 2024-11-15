@@ -2,12 +2,14 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import defaultRouter from "./app/middleware/defaultRouter.js";
-import globalErrorHandler from "./app/middleware/globalErrorHandler.js";
 import authRoutes from "./app/routes/v1/authRoutes.js";
 import productRoutes from "./app/routes/v1/productRoutes.js";
 import cartRoutes from "./app/routes/v1/cartRoutes.js";
 import checkoutRouter from "./app/routes/v1/cartRoutes.js";
 import orderRouter from "./app/routes/v1/orderRoutes.js";
+import globalErrorHandler from "./app/controllers/errorController.js"
+
+
 
 const app = express();
 

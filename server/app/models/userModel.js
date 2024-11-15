@@ -21,7 +21,10 @@ const registerSchema = new mongoose.Schema({
       message: (props) => `${props.value} is not a valid email`,
     },
   },
-  password: { type: String, required: [true, "Password is required"] },
+  password: {
+    type: String,
+    required: [true, "Password is required"],
+  },
   role: {
     type: String,
     enum: ["admin", "user"],

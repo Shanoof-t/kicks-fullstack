@@ -18,7 +18,8 @@ export const addItemToCart = async (user, item) => {
   if (updatedCart.modifiedCount === 0) {
     const result = await User.updateOne(
       { _id: new mongoose.Types.ObjectId(sub) },
-      { $push: { cart: item } }
+      { $push: { cart: item } },
+      { new: true, runValidators: true }
     );
 
     if (result.modifiedCount === 0)
@@ -82,7 +83,7 @@ export const updateCartItem = async (user, id, body) => {
   if (!data) throw new CustomError("Cart item not found ", 404);
 };
 
-export const removeCartItem = async (user, id, body) => {
+export const removeCartItem = async (user, id) => {
   const { sub } = user;
 
   if (!id) throw new CustomError("Product id is required", 400);
