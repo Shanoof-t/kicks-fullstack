@@ -1,10 +1,10 @@
 import express from "express";
 
 import {
-  addToCart,
-  deleteCartProduct,
-  fetchCartProducts,
-  updateCartQuantity,
+  addCartItem,
+  deleteCartItem,
+  getCartItems,
+  updateCartItemQuantity,
 } from "../../controllers/cartController.js";
 import authenticateToken from "../../middleware/authenticateToken.js";
 
@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.use(authenticateToken);
 
-router.route("/").post(addToCart).get(fetchCartProducts);
-router.route("/:id").patch(updateCartQuantity).delete(deleteCartProduct);
+router.route("/").post(addCartItem).get(getCartItems);
+router.route("/:id").patch(updateCartItemQuantity).delete(deleteCartItem);
 
 export default router;
