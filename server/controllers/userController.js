@@ -4,15 +4,18 @@ import generateToken from "../utils/jwt.js";
 import { CLIENT_ERROR } from "../config/errorCodes.js";
 import asynErrorHandler from "../utils/asynErrorHandler.js";
 import CustomError from "../utils/CustomError.js";
+
 export const userRegister = asynErrorHandler(async (req, res) => {
   const { first_name, last_name, gender, email, password, confirm_password } =
     req.body;
+    
   if (password !== confirm_password)
     return res
       .status(400)
       .json({ errCode: CLIENT_ERROR, message: "Password does not match" });
 
   const existingUser = await User.findOne({ email });
+
   if (existingUser)
     return res
       .status(400)
@@ -27,11 +30,13 @@ export const userRegister = asynErrorHandler(async (req, res) => {
     email,
     password: hashedPassword,
     role,
-  });
+  }); 
+
   return res.status(201).json({ message: "User registered successfully" });
 });
 
 export const userLogin = asynErrorHandler(async (req, res, next) => {
+
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
@@ -51,7 +56,9 @@ export const userLogin = asynErrorHandler(async (req, res, next) => {
   }
 
   const payload = { sub: user._id, name: user.name, role: user.role };
+
   const accessToken = generateToken(payload);
+
   res.cookie("token", accessToken, {
     httpOnly: true,
     secure: true,
@@ -59,7 +66,9 @@ export const userLogin = asynErrorHandler(async (req, res, next) => {
     maxAge: 24 * 60 * 60 * 1000,
     path: "/",
   });
-  return res
-    .status(200)
-    .json({ message: "Login Successfull", role: user.role });
+
+  return res.status(200).json({
+    message: "Login Successfull",
+    role: user.role,
+  });
 });

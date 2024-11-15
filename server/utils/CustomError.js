@@ -7,7 +7,7 @@ class CustomError extends Error {
     this.status =
       statusCode >= 400 && statusCode < 500 ? CLIENT_ERROR : SERVER_ERROR;
 
-    this.isOperational = true;
+    this.isOperational = true; 
     Error.captureStackTrace(this, this.constructor);
   }
 }

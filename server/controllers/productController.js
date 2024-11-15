@@ -3,31 +3,28 @@ import { Product } from "../models/productModel.js";
 import asynErrorHandler from "../utils/asynErrorHandler.js";
 import CustomError from "../utils/CustomError.js";
 
-export const getAllProduct = asynErrorHandler(async (req, res, next) => {
+export const getAllProducts = asynErrorHandler(async (req, res, next) => {
   const products = await Product.find();
-
   if (!products) {
     const error = new CustomError("Not product found", 404);
     return next(error);
-  }
+  } 
   res.status(200).json(products);
 });
 
-export const getProduct = asynErrorHandler(async (req, res, next) => {
+export const getProductById = asynErrorHandler(async (req, res, next) => {
   const { id } = req.params;
   const product = await Product.findOne({ _id: id });
-
   if (!product) {
     const error = new CustomError("can't find product", 404);
     return next(error);
   }
-
   return res.status(200).json(product);
 });
 
-export const getCategorieProduct = asynErrorHandler(async (req, res, next) => {
+export const getCategorieProducts = asynErrorHandler(async (req, res, next) => {
   const { category, gender } = req.query;
-  if (!category && gender) {
+  if (!category || !gender) {
     return res
       .status(403)
       .json({ errCode: CLIENT_ERROR, message: "check quary" });

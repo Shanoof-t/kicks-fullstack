@@ -1,12 +1,15 @@
 import mongoose from "mongoose";
 import { User } from "../models/userModel.js";
-import { CLIENT_ERROR } from "../config/errorCodes.js";
 import asynErrorHandler from "../utils/asynErrorHandler.js";
 import CustomError from "../utils/CustomError.js";
 
 export const addToCart = asynErrorHandler(async (req, res, next) => {
   const { sub } = req.user;
-  const { item } = req.body;
+  const item = req.body;
+  // if (!item) {
+  //   const error = new CustomError("Item is required", 400);
+  //   next(error);
+  // }
   if (!item)
     return res
       .status(400)
@@ -26,12 +29,12 @@ export const addToCart = asynErrorHandler(async (req, res, next) => {
       { $push: { cart: item } }
     );
 
-    
     if (result.modifiedCount === 0) {
       const error = new CustomError("user cart update has problem", 404);
       return next(error);
     }
   }
+
   return res.json({ message: "success" });
 });
 
@@ -75,8 +78,8 @@ export const fetchCartProducts = asynErrorHandler(async (req, res, next) => {
 
 export const updateCartQuantity = asynErrorHandler(async (req, res, next) => {
   const { sub } = req.user;
-  const { id, newQuantity } = req.body;
-
+  const { newQuantity } = req.body;
+  const id = req.params;
   if (!req.body)
     return res.status(400).json({
       errCode: "CLIENT_ERROR",
