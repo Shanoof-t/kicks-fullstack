@@ -1,5 +1,5 @@
 import { SERVER_ERROR } from "../config/errorCodes.js";
-import CustomError from "../utils/CustomError.js";
+import { castErrorHandler, duplicateKeyErrorHandler, validationErrorHandler } from "../utils/errorHandlers.js";
 
 const devErrors = (res, error) => {
   res.status(error.statusCode).json({
@@ -10,23 +10,7 @@ const devErrors = (res, error) => {
   });
 };
 
-const castErrorHandler = (err) => {
-  const msg = `Invalid value for ${err.path}: ${err.value}`;
-  return new CustomError(msg, 400);
-};
 
-const duplicateKeyErrorHandler = (err) => {
-  const email = err.keyValue.email;
-  const msg = `You already registered with this email ${email}`;
-  return new CustomError(msg, 400);
-};
-
-const validationErrorHandler = (err) => {
-  const errors = Object.values(err.errors).map((val) => val);
-  const errorMsgs = errors.join(". ");
-  const msg = `Invalid input data : ${errorMsgs}`;
-  return new CustomError(msg, 400);
-};
 const prodErrors = (res, error) => {
   if (error.isOperational) {
     res.status(error.statusCode).json({

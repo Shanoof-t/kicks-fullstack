@@ -5,26 +5,27 @@ import CustomError from "../utils/CustomError.js";
 export const addItemToCart = async (user, item) => {
   const { sub } = user;
 
-  if (!item) throw new CustomError("Item is required", 400);
+  if (Object.keys(item).length === 0)
+    throw new CustomError("Item is required", 400);
 
-  const updatedCart = await User.updateOne(
-    {
-      _id: new mongoose.Types.ObjectId(sub),
-      "cart._id": item._id,
-    },
-    { $inc: { "cart.$.quantity": item.quantity } }
+  // const updatedCart = await User.updateOne(
+  //   {
+  //     _id: new mongoose.Types.ObjectId(sub),
+  //     "cart._id": item._id,
+  //   },
+  //   { $inc: { "cart.$.quantity": item.quantity } }
+  // );
+
+  const result = await User.updateOne(
+    { _id: new mongoose.Types.ObjectId(sub) },
+    { $push: { cart: item } },
+    { new: true, runValidators: true }
   );
 
-  if (updatedCart.modifiedCount === 0) {
-    const result = await User.updateOne(
-      { _id: new mongoose.Types.ObjectId(sub) },
-      { $push: { cart: item } },
-      { new: true, runValidators: true }
-    );
+  if (result.modifiedCount === 0)
+    throw new CustomError("user cart update has problem", 404);
 
-    if (result.modifiedCount === 0)
-      throw new CustomError("user cart update has problem", 404);
-  }
+  return { message: "Item added to cart successfully" };
 };
 
 export const getCartDetails = async (user) => {
@@ -65,22 +66,41 @@ export const getCartDetails = async (user) => {
   return products[0];
 };
 
-export const updateCartItem = async (user, id, body) => {
+export const updateCartItem = async (user, id, action) => {
   const { sub } = user;
-  const { newQuantity } = body;
 
-  if (!body)
-    throw new CustomError("Product id and new quantity is required", 400);
+  if (!action) throw new CustomError("Action must be needed", 404);
 
-  const data = await User.findOneAndUpdate(
+  if (!["increment", "decrement"].includes(action))
+    throw new CustomError("Action must be increment or decrement", 400);
+
+  const updatableUser = await User.findOne({
+    _id: new mongoose.Types.ObjectId(sub),
+  });
+  if (!updatableUser) throw new CustomError("User not found", 404);
+
+  const userCartItem = updatableUser.cart.find(
+    (item) => item._id.toString() === id
+  );
+  if (!userCartItem)
+    throw new CustomError("Can't find cart items,check item id again!", 404);
+
+  let newQuantity = userCartItem.quantity;
+  if (action === "increment") {
+    newQuantity++;
+  } else if (action === "decrement") {
+    newQuantity = Math.max(newQuantity - 1, 1);
+  }
+
+  const updatedCart = await User.findOneAndUpdate(
     {
       _id: new mongoose.Types.ObjectId(sub),
+      "cart._id": new mongoose.Types.ObjectId(id),
     },
-    { $set: { "cart.$[elem].quantity": newQuantity } },
-    { new: true, arrayFilters: [{ "elem._id": id }] }
+    { $set: { "cart.$.quantity": newQuantity } },
+    { new: true }
   );
-
-  if (!data) throw new CustomError("Cart item not found ", 404);
+  return updatedCart;
 };
 
 export const removeCartItem = async (user, id) => {

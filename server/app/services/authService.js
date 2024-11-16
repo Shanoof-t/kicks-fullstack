@@ -15,7 +15,8 @@ export const createUser = async (userData) => {
   // if (existingUser) throw new CustomError("You are already registered", 400);
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  const role = email.includes("admin") ? "admin" : "user";
+  // const role = email.includes("admin") ? "admin" : "user";
+  const role = "user";
   await User.create({
     first_name,
     last_name,
@@ -37,7 +38,7 @@ export const authenticateUser = async (userData) => {
 
   if (!isPasswordCorrect)
     throw new CustomError("Check your password again", 401);
-
+  
   const payload = { sub: user._id, name: user.name, role: user.role };
 
   const accessToken = generateToken(payload);

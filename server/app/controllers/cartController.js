@@ -1,16 +1,16 @@
-import asynErrorHandler from "../utils/asynErrorHandler.js";
 import {
   addItemToCart,
   getCartDetails,
   removeCartItem,
   updateCartItem,
 } from "../services/cartServices.js";
+import { asynErrorHandler } from "../utils/errorHandlers.js";
 
 export const addCartItem = asynErrorHandler(async (req, res) => {
   const user = req.user;
   const item = req.body;
-  await addItemToCart(user, item);
-  return res.json({ message: "success" });
+  const response = await addItemToCart(user, item);
+  return res.json(response);
 });
 
 export const getCartItems = asynErrorHandler(async (req, res) => {
@@ -21,12 +21,10 @@ export const getCartItems = asynErrorHandler(async (req, res) => {
 
 export const updateCartItemQuantity = asynErrorHandler(async (req, res) => {
   const user = req.user;
-  const body = req.body;
+  const { action } = req.body;
   const { id } = req.params;
-
-  await updateCartItem(user, id, body);
-
-  return res.status(200).json({ message: "Quantity updated" });
+  const updatedCart = await updateCartItem(user, id, action);
+  return res.status(200).json({ message: "Quantity updated", updatedCart });
 });
 
 export const deleteCartItem = asynErrorHandler(async (req, res) => {

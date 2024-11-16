@@ -1,5 +1,5 @@
-import asynErrorHandler from "../utils/asynErrorHandler.js"
 import { authenticateUser, createUser } from "../services/authService.js";
+import { asynErrorHandler } from "../utils/errorHandlers.js";
 
 export const userRegister = asynErrorHandler(async (req, res) => {
   const userData = req.body;

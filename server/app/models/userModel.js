@@ -54,12 +54,12 @@ const registerSchema = new mongoose.Schema({
           required: [true, "price is required"],
           min: [0, "price cannot be negative"],
         },
-        items_left: {
+        items_left: { 
           type: Number,
           required: [true, "auntity is required"],
           min: [0, "Items left cannot be negative"],
         },
-        imageURL: {
+        image_url: {
           type: String,
           required: [true, "image url is required"],
         },
@@ -77,6 +77,7 @@ const registerSchema = new mongoose.Schema({
         quantity: {
           type: Number,
           required: [true, "quantity is required"],
+          default: 1,
         },
       },
     ],

@@ -18,7 +18,7 @@ export const fetchProductsByCategoryAndGender = async (queryData) => {
 
   if (!category || !gender) throw new CustomError("check quary", 403);
 
-    const products = await Product.aggregate([{ $match: { gender, category } }]);
+  const products = await Product.aggregate([{ $match: { gender, category } }]);
 
   if (products.length === 0)
     throw new CustomError(

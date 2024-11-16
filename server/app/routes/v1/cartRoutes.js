@@ -13,6 +13,6 @@ const router = express.Router();
 router.use(authenticateToken);
 
 router.route("/").post(addCartItem).get(getCartItems);
-router.route("/:id").patch(updateCartItemQuantity).delete(deleteCartItem);
+router.route("/:id").post(updateCartItemQuantity).delete(deleteCartItem);
 
 export default router;
