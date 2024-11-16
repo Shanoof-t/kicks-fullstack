@@ -1,15 +1,15 @@
 import {
+  processOrderCreation,
   retrieveOrderById,
   retrieveUserOrders,
 } from "../services/orderService.js";
 import { asynErrorHandler } from "../utils/errorHandlers.js";
 
-
 export const createOrder = asynErrorHandler(async (req, res) => {
   const user = req.user;
   const data = req.body;
-  await processOrderCreation(user, data);
-  res.status(201).json({ message: "Your order is placed" });
+  const response = await processOrderCreation(user, data);
+  res.status(201).json(response);
 });
 
 export const listOrders = asynErrorHandler(async (req, res) => {

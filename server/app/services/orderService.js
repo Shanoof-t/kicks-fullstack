@@ -28,7 +28,7 @@ export const processOrderCreation = async (user, data) => {
   ]);
 
   if (userDetails.length === 0)
-    throw new CustomError("Can't find cart details", 404);
+    throw new CustomError("Can't find cart details", 400);
 
   const { products, totalAmount } = userDetails[0];
 
@@ -36,12 +36,15 @@ export const processOrderCreation = async (user, data) => {
     userId: sub,
     shippingAddress: { email, firstName, lastName, location: address, phone },
     paymentMethod,
-    status: "pending",
+    // status: "pending",
     totalAmount,
     products,
   });
 
   await User.findByIdAndUpdate(sub, { $unset: { cart: 1 } });
+  return {
+    message: "Your order is placed",
+  };
 };
 
 export const retrieveUserOrders = async (user) => {

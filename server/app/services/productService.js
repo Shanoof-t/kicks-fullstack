@@ -3,7 +3,7 @@ import CustomError from "../utils/CustomError.js";
 
 export const fetchAllProducts = async () => {
   const products = await Product.find();
-  if (!products) throw new CustomError("Not product found", 404);
+  // if (!products) throw new CustomError("Not product found", 404);
   return products;
 };
 
@@ -16,7 +16,7 @@ export const fetchProductById = async (id) => {
 export const fetchProductsByCategoryAndGender = async (queryData) => {
   const { category, gender } = queryData;
 
-  if (!category || !gender) throw new CustomError("check quary", 403);
+  if (!category || !gender) throw new CustomError("Invalid query", 400);
 
   const products = await Product.aggregate([{ $match: { gender, category } }]);
 

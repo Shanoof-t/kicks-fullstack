@@ -83,7 +83,10 @@ export const updateCartItem = async (user, id, action) => {
     (item) => item._id.toString() === id
   );
   if (!userCartItem)
-    throw new CustomError("Can't find cart items,check item id again!", 404);
+    throw new CustomError(
+      `Can't find cart items with this id '${id}',check item id again!`,
+      404
+    );
 
   let newQuantity = userCartItem.quantity;
   if (action === "increment") {
@@ -108,10 +111,11 @@ export const removeCartItem = async (user, id) => {
 
   if (!id) throw new CustomError("Product id is required", 400);
 
-  const data = await User.findOneAndUpdate(
+  const data = await User.updateOne(
     { _id: new mongoose.Types.ObjectId(sub) },
     { $pull: { cart: { _id: id } } }
   );
 
-  if (!data) throw new CustomError("Can't find cart product", 404);
+  if (data.modifiedCount === 0)
+    throw new CustomError("Can't find cart product", 404);
 };

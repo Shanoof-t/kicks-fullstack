@@ -12,7 +12,7 @@ const orderSchema = new mongoose.Schema(
       phone: { type: Number, required: [true, "number is required"] },
     },
     paymentMethod: { type: String, required: [true, "payment method is required"] },
-    status: { type: String, required: [true, "status is required"] },
+    status: { type: String, required: [true, "status is required"] ,default:"pending"},
     totalAmount: { type: Number, required: [true, "total amount is required"] },
   },
   { timestamps: true }
