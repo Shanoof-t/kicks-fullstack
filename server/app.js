@@ -8,6 +8,7 @@ import cartRoutes from "./src/routes/v1/cartRoutes.js";
 import checkoutRouter from "./src/routes/v1/cartRoutes.js";
 import orderRouter from "./src/routes/v1/orderRoutes.js";
 import globalErrorHandler from "./src/utils/errorController.js"
+import userRoutes from "./src/routes/v1/userRoutes.js";
 
 
 
@@ -24,11 +25,18 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 
+// user routes
+
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/products", productRoutes);
 app.use("/api/v1/cart", cartRoutes);
 app.use("/api/v1/checkout", checkoutRouter);
 app.use("/api/v1/orders", orderRouter);
+
+// admin routes
+
+app.use("/api/v1/admin/users",userRoutes)
+
 
 app.all("*", defaultRouter);
 app.use(globalErrorHandler);

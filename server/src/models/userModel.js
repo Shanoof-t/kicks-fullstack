@@ -30,6 +30,12 @@ const registerSchema = new mongoose.Schema({
     enum: ["admin", "user"],
     required: [true, "Role is required"],
   },
+  isAllowed: {
+    type: Boolean,
+    enum: [true, false],
+    required: [true, "User status is required"],
+    default: true,
+  },
   cart: {
     type: [
       {

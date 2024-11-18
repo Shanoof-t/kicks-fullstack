@@ -19,7 +19,7 @@ export const getCartItems = asynErrorHandler(async (req, res) => {
   return res.status(200).json(products);
 });
 
-export const updateCartItemQuantity = asynErrorHandler(async (req, res) => {
+export const updateCart = asynErrorHandler(async (req, res) => {
   const user = req.user;
   const { action } = req.body;
   const { id } = req.params;
