@@ -1,4 +1,3 @@
-import mongoose, { mongo } from "mongoose";
 import { User } from "../models/userModel.js";
 import CustomError from "../utils/CustomError.js";
 
@@ -20,7 +19,7 @@ export const updateUserById = async (id, action) => {
   if (!["block", "unblock"].includes(action))
     throw new CustomError("Action must be block or unblock", 400);
 
-  const user = await User.findOne({ _id: new mongoose.Types.ObjectId(id) });
+  const user = await User.findOne({ _id: id });
 
   if (!user)
     throw new CustomError(
@@ -37,7 +36,7 @@ export const updateUserById = async (id, action) => {
   }
 
   const updatedUser = await User.findOneAndUpdate(
-    { _id: new mongoose.Types.ObjectId(id) },
+    { _id: id },
     { $set: { isAllowed: currentStatus } },
     { new: true }
   );

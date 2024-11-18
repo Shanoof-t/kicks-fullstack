@@ -13,14 +13,28 @@ const productSchema = mongoose.Schema({
     required: [true, "category is required"],
     enum: ["RUNNING", "FOOTBALL", "CASUAL"],
   },
-  price: { type: Number, required: [true, "price is required"] },
+  price: {
+    type: Number,
+    required: [true, "price is required"],
+    min: [0, "price cannot be less than zero"],
+  },
   items_left: {
     type: Number,
     required: [true, "product quantity is required"],
+    min: [0, "product quantity cannot go less than zero"],
   },
   imageURL: { type: String, required: [true, "image url is required"] },
   description: { type: String, required: [true, "description is required"] },
-  available_sizes: { type: Array, required: [true, "sizes is required"] },
+  available_sizes: {
+    type: [String],
+    required: [true, "sizes is required"],
+    validate: {
+      validator: (sizes) => {
+        return sizes && sizes.length > 0;
+      },
+      message: "At least one size must be included",
+    },
+  },
 });
 
 export const Product = mongoose.model("Products", productSchema);

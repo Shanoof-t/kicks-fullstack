@@ -8,16 +8,8 @@ export const addItemToCart = async (user, item) => {
   if (Object.keys(item).length === 0)
     throw new CustomError("Item is required", 400);
 
-  // const updatedCart = await User.updateOne(
-  //   {
-  //     _id: new mongoose.Types.ObjectId(sub),
-  //     "cart._id": item._id,
-  //   },
-  //   { $inc: { "cart.$.quantity": item.quantity } }
-  // );
-
   const result = await User.updateOne(
-    { _id: new mongoose.Types.ObjectId(sub) },
+    { _id: sub },
     { $push: { cart: item } },
     { new: true, runValidators: true }
   );
@@ -66,7 +58,6 @@ export const getCartDetails = async (user) => {
   return products[0];
 };
 
-
 export const updateCartItem = async (user, id, action) => {
   const { sub } = user;
 
@@ -76,7 +67,7 @@ export const updateCartItem = async (user, id, action) => {
     throw new CustomError("Action must be increment or decrement", 400);
 
   const updatableUser = await User.findOne({
-    _id: new mongoose.Types.ObjectId(sub),
+    _id: sub,
   });
   if (!updatableUser) throw new CustomError("User not found", 404);
 
@@ -98,7 +89,7 @@ export const updateCartItem = async (user, id, action) => {
 
   const updatedCart = await User.findOneAndUpdate(
     {
-      _id: new mongoose.Types.ObjectId(sub),
+      _id: sub,
       "cart._id": new mongoose.Types.ObjectId(id),
     },
     { $set: { "cart.$.quantity": newQuantity } },
@@ -113,8 +104,8 @@ export const removeCartItem = async (user, id) => {
   if (!id) throw new CustomError("Product id is required", 400);
 
   const data = await User.updateOne(
-    { _id: new mongoose.Types.ObjectId(sub) },
-    { $pull: { cart: { _id: id } } }
+    { _id: sub },
+    { $pull: { cart: { _id: new mongoose.Types.ObjectId(id) } } }
   );
 
   if (data.modifiedCount === 0)

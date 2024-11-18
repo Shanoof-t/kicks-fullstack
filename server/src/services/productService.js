@@ -3,7 +3,6 @@ import CustomError from "../utils/CustomError.js";
 
 export const fetchAllProducts = async () => {
   const products = await Product.find();
-  // if (!products) throw new CustomError("Not product found", 404);
   return products;
 };
 
@@ -16,9 +15,14 @@ export const fetchProductById = async (id) => {
 export const fetchProductsByCategoryAndGender = async (queryData) => {
   const { category, gender } = queryData;
 
-  if (!category || !gender) throw new CustomError("Invalid query", 400);
-
-  const products = await Product.aggregate([{ $match: { gender, category } }]);
+  if (!category && !gender) throw new CustomError("Invalid query", 400);
+  
+  let products = [];
+  if (category && gender) {
+    products = await Product.aggregate([{ $match: { gender, category } }]);
+  } else if (category) {
+    products = await Product.aggregate([{ $match: { category } }]);
+  }
 
   if (products.length === 0)
     throw new CustomError(
@@ -26,4 +30,31 @@ export const fetchProductsByCategoryAndGender = async (queryData) => {
       404
     );
   return products;
+};
+
+export const addProduct = async (productData) => {
+  const {
+    name,
+    brand,
+    gender,
+    category,
+    price,
+    quantity,
+    imageURL,
+    description,
+    available_sizes,
+  } = productData;
+
+  const product = await Product.create({
+    name,
+    brand,
+    gender,
+    category,
+    price,
+    items_left: quantity,
+    imageURL,
+    description,
+    available_sizes,
+  });
+  return product;
 };

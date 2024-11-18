@@ -1,10 +1,10 @@
 import {
+  addProduct,
   fetchAllProducts,
   fetchProductById,
   fetchProductsByCategoryAndGender,
 } from "../services/productService.js";
 import { asynErrorHandler } from "../utils/errorHandlers.js";
-
 
 export const getAllProducts = asynErrorHandler(async (req, res) => {
   const products = await fetchAllProducts();
@@ -21,4 +21,16 @@ export const getCategorieProducts = asynErrorHandler(async (req, res) => {
   const queryData = req.query;
   const products = await fetchProductsByCategoryAndGender(queryData);
   return res.status(200).json(products);
+});
+
+export const createProduct = asynErrorHandler(async (req, res) => {
+  const productData = req.body;
+  const product = await addProduct(productData);
+  res
+    .status(201)
+    .json({
+      status: "success",
+      message: "Product added successfully",
+      data: product,
+    });
 });

@@ -11,7 +11,7 @@ export const processOrderCreation = async (user, data) => {
   const { email, firstName, lastName, address, phone, paymentMethod } = data;
 
   const userDetails = await User.aggregate([
-    { $match: { _id: new mongoose.Types.ObjectId(sub) } },
+    { $match: { _id: sub } },
     { $unwind: "$cart" },
     {
       $addFields: {
