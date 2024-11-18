@@ -3,6 +3,7 @@ import { User } from "../models/userModel.js";
 import CustomError from "../utils/CustomError.js";
 import { Order } from "../models/orderModel.js";
 
+// user order services
 export const processOrderCreation = async (user, data) => {
   const { sub } = user;
 
@@ -11,7 +12,7 @@ export const processOrderCreation = async (user, data) => {
   const { email, firstName, lastName, address, phone, paymentMethod } = data;
 
   const userDetails = await User.aggregate([
-    { $match: { _id: sub } },
+    { $match: { _id: new mongoose.Types.ObjectId(sub) } },
     { $unwind: "$cart" },
     {
       $addFields: {
@@ -32,36 +33,61 @@ export const processOrderCreation = async (user, data) => {
 
   const { products, totalAmount } = userDetails[0];
 
-  await Order.create({
+  const order = await Order.create({
     userId: sub,
     shippingAddress: { email, firstName, lastName, location: address, phone },
     paymentMethod,
-    // status: "pending",
     totalAmount,
     products,
   });
 
   await User.findByIdAndUpdate(sub, { $unset: { cart: 1 } });
-  return {
-    message: "Your order is placed",
-  };
+  return order;
 };
 
 export const retrieveUserOrders = async (user) => {
   const { sub } = user;
   const orders = await Order.find({ userId: sub });
-  if (orders.length === 0) throw new CustomError("Can't find orders", 404);
+  if (orders.length === 0)
+    throw new CustomError(
+      "Currently you dont have orders,Please make order!",
+      404
+    );
   return orders;
 };
 
-export const retrieveOrderById = async (user, id) => {
-  const { sub } = user;
+export const retrieveOrderById = async (id) => {
   if (!id) throw new CustomError("Order id is required", 404);
   const order = await Order.findOne({
-    userId: sub,
     _id: id,
   });
-
-  if (!order) throw new CustomError("Can't find the order", 404);
+  if (!order) throw new CustomError("There is no order with this id", 404);
   return order;
 };
+
+// admin order services
+
+export const updatedOrderById = async (id, action) => {
+  if (!action) throw new CustomError("Order action must be needed", 400);
+
+  if (!["pending", "delivered"].includes(action))
+    throw new CustomError("Action must be pending or delivered", 400);
+
+  const updatedOrder = await Order.updateOne(
+    { _id: id },
+    { $set: { status: action } },
+    { new: true }
+  );
+  return updatedOrder;
+};
+
+export const retrieveOrders = async () => {
+  const orders = await Order.find();
+  return orders;
+};
+
+// export const retrieveOrderById = async (id) => {
+//   const order = await Order.findOne({ _id: id });
+//   if (!order) throw new CustomError("There is no order with this id", 404);
+//   return order;
+// };

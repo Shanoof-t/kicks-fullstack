@@ -35,6 +35,7 @@ app.use("/api/v1/orders", orderRouter);
 
 app.use("/api/v1/admin/users", userRoutes);
 app.use("/api/v1/admin/products", productRoutes);
+app.use("/api/v1/admin/orders", orderRouter);
 
 app.all("*", defaultRouter);
 app.use(globalErrorHandler);

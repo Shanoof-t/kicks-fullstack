@@ -11,8 +11,16 @@ const orderSchema = new mongoose.Schema(
       location: { type: String, required: [true, "location is required"] },
       phone: { type: Number, required: [true, "number is required"] },
     },
-    paymentMethod: { type: String, required: [true, "payment method is required"] },
-    status: { type: String, required: [true, "status is required"] ,default:"pending"},
+    paymentMethod: {
+      type: String,
+      required: [true, "payment method is required"],
+    },
+    status: {
+      type: String,
+      required: [true, "status is required"],
+      enum: ["pending", "delivered"],
+      default: "pending",
+    },
     totalAmount: { type: Number, required: [true, "total amount is required"] },
   },
   { timestamps: true }
