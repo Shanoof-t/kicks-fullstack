@@ -6,10 +6,10 @@ import {
 } from "../../controllers/orderController.js";
 import authenticateToken from "../../middleware/authenticateToken.js";
 
-const router = express.Router();
+const orderRouter = express.Router();
 
-router.use(authenticateToken);
-router.route("/").post(createOrder).get(listOrders);
-router.get("/:id", getOrder);
+orderRouter.use(authenticateToken);
+orderRouter.route("/").post(createOrder).get(listOrders);
+orderRouter.get("/:id", getOrder);
 
-export default router;
+export default orderRouter;

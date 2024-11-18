@@ -3,15 +3,18 @@ import { asynErrorHandler } from "../utils/errorHandlers.js";
 
 export const userRegister = asynErrorHandler(async (req, res) => {
   const userData = req.body;
-  await createUser(userData);
-  return res.status(201).json({ message: "User registered successfully" });
+  const user = await createUser(userData);
+  return res.status(201).json({
+    status: "success",
+    message: "User registered successfully",
+    data: user,
+  });
 });
 
 export const userLogin = asynErrorHandler(async (req, res) => {
   const userData = req.body;
+  const { accessToken, user } = await authenticateUser(userData);
 
-  const { role, accessToken } = await authenticateUser(userData);
-  
   res.cookie("token", accessToken, {
     httpOnly: true,
     secure: true,
@@ -21,7 +24,8 @@ export const userLogin = asynErrorHandler(async (req, res) => {
   });
 
   return res.status(200).json({
-    message: "Login Successfull",
-    role,
+    status: "success",
+    message: "Login successfull",
+    data: user,
   });
 });

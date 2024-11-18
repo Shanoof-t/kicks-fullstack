@@ -54,7 +54,7 @@ const registerSchema = new mongoose.Schema({
           required: [true, "price is required"],
           min: [0, "price cannot be negative"],
         },
-        items_left: { 
+        items_left: {
           type: Number,
           required: [true, "auntity is required"],
           min: [0, "Items left cannot be negative"],
@@ -81,7 +81,12 @@ const registerSchema = new mongoose.Schema({
         },
       },
     ],
-    default: [],
+    // default: [],
+  },
+  Permissions: {
+    type: [String],
+    enum: ["create", "read", "update", "delete"],
+    default: ["read", "update"],
   },
 });
 

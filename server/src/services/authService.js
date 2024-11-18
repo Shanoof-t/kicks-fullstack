@@ -17,7 +17,7 @@ export const createUser = async (userData) => {
   const hashedPassword = await bcrypt.hash(password, 10);
   // const role = email.includes("admin") ? "admin" : "user";
   const role = "user";
-  await User.create({
+  const user = await User.create({
     first_name,
     last_name,
     gender,
@@ -25,6 +25,7 @@ export const createUser = async (userData) => {
     password: hashedPassword,
     role,
   });
+  return user;
 };
 
 export const authenticateUser = async (userData) => {
@@ -38,9 +39,9 @@ export const authenticateUser = async (userData) => {
 
   if (!isPasswordCorrect)
     throw new CustomError("Check your password again", 401);
-  
+
   const payload = { sub: user._id, name: user.name, role: user.role };
 
   const accessToken = generateToken(payload);
-  return { role: user.role, accessToken };
+  return { accessToken, user };
 };

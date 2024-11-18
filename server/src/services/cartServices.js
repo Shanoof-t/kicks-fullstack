@@ -66,6 +66,7 @@ export const getCartDetails = async (user) => {
   return products[0];
 };
 
+
 export const updateCartItem = async (user, id, action) => {
   const { sub } = user;
 

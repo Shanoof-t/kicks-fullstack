@@ -1,5 +1,8 @@
-import { SERVER_ERROR } from "../config/errorCodes.js";
-import { castErrorHandler, duplicateKeyErrorHandler, validationErrorHandler } from "../utils/errorHandlers.js";
+import {
+  castErrorHandler,
+  duplicateKeyErrorHandler,
+  validationErrorHandler,
+} from "./errorHandlers.js";
 
 const devErrors = (res, error) => {
   res.status(error.statusCode).json({
@@ -10,7 +13,6 @@ const devErrors = (res, error) => {
   });
 };
 
-
 const prodErrors = (res, error) => {
   if (error.isOperational) {
     res.status(error.statusCode).json({
@@ -19,7 +21,7 @@ const prodErrors = (res, error) => {
     });
   } else {
     res.status(500).json({
-      status: SERVER_ERROR,
+      status: "error",
       message: "Something went wrong! Please try again later.",
     });
   }
@@ -27,7 +29,7 @@ const prodErrors = (res, error) => {
 
 const globalErrorHandler = (error, req, res, next) => {
   error.statusCode = error.statusCode || 500;
-  error.status = error.status || SERVER_ERROR;
+  error.status = error.status || "error";
   if (process.env.NODE_ENV === "development") {
     devErrors(res, error);
   } else if (process.env.NODE_ENV === "production") {

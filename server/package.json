@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "NODE_ENV=production nodemon server.js",
-    "start_dev": "NODE_ENV=development nodemon server.js"
+    "start_dev": "NODE_ENV=development nodemon server.js",
+    "admin:import":"node ./src/seeders/adminSeeder.js",
+    "admin:remove":"node ./src/seeders/adminSeeder.js -r"
   },
   "keywords": [],
   "author": "",
