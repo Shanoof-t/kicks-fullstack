@@ -1,10 +1,17 @@
-import mongoose from "mongoose";
+import mongoose, { mongo } from "mongoose";
 import { User } from "../models/userModel.js";
 import CustomError from "../utils/CustomError.js";
 
 export const fetchAllUsers = async () => {
   const users = await User.find({ role: "user" });
   return users;
+};
+
+export const fetchUserById = async (id) => {
+  const user = await User.findOne({ _id: id });
+  if (!user)
+    throw new CustomError(`User is not existing with this id ${id}`, 404);
+  return user;
 };
 
 export const updateUserById = async (id, action) => {
@@ -20,12 +27,15 @@ export const updateUserById = async (id, action) => {
       `Can't find user on this id ${id},check user id again`,
       404
     );
+
   let currentStatus = user.isAllowed;
+
   if (action === "block") {
     currentStatus = false;
   } else if (action === "unblock") {
     currentStatus = true;
   }
+
   const updatedUser = await User.findOneAndUpdate(
     { _id: new mongoose.Types.ObjectId(id) },
     { $set: { isAllowed: currentStatus } },
