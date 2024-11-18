@@ -1,6 +1,7 @@
 import express from "express";
 import {
   createProduct,
+  deleteProduct,
   getAllProducts,
   getCategorieProducts,
   getProductById,
@@ -14,6 +15,9 @@ productRouter
   .get(getAllProducts)
   .post(authenticateToken, verifyAdmin, createProduct);
 productRouter.get("/category", getCategorieProducts);
-productRouter.get("/:id", getProductById);
+productRouter
+  .route("/:id")
+  .get(getProductById)
+  .delete(authenticateToken, verifyAdmin, deleteProduct);
 
 export default productRouter;

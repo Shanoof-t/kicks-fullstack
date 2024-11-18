@@ -16,7 +16,7 @@ export const fetchProductsByCategoryAndGender = async (queryData) => {
   const { category, gender } = queryData;
 
   if (!category && !gender) throw new CustomError("Invalid query", 400);
-  
+
   let products = [];
   if (category && gender) {
     products = await Product.aggregate([{ $match: { gender, category } }]);
@@ -56,5 +56,15 @@ export const addProduct = async (productData) => {
     description,
     available_sizes,
   });
+  return product;
+};
+
+export const deleteProductById = async (id) => {
+  const product = await Product.findOneAndDelete({ _id: id });
+  if (!product)
+    throw new CustomError(
+      `The product is not existing with this id ${id}!`,
+      404
+    );
   return product;
 };

@@ -1,5 +1,6 @@
 import {
   addProduct,
+  deleteProductById,
   fetchAllProducts,
   fetchProductById,
   fetchProductsByCategoryAndGender,
@@ -26,11 +27,21 @@ export const getCategorieProducts = asynErrorHandler(async (req, res) => {
 export const createProduct = asynErrorHandler(async (req, res) => {
   const productData = req.body;
   const product = await addProduct(productData);
+  res.status(201).json({
+    status: "success",
+    message: "Product added successfully",
+    data: product,
+  });
+});
+
+export const deleteProduct = asynErrorHandler(async (req, res) => {
+  const { id } = req.params;
+  const product = await deleteProductById(id);
   res
-    .status(201)
+    .status(200)
     .json({
       status: "success",
-      message: "Product added successfully",
+      message: "Product deleted successfully",
       data: product,
     });
 });
