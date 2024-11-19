@@ -1,18 +1,10 @@
-import app from "./app.js";
+import app from "./app/index.js";
 import connectDB from "./config/db.js";
-import "colors";
-connectDB();
+import { unhandledRejectionHandler } from "./src/utils/eventHandlers.js";
+
+connectDB(); //database connection
 
 const PORT = process.env.PORT || 8080;
 const server = app.listen(PORT);
 
-process.on("unhandledRejection", (error) => {
-  console.error(
-    `Error Name : ${error.name}  Error: ${error.message}`.red.underline.bold
-  );
-  console.log("Unhandled rejection occured! Shutting down...".yellow.bold);
-
-  server.close(() => {
-    process.exit(1);
-  });
-});
+unhandledRejectionHandler(server); //handler for unhandled Rejections

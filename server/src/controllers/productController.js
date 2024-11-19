@@ -45,3 +45,7 @@ export const deleteProduct = asynErrorHandler(async (req, res) => {
       data: product,
     });
 });
+
+export const updateProduct = asynErrorHandler(async(req,res)=>{
+  
+})
