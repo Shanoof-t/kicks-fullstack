@@ -32,6 +32,8 @@ export const fetchProductsByCategoryAndGender = async (queryData) => {
   return products;
 };
 
+// admin only
+
 export const addProduct = async (productData) => {
   const {
     name,
@@ -45,7 +47,7 @@ export const addProduct = async (productData) => {
     available_sizes,
   } = productData;
 
-  const product = await Product.create({
+  await Product.create({
     name,
     brand,
     gender,
@@ -56,7 +58,10 @@ export const addProduct = async (productData) => {
     description,
     available_sizes,
   });
-  return product;
+};
+
+export const updateProductById = async (id, updatedData) => {
+  const updatedProduct = await Product.updateOne({ _id: id }, updatedData);
 };
 
 export const deleteProductById = async (id) => {
@@ -66,5 +71,4 @@ export const deleteProductById = async (id) => {
       `The product is not existing with this id ${id}!`,
       404
     );
-  return product;
 };

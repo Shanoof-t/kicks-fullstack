@@ -6,7 +6,7 @@ export const userRegister = asynErrorHandler(async (req, res) => {
   const user = await createUser(userData);
   return res.status(201).json({
     status: "success",
-    message: "User registered successfully",
+    message: "Successfully registered.",
     data: user,
   });
 });
@@ -25,7 +25,7 @@ export const userLogin = asynErrorHandler(async (req, res) => {
 
   return res.status(200).json({
     status: "success",
-    message: "Login successfull",
+    message: "Successfull logged In.",
     data: user,
   });
 });

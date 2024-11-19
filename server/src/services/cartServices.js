@@ -16,8 +16,6 @@ export const addItemToCart = async (user, item) => {
 
   if (result.modifiedCount === 0)
     throw new CustomError("user cart update has problem", 404);
-
-  return { message: "Item added to cart successfully" };
 };
 
 export const getCartDetails = async (user) => {

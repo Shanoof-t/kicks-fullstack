@@ -23,6 +23,8 @@ export const listUserOrders = asynErrorHandler(async (req, res) => {
   res.status(200).json(orders);
 });
 
+// both admin and user
+
 export const getOrder = asynErrorHandler(async (req, res) => {
   const { id } = req.params;
   const order = await retrieveOrderById(id);

@@ -9,6 +9,7 @@ import checkoutRouter from "../src/routes/v1/cartRoutes.js";
 import orderRouter from "../src/routes/v1/orderRoutes.js";
 import globalErrorHandler from "../src/utils/errorController.js";
 import userRoutes from "../src/routes/v1/userRoutes.js";
+import statsRouter from "../src/routes/v1/statsRouter.js";
 
 const app = express();
 
@@ -33,9 +34,11 @@ app.use("/api/v1/orders", orderRouter);
 
 // admin routes
 
+app.use("/api/v1/admin/auth", authRoutes);
 app.use("/api/v1/admin/users", userRoutes);
 app.use("/api/v1/admin/products", productRoutes);
 app.use("/api/v1/admin/orders", orderRouter);
+app.use("/api/v1/admin/stats",statsRouter)
 
 app.all("*", defaultRouter);
 app.use(globalErrorHandler);
