@@ -11,6 +11,7 @@ export const createStats = async () => {
         totalProductPurchased: { $sum: "$products.quantity" },
       },
     },
+    { $project: { _id: 0 } },
   ]);
   return stats;
 };

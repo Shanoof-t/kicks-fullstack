@@ -13,6 +13,7 @@ export const userRegister = asynErrorHandler(async (req, res) => {
 
 export const userLogin = asynErrorHandler(async (req, res) => {
   const userData = req.body;
+
   const { accessToken, user } = await authenticateUser(userData);
 
   res.cookie("token", accessToken, {

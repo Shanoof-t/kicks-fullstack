@@ -27,7 +27,7 @@ const prodErrors = (res, error) => {
   }
 };
 
-const globalErrorHandler = (error, req, res, next) => {
+export default (error, req, res, next) => {
   error.statusCode = error.statusCode || 500;
   error.status = error.status || "error";
   if (process.env.NODE_ENV === "development") {
@@ -39,5 +39,3 @@ const globalErrorHandler = (error, req, res, next) => {
     prodErrors(res, error);
   }
 };
-
-export default globalErrorHandler;

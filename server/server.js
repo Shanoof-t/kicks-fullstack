@@ -1,10 +1,16 @@
-import app from "./app/index.js";
-import connectDB from "./config/db.js";
+import "colors";
 import { unhandledRejectionHandler } from "./src/utils/eventHandlers.js";
+import express from "express";
+import loaders from "./loaders/index.js";
 
-connectDB(); //database connection
+const app = express();
 
-const PORT = process.env.PORT || 8080;
-const server = app.listen(PORT);
+const startServer = async () => {
+  await loaders({ app, express }); // loaders
 
-unhandledRejectionHandler(server); //handler for unhandled Rejections
+  const PORT = process.env.PORT || 8080;
+  const server = app.listen(PORT);
+
+  unhandledRejectionHandler(server); //handler for unhandled Rejections
+};
+startServer();
