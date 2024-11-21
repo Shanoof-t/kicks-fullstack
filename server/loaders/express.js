@@ -2,7 +2,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import defaultRouter from "../src/middleware/defaultRouter.js";
 import globalErrorHandler from "../src/utils/errorController.js";
-import routes from "../app/index.js";
+import routes from "./routes.js";
 
 export default ({ app, express }) => {
   app.use(
@@ -12,9 +12,9 @@ export default ({ app, express }) => {
       credentials: true,
     })
   );
-
   app.use(cookieParser());
   app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
 
   routes({ app });
 

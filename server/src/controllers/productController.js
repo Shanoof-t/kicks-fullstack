@@ -41,17 +41,20 @@ export const getCategorieProducts = asynErrorHandler(async (req, res) => {
 
 export const createProduct = asynErrorHandler(async (req, res) => {
   const productData = req.body;
-  await addProduct(productData);
+  const productImage = req.file;
+  const product = await addProduct(productData, productImage);
   res.status(201).json({
     status: "success",
     message: "Successfully created a product.",
+    data: product,
   });
 });
 
 export const updateProduct = asynErrorHandler(async (req, res) => {
   const id = req.params.id;
   const updatedData = req.body;
-  await updateProductById(id, updatedData);
+  const productImage = req.file;
+  await updateProductById(id, updatedData, productImage);
   res.status(201).json({
     status: "success",
     message: "Successfully updated a product.",

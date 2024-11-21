@@ -1,6 +1,7 @@
 import {
   castErrorHandler,
   duplicateKeyErrorHandler,
+  MulterErrorHandler,
   validationErrorHandler,
 } from "./errorHandlers.js";
 
@@ -28,6 +29,7 @@ const prodErrors = (res, error) => {
 };
 
 export default (error, req, res, next) => {
+  console.log(error.name);
   error.statusCode = error.statusCode || 500;
   error.status = error.status || "error";
   if (process.env.NODE_ENV === "development") {
@@ -36,6 +38,7 @@ export default (error, req, res, next) => {
     if (error.name === "CastError") error = castErrorHandler(error);
     if (error.code === 11000) error = duplicateKeyErrorHandler(error);
     if (error.name === "ValidationError") error = validationErrorHandler(error);
+    if (error.name === "MulterError") error = MulterErrorHandler(error);
     prodErrors(res, error);
   }
 };

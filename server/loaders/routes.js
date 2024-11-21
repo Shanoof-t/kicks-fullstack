@@ -9,6 +9,7 @@ import statsRouter from "../src/routes/v1/statsRouter.js";
 export default ({ app }) => {
   
   // user routes
+  
   app.use("/api/v1/auth", authRoutes);
   app.use("/api/v1/products", productRoutes);
   app.use("/api/v1/cart", cartRoutes);
