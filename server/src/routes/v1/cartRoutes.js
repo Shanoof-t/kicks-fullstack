@@ -7,12 +7,20 @@ import {
   updateCart,
 } from "../../controllers/cartController.js";
 import authenticateToken from "../../middleware/authenticateToken.js";
-
+import validator from "../../middleware/validatorMiddleware.js";
+import schema from "../../schema/index.js";
 const cartRouter = express.Router();
 
 cartRouter.use(authenticateToken);
 
-cartRouter.route("/").post(addCartItem).get(getCartItems);
-cartRouter.route("/:id").post(updateCart).delete(deleteCartItem);
+cartRouter
+  .route("/")
+  .post(validator(schema.addTocart), addCartItem)
+  .get(getCartItems);
+  
+cartRouter
+  .route("/:id")
+  .post(validator(schema.updateCart), updateCart)
+  .delete(deleteCartItem);
 
 export default cartRouter;

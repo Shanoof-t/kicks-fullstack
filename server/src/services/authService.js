@@ -7,9 +7,6 @@ export const createUser = async (userData) => {
   const { first_name, last_name, gender, email, password, confirm_password } =
     userData;
 
-  if (password !== confirm_password)
-    throw new CustomError("Password does not match", 400);
-
   const existingUser = await User.findOne({ email });
 
   if (existingUser) throw new CustomError("You are already registered", 400);

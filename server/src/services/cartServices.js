@@ -5,9 +5,6 @@ import CustomError from "../utils/CustomError.js";
 export const addItemToCart = async (user, item) => {
   const { sub } = user;
 
-  if (Object.keys(item).length === 0)
-    throw new CustomError("Item is required", 400);
-
   const result = await User.updateOne(
     { _id: sub },
     { $push: { cart: item } },

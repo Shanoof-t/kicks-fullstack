@@ -6,24 +6,24 @@ import { Order } from "../models/orderModel.js";
 // user order services
 export const processOrderCreation = async (user, data) => {
   const { sub } = user;
-
+  console.log(data);
   if (!data) throw new CustomError("Your details is required", 400);
 
-  const { email, firstName, lastName, address, phone, paymentMethod } = data;
+  const { email, first_name, last_name, address, phone, payment_method } = data;
 
   const userDetails = await User.aggregate([
     { $match: { _id: new mongoose.Types.ObjectId(sub) } },
     { $unwind: "$cart" },
     {
       $addFields: {
-        totalAmount: { $multiply: ["$cart.price", "$cart.quantity"] },
+        total_amount: { $multiply: ["$cart.price", "$cart.quantity"] },
       },
     },
     {
       $group: {
         _id: "$_id",
         products: { $push: "$cart" },
-        totalAmount: { $sum: "$totalAmount" },
+        total_amount: { $sum: "$total_amount" },
       },
     },
   ]);
@@ -31,13 +31,19 @@ export const processOrderCreation = async (user, data) => {
   if (userDetails.length === 0)
     throw new CustomError("Can't find cart details", 400);
 
-  const { products, totalAmount } = userDetails[0];
+  const { products, total_amount } = userDetails[0];
 
   const order = await Order.create({
     userId: sub,
-    shippingAddress: { email, firstName, lastName, location: address, phone },
-    paymentMethod,
-    totalAmount,
+    shipping_address: {
+      email,
+      first_name,
+      last_name,
+      location: address,
+      phone,
+    },
+    payment_method,
+    total_amount,
     products,
   });
 

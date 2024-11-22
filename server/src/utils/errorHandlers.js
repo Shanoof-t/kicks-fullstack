@@ -8,10 +8,17 @@ export const castErrorHandler = (err) => {
 };
 
 export const validationErrorHandler = (err) => {
-  const errors = Object.values(err.errors).map((val) => val);
-  const errorMsgs = errors.join(". ");
-  const msg = `Invalid input data : ${errorMsgs}`;
-  return new CustomError(msg, 400);
+  if (err.details) {
+    const errors = err.details.map((errObj) => errObj.message);
+    const errorMsgs = errors.join(". ");
+    const msg = `Invalid input data : ${errorMsgs}`;
+    return new CustomError(msg, 400);
+  } else {
+    const errors = Object.values(err.errors).map((val) => val);
+    const errorMsgs = errors.join(". ");
+    const msg = `Invalid input data : ${errorMsgs}`;
+    return new CustomError(msg, 400);
+  }
 };
 
 export const duplicateKeyErrorHandler = (err) => {
