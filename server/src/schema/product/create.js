@@ -5,8 +5,8 @@ export default Joi.object({
   brand: Joi.string().required(),
   gender: Joi.string().required(),
   category: Joi.string().required(),
-  price: Joi.number().required(),
-  quantity: Joi.number().required().min(1),
+  price: Joi.string().required().min(0),
+  quantity: Joi.string().required().min(0),
   description: Joi.string().required(),
   available_sizes: Joi.string().required(),
 });

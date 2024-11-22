@@ -47,14 +47,14 @@ export const addProduct = async (productData, productImage) => {
     description,
     available_sizes,
   } = productData;
-  
+
   const product = await Product.create({
     name,
     brand,
     gender,
     category,
-    price,
-    items_left: quantity,
+    price: Number(price),
+    items_left: Number(quantity),
     imageURL: productImage.path,
     description,
     available_sizes: available_sizes.split(","),
@@ -63,7 +63,7 @@ export const addProduct = async (productData, productImage) => {
 };
 
 export const updateProductById = async (id, updatedData) => {
-  const updatedProduct = await Product.updateOne({ _id: id }, updatedData);
+  await Product.updateOne({ _id: id }, updatedData);
 };
 
 export const deleteProductById = async (id) => {
