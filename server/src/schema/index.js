@@ -4,6 +4,7 @@ import addTocart from "./cart/add.js";
 import updateCart from "./cart/update.js";
 import createOrder from "./order/create.js";
 import createProduct from "./product/create.js";
+import updateOrder from "./order/update.js";
 export default {
   register,
   login,
@@ -11,4 +12,5 @@ export default {
   updateCart,
   createOrder,
   createProduct,
+  updateOrder,
 };

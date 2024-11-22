@@ -20,6 +20,9 @@ orderRouter
   .post(validate(schema.createOrder), createOrder)
   .get(listUserOrders);
 orderRouter.route("/list").get(verifyAdmin, listOrders);
-orderRouter.route("/:id").get(getOrder).post(verifyAdmin, updateOrder);
+orderRouter
+  .route("/:id")
+  .get(getOrder)
+  .post(verifyAdmin, validate(schema.updateOrder), updateOrder);
 
 export default orderRouter;
