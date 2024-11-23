@@ -1,10 +1,10 @@
-import authRoutes from "../src/routes/v1/authRoutes.js";
-import productRoutes from "../src/routes/v1/productRoutes.js";
-import cartRoutes from "../src/routes/v1/cartRoutes.js";
-import checkoutRouter from "../src/routes/v1/cartRoutes.js";
-import orderRouter from "../src/routes/v1/orderRoutes.js";
-import userRoutes from "../src/routes/v1/userRoutes.js";
-import statsRouter from "../src/routes/v1/statsRouter.js";
+import authRoutes from "../routes/v1/authRoutes.js";
+import productRoutes from "../routes/v1/productRoutes.js";
+import cartRoutes from "../routes/v1/cartRoutes.js";
+import checkoutRouter from "../routes/v1/cartRoutes.js";
+import orderRouter from "../routes/v1/orderRoutes.js";
+import userRoutes from "../routes/v1/userRoutes.js";
+import statsRouter from "../routes/v1/statsRouter.js";
 
 export default ({ app }) => {
   

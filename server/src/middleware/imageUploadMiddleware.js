@@ -1,5 +1,5 @@
 import { CloudinaryStorage } from "multer-storage-cloudinary";
-import cloudinary from "../../config/cloudinary.js";
+import cloudinary from "../config/cloudinary.js";
 import multer from "multer";
 import CustomError from "../utils/CustomError.js";
 

@@ -1,11 +1,12 @@
 import "colors";
 import express from "express";
-import loaders from "./loaders/index.js";
+import loaders from "./src/loaders/index.js"
 import { unhandledRejectionHandler } from "./src/utils/errorHandlers.js";
 
 const app = express();
 
 const startServer = async () => {
+  
   await loaders({ app, express }); // loaders
   
   const PORT = process.env.PORT || 8080;
