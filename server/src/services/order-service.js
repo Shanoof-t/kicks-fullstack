@@ -84,6 +84,8 @@ export const updatedOrderById = async (id, action) => {
     { $set: { status: action } },
     { new: true }
   );
+  if (updatedOrder.modifiedCount === 0)
+    throw new CustomError(`There is no order with this id : ${id}`);
   return updatedOrder;
 };
 

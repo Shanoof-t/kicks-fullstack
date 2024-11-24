@@ -58,7 +58,6 @@ export const updateProduct = asynErrorHandler(async (req, res) => {
   res.status(201).json({
     status: "success",
     message: "Successfully updated a product.",
-    data: updatedProduct,
   });
 });
 

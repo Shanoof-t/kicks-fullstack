@@ -2,7 +2,7 @@ import { Order } from "../models/order-model.js";
 
 export const createStats = async () => {
   const stats = Order.aggregate([
-    { $addFields: { totalRevenue: { $sum: "$totalAmount" } } },
+    { $addFields: { totalRevenue: { $sum: "$total_amount" } } },
     { $unwind: "$products" },
     {
       $group: {

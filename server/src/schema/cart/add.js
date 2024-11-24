@@ -9,4 +9,6 @@ export default Joi.object({
   price: Joi.number().required().min(0),
   image_url: Joi.string().required(),
   size: Joi.number().required(),
+  description: Joi.string().required(),
+  items_left: Joi.number().required(),
 });

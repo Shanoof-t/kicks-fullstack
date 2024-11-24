@@ -1,7 +1,7 @@
 import "colors";
 import bcrypt from "bcrypt";
-import connectDB from "../../config/db.js";
-import { User } from "../models/userModel.js";
+import connectDB from "../loaders/db.js"
+import { User } from "../models/user-model.js";
 import mongoose from "mongoose";
 connectDB();
 const adminEmail = "admin@gmail.com";

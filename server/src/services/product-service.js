@@ -35,8 +35,6 @@ export const fetchProductsByCategoryAndGender = async (queryData) => {
 // admin only
 
 export const addProduct = async (productData, productImage) => {
-  if (!productImage) throw new CustomError("image is not found", 400);
-
   const {
     name,
     brand,
@@ -62,8 +60,35 @@ export const addProduct = async (productData, productImage) => {
   return product;
 };
 
-export const updateProductById = async (id, updatedData) => {
-  await Product.updateOne({ _id: id }, updatedData);
+export const updateProductById = async (id, updatedData, productImage) => {
+  const {
+    name,
+    brand,
+    gender,
+    category,
+    price,
+    quantity,
+    description,
+    available_sizes,
+  } = updatedData;
+
+  const updatedProduct = {
+    name,
+    brand,
+    gender,
+    category,
+    price: Number(price),
+    items_left: Number(quantity),
+    imageURL: productImage.path,
+    description,
+    available_sizes: available_sizes.split(","),
+  };
+  const updatedDetails = await Product.updateOne({ _id: id }, updatedProduct);
+  if (updatedDetails.matchedCount === 0)
+    throw new CustomError(
+      `The product is not existing with this id ${id}!`,
+      404
+    );
 };
 
 export const deleteProductById = async (id) => {
