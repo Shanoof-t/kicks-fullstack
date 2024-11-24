@@ -6,7 +6,7 @@ import {
   getCategorieProducts,
   getProductById,
   updateProduct,
-} from "../../controllers/productController.js";
+} from "../../controllers/product-controller.js";
 
 //middlewares
 

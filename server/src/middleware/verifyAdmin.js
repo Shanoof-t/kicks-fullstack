@@ -1,4 +1,4 @@
-import CustomError from "../utils/CustomError.js";
+import CustomError from "../utils/custom-error.js";
 
 export default function verifyAdmin(req, res, next) {
   const { role } = req.user;

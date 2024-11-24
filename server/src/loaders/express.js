@@ -1,11 +1,7 @@
 import cors from "cors";
 import cookieParser from "cookie-parser";
-// import defaultRouter from "../src/middleware/defaultRouter.js";
-// import globalErrorHandler from "../src/utils/errorController.js";
-// import routes from "./routes.js";
-// import morgan from "../config/morgan.js";
 import defaultRouter from "../middleware/defaultRouter.js"
-import globalErrorHandler from "../utils/errorController.js"
+import globalErrorHandler from "../utils/global-error-handler.js"
 import routes from "./routes.js"
 import morgan from "../config/morgan.js";
 

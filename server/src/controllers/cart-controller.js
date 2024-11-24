@@ -4,7 +4,7 @@ import {
   removeCartItem,
   updateCartItem,
 } from "../services/cartServices.js";
-import { asynErrorHandler } from "../utils/errorHandlers.js";
+import { asynErrorHandler } from "../utils/error-handlers.js";
 
 export const addCartItem = asynErrorHandler(async (req, res) => {
   const user = req.user;

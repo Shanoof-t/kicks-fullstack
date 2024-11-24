@@ -5,7 +5,7 @@ import {
   getOrder,
   updateOrder,
   listUserOrders,
-} from "../../controllers/orderController.js";
+} from "../../controllers/order-controller.js";
 import authenticateToken from "../../middleware/authenticateToken.js";
 import verifyAdmin from "../../middleware/verifyAdmin.js";
 import validate from "../../middleware/validatorMiddleware.js";

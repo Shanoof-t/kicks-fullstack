@@ -1,5 +1,5 @@
 import { MulterError } from "multer";
-import CustomError from "./CustomError.js";
+import CustomError from "./custom-error.js"
 import "colors";
 
 export const castErrorHandler = (err) => {

@@ -1,5 +1,5 @@
 import { createStats } from "../services/statsService.js";
-import { asynErrorHandler } from "../utils/errorHandlers.js";
+import { asynErrorHandler } from "../utils/error-handlers.js";
 
 export const getStats = asynErrorHandler(async (req, res) => {
   const stats = await createStats();

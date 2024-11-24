@@ -1,5 +1,5 @@
 import { User } from "../models/userModel.js";
-import CustomError from "../utils/CustomError.js";
+import CustomError from "../utils/custom-error.js";
 
 export const fetchAllUsers = async () => {
   const users = await User.find({ role: "user" });

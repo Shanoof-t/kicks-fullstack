@@ -1,5 +1,5 @@
 import { Product } from "../models/productModel.js";
-import CustomError from "../utils/CustomError.js";
+import CustomError from "../utils/custom-error.js";
 
 export const fetchAllProducts = async () => {
   const products = await Product.find();

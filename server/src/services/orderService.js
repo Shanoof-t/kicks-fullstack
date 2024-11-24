@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { User } from "../models/userModel.js";
-import CustomError from "../utils/CustomError.js";
+import CustomError from "../utils/custom-error.js";
 import { Order } from "../models/orderModel.js";
 
 // user order services

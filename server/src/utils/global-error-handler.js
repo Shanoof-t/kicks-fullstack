@@ -3,7 +3,7 @@ import {
   duplicateKeyErrorHandler,
   MulterErrorHandler,
   validationErrorHandler,
-} from "./errorHandlers.js";
+} from "./error-handlers.js";
 
 const devErrors = (res, error) => {
   res.status(error.statusCode).json({

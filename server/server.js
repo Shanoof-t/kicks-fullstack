@@ -1,7 +1,7 @@
 import "colors";
 import express from "express";
 import loaders from "./src/loaders/index.js"
-import { unhandledRejectionHandler } from "./src/utils/errorHandlers.js";
+import { unhandledRejectionHandler } from "./src/utils/error-handlers.js";
 
 const app = express();
 

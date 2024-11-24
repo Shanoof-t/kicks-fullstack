@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import { User } from "../models/userModel.js";
-import CustomError from "../utils/CustomError.js";
-import generateToken from "../utils/jwt.js";
+import CustomError from "../utils/custom-error.js";
+import generateToken from "../utils/generate-token.js";
 
 export const createUser = async (userData) => {
   const { first_name, last_name, gender, email, password, confirm_password } =

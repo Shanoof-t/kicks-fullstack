@@ -3,7 +3,7 @@ import {
   getUser,
   listUsers,
   updateUser,
-} from "../../controllers/userController.js";
+} from "../../controllers/user-controller.js";
 import authenticateToken from "../../middleware/authenticateToken.js";
 import verifyAdmin from "../../middleware/verifyAdmin.js";
 

@@ -6,7 +6,7 @@ import {
   fetchProductsByCategoryAndGender,
   updateProductById,
 } from "../services/productService.js";
-import { asynErrorHandler } from "../utils/errorHandlers.js";
+import { asynErrorHandler } from "../utils/error-handlers.js";
 
 export const getAllProducts = asynErrorHandler(async (req, res) => {
   const products = await fetchAllProducts();

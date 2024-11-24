@@ -1,4 +1,4 @@
-import authRoutes from "../routes/v1/authRoutes.js";
+import authRoutes from "../routes/v1/auth-routes.js";
 import productRoutes from "../routes/v1/productRoutes.js";
 import cartRoutes from "../routes/v1/cartRoutes.js";
 import checkoutRouter from "../routes/v1/cartRoutes.js";

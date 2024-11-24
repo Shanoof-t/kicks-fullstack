@@ -3,7 +3,7 @@ import {
   fetchUserById,
   updateUserById,
 } from "../services/userService.js";
-import { asynErrorHandler } from "../utils/errorHandlers.js";
+import { asynErrorHandler } from "../utils/error-handlers.js";
 
 export const listUsers = asynErrorHandler(async (req, res) => {
   const users = await fetchAllUsers();

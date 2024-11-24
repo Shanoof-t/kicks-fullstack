@@ -15,7 +15,7 @@ requiredEnvVar.forEach((key) => {
     throw new Error(`Enviorment variable ${key} is missing`);
 });
 
-const config = {
+const env = {
   mongoUrl: process.env.MONGO_URL,
   accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
   refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
@@ -24,4 +24,4 @@ const config = {
   api_secret: process.env.API_SECRET,
 };
 
-export default config;
+export default env;

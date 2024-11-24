@@ -5,7 +5,7 @@ import {
   retrieveUserOrders,
   updatedOrderById,
 } from "../services/orderService.js";
-import { asynErrorHandler } from "../utils/errorHandlers.js";
+import { asynErrorHandler } from "../utils/error-handlers.js";
 
 // user order controllers
 export const createOrder = asynErrorHandler(async (req, res) => {
