@@ -1,4 +1,4 @@
-import { Order } from "../models/orderModel.js";
+import { Order } from "../models/order-model.js";
 
 export const createStats = async () => {
   const stats = Order.aggregate([

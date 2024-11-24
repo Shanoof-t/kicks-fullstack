@@ -6,8 +6,8 @@
   "scripts": {
     "start": "NODE_ENV=production nodemon server.js",
     "dev": "NODE_ENV=development nodemon server.js",
-    "admin:import": "node ./src/seeders/adminSeeder.js",
-    "admin:remove": "node ./src/seeders/adminSeeder.js -r"
+    "admin:import": "node ./src/seeders/admin-seeder.js",
+    "admin:remove": "node ./src/seeders/admin-seeder.js -r"
   },
   "keywords": [],
   "author": "",

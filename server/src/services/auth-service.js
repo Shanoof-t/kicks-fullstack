@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { User } from "../models/userModel.js";
+import { User } from "../models/user-model.js";
 import CustomError from "../utils/custom-error.js";
 import generateToken from "../utils/generate-token.js";
 

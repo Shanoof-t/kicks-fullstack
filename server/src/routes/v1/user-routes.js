@@ -3,9 +3,9 @@ import {
   getUser,
   listUsers,
   updateUser,
-} from "../../controllers/user-controller.js";
-import authenticateToken from "../../middleware/authenticateToken.js";
-import verifyAdmin from "../../middleware/verifyAdmin.js";
+} from "../../controllers/index.js";
+import authenticateToken from "../../middleware/authenticate-token.js";
+import verifyAdmin from "../../middleware/verify-admin-middleware.js";
 
 const userRoutes = express.Router();
 

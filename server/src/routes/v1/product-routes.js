@@ -6,14 +6,14 @@ import {
   getCategorieProducts,
   getProductById,
   updateProduct,
-} from "../../controllers/product-controller.js";
+} from "../../controllers/index.js";
 
 //middlewares
 
-import verifyAdmin from "../../middleware/verifyAdmin.js";
-import authenticateToken from "../../middleware/authenticateToken.js";
-import upload from "../../middleware/imageUploadMiddleware.js";
-import validator from "../../middleware/validatorMiddleware.js";
+import verifyAdmin from "../../middleware/verify-admin-middleware.js";
+import authenticateToken from "../../middleware/authenticate-token.js";
+import upload from "../../middleware/image-upload-middleware.js";
+import validator from "../../middleware/validator-middleware.js";
 import schema from "../../schema/index.js";
 
 const productRouter = express.Router();

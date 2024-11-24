@@ -5,10 +5,10 @@ import {
   getOrder,
   updateOrder,
   listUserOrders,
-} from "../../controllers/order-controller.js";
-import authenticateToken from "../../middleware/authenticateToken.js";
-import verifyAdmin from "../../middleware/verifyAdmin.js";
-import validate from "../../middleware/validatorMiddleware.js";
+} from "../../controllers/index.js";
+import authenticateToken from "../../middleware/authenticate-token.js";
+import verifyAdmin from "../../middleware/verify-admin-middleware.js";
+import validate from "../../middleware/validator-middleware.js";
 import schema from "../../schema/index.js";
 
 const orderRouter = express.Router();

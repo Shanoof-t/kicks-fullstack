@@ -4,7 +4,7 @@ import {
   retrieveOrders,
   retrieveUserOrders,
   updatedOrderById,
-} from "../services/orderService.js";
+} from "../services/index.js";
 import { asynErrorHandler } from "../utils/error-handlers.js";
 
 // user order controllers

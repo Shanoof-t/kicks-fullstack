@@ -3,7 +3,7 @@ import {
   getCartDetails,
   removeCartItem,
   updateCartItem,
-} from "../services/cartServices.js";
+} from "../services/index.js";
 import { asynErrorHandler } from "../utils/error-handlers.js";
 
 export const addCartItem = asynErrorHandler(async (req, res) => {

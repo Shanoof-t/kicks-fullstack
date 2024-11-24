@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { User } from "../models/userModel.js";
+import { User } from "../models/user-model.js";
 import CustomError from "../utils/custom-error.js";
 
 export const addItemToCart = async (user, item) => {

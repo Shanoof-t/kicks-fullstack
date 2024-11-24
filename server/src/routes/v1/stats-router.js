@@ -1,7 +1,7 @@
 import express from "express";
-import { getStats } from "../../controllers/stats-controller.js";
-import verifyAdmin from "../../middleware/verifyAdmin.js";
-import authenticateToken from "../../middleware/authenticateToken.js";
+import { getStats } from "../../controllers/index.js";
+import verifyAdmin from "../../middleware/verify-admin-middleware.js";
+import authenticateToken from "../../middleware/authenticate-token.js";
 
 const statsRouter = express.Router();
 

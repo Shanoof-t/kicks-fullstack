@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import { User } from "../models/userModel.js";
+import { User } from "../models/user-model.js";
 import CustomError from "../utils/custom-error.js";
-import { Order } from "../models/orderModel.js";
+import { Order } from "../models/order-model.js";
 
 // user order services
 export const processOrderCreation = async (user, data) => {

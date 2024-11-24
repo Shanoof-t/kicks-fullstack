@@ -1,4 +1,4 @@
-import { createStats } from "../services/statsService.js";
+import { createStats } from "../services/index.js";
 import { asynErrorHandler } from "../utils/error-handlers.js";
 
 export const getStats = asynErrorHandler(async (req, res) => {

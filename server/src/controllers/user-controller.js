@@ -2,7 +2,7 @@ import {
   fetchAllUsers,
   fetchUserById,
   updateUserById,
-} from "../services/userService.js";
+} from "../services/index.js";
 import { asynErrorHandler } from "../utils/error-handlers.js";
 
 export const listUsers = asynErrorHandler(async (req, res) => {
@@ -17,13 +17,11 @@ export const listUsers = asynErrorHandler(async (req, res) => {
 export const getUser = asynErrorHandler(async (req, res) => {
   const { id } = req.params;
   const user = await fetchUserById(id);
-  res
-    .status(200)
-    .json({
-      status: "success",
-      message: "Successfully fetched user data.",
-      data: user,
-    });
+  res.status(200).json({
+    status: "success",
+    message: "Successfully fetched user data.",
+    data: user,
+  });
 });
 
 export const updateUser = asynErrorHandler(async (req, res) => {
