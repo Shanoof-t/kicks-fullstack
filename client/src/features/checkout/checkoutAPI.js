@@ -26,6 +26,7 @@ export const addOrder = createAsyncThunk(
         { values },
         { withCredentials: true }
       );
+      console.log("order>>>>", res.data);
       return res.data;
     } catch (error) {
       console.error(error);

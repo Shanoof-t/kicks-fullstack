@@ -6,7 +6,7 @@ export const userFetch = createAsyncThunk(
   async (loginData, { rejectWithValue }) => {
     try {
       const res = await axios.post(
-        `${process.env.REACT_APP_API_URL}/login`,
+        `${process.env.REACT_APP_API_USER_URL}/login`,
         loginData,
         { withCredentials: true }
       );

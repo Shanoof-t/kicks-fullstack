@@ -27,9 +27,10 @@ export const updateCartQuantity = createAsyncThunk(
         { id, newQuantity },
         { withCredentials: true }
       );
+      console.log("res>>>>", res.data);
       return res.data;
     } catch (error) {
-      console.log(error);
+      console.log("err>>>>", error);
       return rejectWithValue(error.response.data.payload);
     }
   }

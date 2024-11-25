@@ -3,33 +3,32 @@ import { useDispatch, useSelector } from "react-redux";
 import { registerDataPost } from "../../../features/register/registerAPI";
 import { Field, Form, Formik } from "formik";
 import { registerValidation } from "./registerValidationSchema";
+import { useEffect } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 function Register() {
   const dispatch = useDispatch();
-  const navigateToHome = useNavigate();
+  const navigate = useNavigate();
   const registerValues = useSelector((state) => state.register.formValues);
   const dataPostValue = useSelector((state) => state.register.dataPostValue);
   const handleRegistration = (values, { resetForm }) => {
-    const data = {
-      first_name: values.firstName,
-      last_name: values.lastName,
-      gender: values.gender,
-      email: values.email,
-      password: values.password,
-      confirm_password: values.confirmPassword,
-    };
-
-    dispatch(registerDataPost(data)).then(() => {
-      if (dataPostValue.error) {
-        console.log(dataPostValue.error);
-      } else {
-        navigateToHome("/login");
+    dispatch(registerDataPost(values)).then((res) => {
+      if (res.meta.requestStatus === "fulfilled") {
+        navigate("/login");
         resetForm();
       }
     });
   };
 
+  useEffect(() => {
+    if (dataPostValue.error) {
+      toast.error(dataPostValue.error);
+    }
+  }, [dataPostValue.error]);
+
   return (
     <div className="flex justify-center">
+      <ToastContainer />
       <div className="w-2/4 mt-5">
         <h1 className="text-4xl font-bold text-center">Register</h1>
         <Formik
@@ -45,25 +44,25 @@ function Register() {
                   <div>
                     <Field
                       type="text"
-                      name="firstName"
+                      name="first_name"
                       onChange={handleChange}
                       placeholder="First Name"
                       className="w-full px-4 py-3 bg-transparent border border-black rounded-md text-gray-800 focus:outline-none focus:ring-0"
                     ></Field>
-                    {touched.firstName && errors.firstName && (
-                      <p className="text-red-600 my-1 ">{errors.firstName}</p>
+                    {touched.first_name && errors.first_name && (
+                      <p className="text-red-600 my-1 ">{errors.first_name}</p>
                     )}
                   </div>
                   <div>
                     <Field
                       type="text"
-                      name="lastName"
+                      name="last_name"
                       placeholder="Last Name"
                       onChange={handleChange}
                       className="w-full px-4 py-3 bg-transparent border border-black rounded-md text-gray-800 focus:outline-none focus:ring-0"
                     ></Field>
-                    {touched.lastName && errors.lastName && (
-                      <p className="text-red-600 my-1 ">{errors.lastName}</p>
+                    {touched.last_name && errors.last_name && (
+                      <p className="text-red-600 my-1 ">{errors.last_name}</p>
                     )}
                   </div>
                 </div>
@@ -129,15 +128,15 @@ function Register() {
                   <div>
                     <Field
                       type="password"
-                      name="confirmPassword"
+                      name="confirm_password"
                       placeholder="Confirm Password"
                       onChange={handleChange}
                       className="w-full px-4 py-3 bg-transparent border border-black rounded-md text-gray-800 focus:outline-none focus:ring-0"
                     ></Field>
 
-                    {touched.confirmPassword && errors.confirmPassword && (
+                    {touched.confirm_password && errors.confirm_password && (
                       <p className="text-red-600 my-1 ">
-                        {errors.confirmPassword}
+                        {errors.confirm_password}
                       </p>
                     )}
                   </div>

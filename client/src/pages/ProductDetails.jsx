@@ -20,6 +20,9 @@ function ProductDetails() {
   const dispatch = useDispatch();
   const errors = useSelector((state) => state.productDetails.error);
   const productDetails = useSelector((state) => state.productDetails);
+  const loading = useSelector(
+    (state) => state.productDetails.productDetailsLoading
+  );
   const [user, setUser] = useState("");
   useEffect(() => {
     const user = localStorage.getItem("role");
@@ -34,7 +37,7 @@ function ProductDetails() {
     }
   }, [productId, dispatch]);
 
-  const handleCart = () => {
+  const handleCart = async () => {
     if (!user) {
       navigate("/login");
     }
@@ -53,15 +56,14 @@ function ProductDetails() {
       dispatch(setSizeError(""));
     }
 
-    dispatch(addToCart(cartData)).then(() => {
+    await dispatch(addToCart(cartData)).then((res) => {
+      if (res.payload.message === "success") {
+        toast.success("Product added to cart", { className: "mt-12" });
+      } else {
+        toast.error(res.payload, { className: "mt-12" });
+      }
       dispatch(fetchCartItems());
     });
-
-    if (errors.addCartError) {
-      toast.error(errors.addCartError, { className: "mt-12" });
-    } else {
-      toast.success("Product added to cart", { className: "mt-12" });
-    }
   };
 
   return (

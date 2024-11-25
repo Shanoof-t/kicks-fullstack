@@ -6,11 +6,11 @@ const initialState = {
     error: "",
   },
   formValues: {
-    firstName: "",
-    lastName: "",
+    first_name: "",
+    last_name: "",
     email: "",
     password: "",
-    confirmPassword: "",
+    confirm_password: "",
     gender: "",
   },
 };
@@ -21,13 +21,14 @@ const registerSlice = createSlice({
     builder
       .addCase(registerDataPost.pending, (state) => {
         state.dataPostValue.loading = true;
+        state.dataPostValue.error = "";
       })
-      .addCase(registerDataPost.fulfilled, (state) => {
+      .addCase(registerDataPost.fulfilled, (state, action) => {
         state.dataPostValue.loading = false;
       })
       .addCase(registerDataPost.rejected, (state, action) => {
         state.dataPostValue.loading = false;
-        state.dataPostValue.error = action.error.message;
+        state.dataPostValue.error = action.payload;
       });
   },
 });

@@ -1,13 +1,14 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import { USER_API } from "../../api/userApi";
 
 export const registerDataPost = createAsyncThunk(
   "register/registerDataPost",
-  async (data) => {
-    const res = await axios.post(
-      `${process.env.REACT_APP_API_URL}/register`,
-      data
-    );
-    return res.data;
+  async (data, { rejectWithValue }) => {
+    try {
+      const res = await USER_API.post("/auth/register", data);
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message);
+    }
   }
 );
