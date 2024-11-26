@@ -22,11 +22,11 @@ const categorieDetailsSlice = createSlice({
       })
       .addCase(fetchCategorieItems.fulfilled, (state, action) => {
         state.items.loading = false;
-        state.items.data = action.payload;
+        state.items.data = action.payload.data;
       })
       .addCase(fetchCategorieItems.rejected, (state, action) => {
         state.items.loading = false;
-        state.items.error = action.error.message;
+        state.items.error = action.payload;
       });
   },
 });

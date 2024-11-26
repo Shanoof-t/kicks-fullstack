@@ -13,13 +13,14 @@ const allProductSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllProducts.pending, (state) => {
-        state.items.loading = false;
+        state.items.loading = true;
       })
       .addCase(fetchAllProducts.fulfilled, (state, action) => {
         state.items.loading = false;
-        state.items.data = action.payload;
+        state.items.data = action.payload.data;
       })
       .addCase(fetchAllProducts.rejected, (state, action) => {
+        state.items.loading = false;
         state.items.error = action.payload;
       });
   },

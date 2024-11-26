@@ -4,32 +4,36 @@ import { useNavigate } from "react-router-dom";
 import { Field, Form, Formik } from "formik";
 import { loginValidation } from "./loginValidationSchema";
 import { userFetch } from "../../../features/login/loginAPI";
+import { toast, ToastContainer } from "react-toastify";
+import { clearFetchvalues } from "../../../features/login/loginSlice";
 
 function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const LoginValues = useSelector((state) => state.login.formValues);
   const userFetchValues = useSelector((state) => state.login.userFetchValues);
-  
+
+  const handleSubmit = async (values) => {
+    dispatch(userFetch(values));
+  };
+
   useEffect(() => {
-    localStorage.setItem("role", userFetchValues.role);
-    if (userFetchValues.role === "admin") {
-      navigate("/admin", { replace: true });
-    } else if (userFetchValues.role === "user") {
-      navigate("/", { replace: true });
+    if (userFetchValues.role) {
+      localStorage.setItem("role", userFetchValues.role);
+      toast.success(userFetchValues.message, {
+        onClose: () => {
+          navigate(userFetchValues.role === "user" ? "/" : "/admin", {
+            replace: true,
+          });
+          dispatch(clearFetchvalues());
+        },
+      });
     }
   }, [userFetchValues.role]);
 
-  const handleSubmit = async (values) => {
-    const loginData = {
-      email: values.email,
-      password: values.password,
-    };
-    dispatch(userFetch(loginData));
-  };
-
   return (
     <div className="flex flex-col items-center justify-center h-screen  ">
+      <ToastContainer />
       <div className=" p-8 rounded-lg  w-full max-w-md">
         <h1 className="text-4xl font-bold text-center mb-6">Login</h1>
         <Formik

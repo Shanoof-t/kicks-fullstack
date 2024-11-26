@@ -1,12 +1,12 @@
 import axios from "axios";
 
-export const USER_API = axios.create({
+export const userApiClient = axios.create({
   baseURL: "http://localhost:8080/api/v1",
   timeout: 10000,
   timeoutErrorMessage: "axios is timeout ",
 });
 
-USER_API.interceptors.request.use(
+userApiClient.interceptors.request.use(
   (config) => {
     config.withCredentials = true;
     return config;
@@ -17,7 +17,7 @@ USER_API.interceptors.request.use(
   }
 );
 
-USER_API.interceptors.response.use(
+userApiClient.interceptors.response.use(
   (res) => {
     console.log("res>>>", res);
     return res;

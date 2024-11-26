@@ -15,6 +15,16 @@ const initialState = {
 const loginSlice = createSlice({
   name: "login",
   initialState,
+  reducers: {
+    clearFetchvalues(state) {
+      state.userFetchValues = {
+        loading: false,
+        message: "",
+        error: "",
+        role: "",
+      };
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(userFetch.pending, (state) => {
@@ -24,7 +34,7 @@ const loginSlice = createSlice({
       })
       .addCase(userFetch.fulfilled, (state, action) => {
         state.userFetchValues.loading = false;
-        state.userFetchValues.role = action.payload.role;
+        state.userFetchValues.role = action.payload.data.role;
         state.userFetchValues.message = action.payload.message;
       })
       .addCase(userFetch.rejected, (state, action) => {
@@ -32,4 +42,5 @@ const loginSlice = createSlice({
       });
   },
 });
+export const { clearFetchvalues } = loginSlice.actions;
 export default loginSlice.reducer;

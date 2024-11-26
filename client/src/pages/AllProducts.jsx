@@ -3,13 +3,14 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "../components/Loading";
 import { fetchAllProducts } from "../features/common/allProducts/allProductAPI";
+import ProductErrorDisplay from "../components/ProductErrorDisplay";
 
 function AllProducts() {
   const dispatch = useDispatch();
   const items = useSelector((state) => state.allProducts.items.data);
   const loading = useSelector((state) => state.allProducts.items.loading);
   const error = useSelector((state) => state.allProducts.items.error);
-  console.log(error);
+
   useEffect(() => {
     dispatch(fetchAllProducts());
   }, []);
@@ -18,6 +19,11 @@ function AllProducts() {
     return <Loading />;
   }
 
+  if (error) {
+    return (
+      <ProductErrorDisplay error={error} fallbackretryfun={fetchAllProducts} />
+    );
+  }
   return (
     <div className="min-h-screen px-4 sm:px-6 lg:px-8 py-8 pt-16">
       <h1 className="text-3xl font-bold mb-4">ALL PRODUCTS</h1>
@@ -28,7 +34,7 @@ function AllProducts() {
           <Link to={`/product/${item._id}`} key={`${item._id}${index}`}>
             <div className="border rounded-lg overflow-hidden duration-300">
               <img
-                src={item.imageURL}
+                src={item.image_url}
                 alt={`${item.name} image`}
                 className="w-full h-60 object-cover border-5 border-white rounded-3xl"
               />
