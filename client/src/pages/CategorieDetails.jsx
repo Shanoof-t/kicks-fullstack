@@ -13,12 +13,12 @@ function CategorieDetails() {
   const { loading, data, error } = useSelector(
     (state) => state.categorieDetails.items
   );
-  
+
   useEffect(() => {
     if (categrieType && categorieGender) {
       dispatch(fetchCategorieItems({ categrieType, categorieGender }));
     }
-  }, [categrieType, categorieGender]);
+  }, [categrieType, categorieGender, dispatch]);
 
   if (loading) return <Loading />;
 
