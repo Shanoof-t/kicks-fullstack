@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { itemsURL, userURL } from "../../utils/API_URL";
+import { userApiClient } from "../../api/userApi";
 
 export const updateCartSize = createAsyncThunk(
   "productdetails/updateCartSize",
@@ -18,12 +19,22 @@ export const fetchItem = createAsyncThunk(
   "productdetails/fetchItem",
   async (productId, { rejectWithValue }) => {
     try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_API_URL}/${productId}`
-      );
+      const res = await userApiClient.get(`/products/${productId}`);
       return res.data;
     } catch (error) {
       return rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
+export const fetchCartItem = createAsyncThunk(
+  "productdetails/fetchCartItem",
+  async (productId, { rejectWithValue }) => {
+    try {
+      const res = await userApiClient.get(`/cart/${productId}`);
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
     }
   }
 );
@@ -32,16 +43,10 @@ export const addToCart = createAsyncThunk(
   "productdetails/addToCart",
   async (item, { rejectWithValue }) => {
     try {
-      const res = await axios.post(
-        `${process.env.REACT_APP_API_URL}/cart/add`,
-        { item },
-        { withCredentials: true }
-      );
-      console.log("res>>>>>", res.data);
+      const res = await userApiClient.post("/cart", item);
       return res.data;
     } catch (error) {
-      console.log("err>>>>>", error);
-      return rejectWithValue(error.response.data.message);
+      return rejectWithValue(error.response.data);
     }
   }
 );

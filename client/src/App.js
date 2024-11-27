@@ -17,6 +17,7 @@ import React, { lazy, Suspense, useEffect } from "react";
 import Loading from "./components/Loading";
 import Register from "./components/auth/Register/Register";
 import Login from "./components/auth/Login/Login";
+import { ToastContainer } from "react-toastify";
 const OrderDetails = lazy(() => import("./pages/OrderDetails"));
 const Home = React.lazy(() => import("./pages/Home"));
 const HeaderDash = React.lazy(() => import("./admin/components/HeaderDash"));
@@ -46,6 +47,7 @@ function App() {
   return (
     <>
       <div className={hideComponent ? "" : "container mx-auto"}>
+      <ToastContainer />
         {!hideComponent && <Navbar />}
         <Routes>
           {/* User Routes */}

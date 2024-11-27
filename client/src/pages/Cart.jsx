@@ -9,39 +9,45 @@ import {
   updateCartQuantity,
 } from "../features/cart/cartAPI";
 import Loading from "../components/Loading";
-
+import { handleToast } from "../utils/handleToast";
 
 function Cart() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
   const dispatch = useDispatch();
 
-  const cartItem = useSelector((state) => state.cart.cartItems);
-  const loading = useSelector((state) => state.cart.cartLoading);
-  const totalPrice = useSelector((state) => state.cart.cartTotalPrice);
-  const CartProductCount = useSelector((state) => state.cart.CartProductCount);
-  
+  const {
+    cartItems,
+    cartLoading,
+    cartTotalPrice,
+    CartProductCount,
+    cartError,
+  } = useSelector((state) => state.cart);
 
   useEffect(() => {
-    dispatch(fetchCartItems())
+    dispatch(fetchCartItems());
   }, []);
 
-  const handleQuantity = (id, newQuantity) => {
-    dispatch(updateCartQuantity({ id, newQuantity })).then(() => {
+  const handleQuantity = (id, action) => {
+    dispatch(updateCartQuantity({ id, action })).then((res) => {
+      const { status, message } = res.payload;
+      handleToast(status, message);
       dispatch(fetchCartItems());
     });
   };
 
   const handleDelete = (id) => {
-    dispatch(deleteCartItems({ id })).then(() => {
+    dispatch(deleteCartItems({ id })).then((res) => {
+      const { status, message } = res.payload;
+      handleToast(status, message);
       dispatch(fetchCartItems());
     });
   };
 
-  if (loading) {
-    return <Loading />;
-  }
+  if (cartLoading) return <Loading />;
+
   return (
     <div className="container mx-auto p-8 ">
       {/* Page Heading */}
@@ -55,8 +61,8 @@ function Cart() {
       <div className="flex flex-col lg:flex-row gap-12">
         {/* Cart Items Section */}
         <div className="lg:w-2/3">
-          {cartItem.length > 0 ? (
-            cartItem.map((value) => {
+          {cartItems.length > 0 ? (
+            cartItems.map((value) => {
               return (
                 <div
                   key={value._id}
@@ -64,7 +70,7 @@ function Cart() {
                 >
                   <div className="w-24 me-3">
                     <img
-                      src={value.imageURL}
+                      src={value.image_url}
                       alt={value.name}
                       className="w-full rounded-lg shadow-sm"
                     />
@@ -78,7 +84,7 @@ function Cart() {
                         className="bg-thirdColor hover:bg-hoverColor px-3 py-1 rounded"
                         onClick={() => {
                           if (value.quantity > 1) {
-                            handleQuantity(value._id, value.quantity - 1);
+                            handleQuantity(value._id, "decrement");
                           }
                         }}
                       >
@@ -88,7 +94,7 @@ function Cart() {
                       <button
                         className="bg-thirdColor hover:bg-hoverColor px-3 py-1 rounded"
                         onClick={() => {
-                          handleQuantity(value._id, value.quantity + 1);
+                          handleQuantity(value._id, "increment");
                         }}
                       >
                         <span className="text-white">+</span>
@@ -120,20 +126,20 @@ function Cart() {
             <h5>
               {CartProductCount} ITEM{CartProductCount > 1 ? "S" : ""}
             </h5>
-            <h5>${totalPrice}</h5>
+            <h5>${cartTotalPrice}</h5>
           </div>
 
           <hr className="my-4" />
 
           <div className="flex justify-between text-xl font-semibold">
             <h2>Total</h2>
-            <h2>${totalPrice}</h2>
+            <h2>${cartTotalPrice}</h2>
           </div>
 
-          <Link to={totalPrice > 0 ? "/checkout" : ""}>
+          <Link to={cartTotalPrice > 0 ? "/checkout" : ""}>
             <button
               className="w-full mt-6 bg-thirdColor text-white py-3 rounded-lg hover:bg-hoverColor transition"
-              disabled={totalPrice === 0}
+              disabled={cartTotalPrice === 0}
             >
               Checkout
             </button>

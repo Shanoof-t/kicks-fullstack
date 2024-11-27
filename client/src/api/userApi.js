@@ -12,18 +12,18 @@ userApiClient.interceptors.request.use(
     return config;
   },
   (err) => {
-    console.log("req-err>>>", err);
+    console.error("request-error>>>", err);
     return Promise.reject(err);
   }
 );
 
 userApiClient.interceptors.response.use(
   (res) => {
-    console.log("res>>>", res);
+    console.log("response>>>", res);
     return res;
   },
   (err) => {
-    console.log("res-err>>", err);
+    console.error("response-error>>", err);
     return Promise.reject(err);
   }
 );

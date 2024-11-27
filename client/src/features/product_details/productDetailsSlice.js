@@ -1,18 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addToCart, fetchItem, updateCartSize } from "./productDetailsAPI";
+import {
+  addToCart,
+  fetchCartItem,
+  fetchItem,
+  updateCartSize,
+} from "./productDetailsAPI";
 
 const initialState = {
   productDetailsLoading: false,
   addedMessage: "",
-  items: {},
-  sizes: [],
+  item: {},
+  cartExistingItem: {},
   size: null,
-  error: {
-    sizeError: "",
-    updateError: "",
-    fetchError: "",
-    addCartError: "",
-  },
+  sizeError: "",
+  updateError: "",
+  fetchError: "",
+  addCartError: "",
+  cartExistingItemError: "",
 };
 const productDetailsSlice = createSlice({
   name: "product-details",
@@ -22,7 +26,7 @@ const productDetailsSlice = createSlice({
       state.size = action.payload;
     },
     setSizeError: (state, action) => {
-      state.error.sizeError = action.payload;
+      state.sizeError = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -34,28 +38,41 @@ const productDetailsSlice = createSlice({
         state.productDetailsLoading = false;
       })
       .addCase(updateCartSize.rejected, (state, action) => {
-        state.error.updateError = action.error.message;
+        state.productDetailsLoading = false;
+        state.updateError = action.error.message;
       })
       .addCase(fetchItem.pending, (state) => {
         state.productDetailsLoading = true;
       })
       .addCase(fetchItem.fulfilled, (state, action) => {
         state.productDetailsLoading = false;
-        state.items = action.payload;
-        state.sizes = action.payload.available_sizes;
+        state.item = action.payload.data;
       })
       .addCase(fetchItem.rejected, (state, action) => {
         state.productDetailsLoading = false;
-        state.error.fetchError = action.payload;
+        state.fetchError = action.payload;
       })
       .addCase(addToCart.pending, (state) => {
         state.productDetailsLoading = true;
       })
       .addCase(addToCart.fulfilled, (state, action) => {
+        state.productDetailsLoading = false;
         state.addedMessage = action.payload;
       })
       .addCase(addToCart.rejected, (state, action) => {
-        state.error.addCartError = action.payload;
+        state.productDetailsLoading = false;
+        state.addCartError = action.payload;
+      })
+      .addCase(fetchCartItem.pending, (state) => {
+        state.productDetailsLoading = true;
+      })
+      .addCase(fetchCartItem.fulfilled, (state, action) => {
+        state.productDetailsLoading = false;
+        state.cartExistingItem = action.payload.data;
+      })
+      .addCase(fetchCartItem.rejected, (state, action) => {
+        state.productDetailsLoading = false;
+        state.cartExistingItemError = action.payload;
       });
   },
 });

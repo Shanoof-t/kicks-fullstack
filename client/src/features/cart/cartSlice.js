@@ -20,30 +20,32 @@ const cartSlice = createSlice({
     builder
       .addCase(fetchCartItems.pending, (state) => {
         state.cartLoading = true;
-        state.cartItems = []
+        state.cartItems = [];
         state.cartTotalPrice = 0;
         state.CartProductCount = 0;
       })
       .addCase(fetchCartItems.fulfilled, (state, action) => {
         state.cartLoading = false;
-        state.cartItems = action.payload.cart;
-        state.cartTotalPrice = action.payload.totalAmount;
-        state.CartProductCount = action.payload.count;
+        state.cartItems = action.payload.data.cart;
+        state.cartTotalPrice = action.payload.data.totalAmount;
+        state.CartProductCount = action.payload.data.count;
       })
       .addCase(fetchCartItems.rejected, (state, action) => {
         state.cartLoading = false;
-        state.cartError = action.error.message;
+        state.cartError = action.payload.message;
       })
       .addCase(updateCartQuantity.pending, (state) => {
         state.cartLoading = true;
       })
       .addCase(updateCartQuantity.fulfilled, (state, action) => {
         state.cartLoading = false;
-        state.cartItems = action.payload;
+        // state.cartItems = action.payload.data.cart;
+        // state.cartTotalPrice = action.payload.data.totalAmount;
+        // state.CartProductCount = action.payload.data.count;
       })
       .addCase(updateCartQuantity.rejected, (state, action) => {
         state.cartLoading = false;
-        state.cartError = action.payload;
+        state.cartError = action.payload.message;
       })
       .addCase(deleteCartItems.pending, (state) => {
         state.cartLoading = true;
