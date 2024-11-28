@@ -5,16 +5,20 @@ import {
   retrieveUserOrders,
   updatedOrderById,
 } from "../services/index.js";
+import { processPaymentVerification } from "../services/order-service.js";
 import { asynErrorHandler } from "../utils/error-handlers.js";
 
 // user order controllers
+
 export const createOrder = asynErrorHandler(async (req, res) => {
   const user = req.user;
   const data = req.body;
-  const order = await processOrderCreation(user, data);
-  res
-    .status(201)
-    .json({ status: "success", message: "Your order is placed", data: order });
+  const orderData = await processOrderCreation(user, data);
+  res.status(201).json({
+    status: "success",
+    message: "Your order is placed",
+    data: orderData,
+  });
 });
 
 export const listUserOrders = asynErrorHandler(async (req, res) => {
@@ -49,6 +53,21 @@ export const listOrders = asynErrorHandler(async (req, res) => {
   res
     .status(200)
     .json({ status: "success", message: "Successfull", data: orders });
+});
+
+export const verifyPayment = asynErrorHandler(async (req, res) => {
+  const { response, order } = req.body;
+  const user = req.user;
+  const { order_id, payment_id } = await processPaymentVerification(
+    response,
+    order,
+    user
+  );
+  res.status(200).json({
+    status: "success",
+    message: "Your order is placed",
+    data: { order_id, payment_id },
+  });
 });
 
 // export const getOrder = asynErrorHandler(async (req, res) => {

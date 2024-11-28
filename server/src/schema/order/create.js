@@ -4,7 +4,7 @@ export default Joi.object({
   email: Joi.string().required(),
   first_name: Joi.string().required(),
   last_name: Joi.string().required(),
-  address: Joi.string().required(),
+  location: Joi.string().required(),
   phone: Joi.string()
     .pattern(/^[0-9]{10}$/)
     .required()

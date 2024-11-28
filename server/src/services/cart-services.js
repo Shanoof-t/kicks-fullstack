@@ -15,6 +15,16 @@ export const addItemToCart = async (user, item) => {
     throw new CustomError("user cart update has problem", 404);
 };
 
+export const getCartProduct = async (user, id) => {
+  const { sub } = user;
+  const product = await User.findOne({
+    _id: sub,
+    cart: { $elemMatch: { _id: id } },
+  });
+
+  return product;
+};
+
 export const getCartDetails = async (user) => {
   const { sub } = user;
 

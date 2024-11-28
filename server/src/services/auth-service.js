@@ -39,5 +39,5 @@ export const authenticateUser = async (userData) => {
   const payload = { sub: user._id, name: user.name, role: user.role };
 
   const accessToken = generateToken(payload);
-  return { accessToken, user };
+  return { accessToken, user, role: user.role };
 };

@@ -23,7 +23,7 @@ const productSchema = mongoose.Schema({
     required: [true, "product quantity is required"],
     min: [0, "product quantity cannot go less than zero"],
   },
-  imageURL: { type: String, required: [true, "image url is required"] },
+  image_url: { type: String, required: [true, "image url is required"] },
   description: { type: String, required: [true, "description is required"] },
   available_sizes: {
     type: [String],

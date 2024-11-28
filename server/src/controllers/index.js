@@ -23,6 +23,7 @@ import {
 } from "./product-controller.js";
 import { getStats } from "./stats-controller.js";
 import { getUser, listUsers, updateUser } from "./user-controller.js";
+
 export {
   userLogin,
   userRegister,

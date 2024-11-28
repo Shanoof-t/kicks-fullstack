@@ -8,6 +8,8 @@ const requiredEnvVar = [
   "CLOUD_NAME",
   "API_KEY",
   "API_SECRET",
+  "RAZORPAY_KEY_ID",
+  "RAZORPAY_KEY_SECRET",
 ];
 
 requiredEnvVar.forEach((key) => {
@@ -22,6 +24,8 @@ const env = {
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.API_KEY,
   api_secret: process.env.API_SECRET,
+  razorpay_key_id: process.env.RAZORPAY_KEY_ID,
+  razorpay_key_secret: process.env.RAZORPAY_KEY_SECRET,
 };
 
 export default env;

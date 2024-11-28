@@ -14,7 +14,7 @@ export const userRegister = asynErrorHandler(async (req, res) => {
 export const userLogin = asynErrorHandler(async (req, res) => {
   const userData = req.body;
 
-  const { accessToken, user } = await authenticateUser(userData);
+  const { accessToken, user, role } = await authenticateUser(userData);
 
   res.cookie("token", accessToken, {
     httpOnly: true,
@@ -26,7 +26,7 @@ export const userLogin = asynErrorHandler(async (req, res) => {
 
   return res.status(200).json({
     status: "success",
-    message: "Successfull logged In.",
-    data: user,
+    message: "Successfully logged In.",
+    data: { user, role },
   });
 });

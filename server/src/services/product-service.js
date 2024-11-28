@@ -24,11 +24,6 @@ export const fetchProductsByCategoryAndGender = async (queryData) => {
     products = await Product.aggregate([{ $match: { category } }]);
   }
 
-  if (products.length === 0)
-    throw new CustomError(
-      "No products found for the specified category and gender",
-      404
-    );
   return products;
 };
 
@@ -53,7 +48,7 @@ export const addProduct = async (productData, productImage) => {
     category,
     price: Number(price),
     items_left: Number(quantity),
-    imageURL: productImage.path,
+    image_url: productImage.path,
     description,
     available_sizes: available_sizes.split(","),
   });
@@ -79,7 +74,7 @@ export const updateProductById = async (id, updatedData, productImage) => {
     category,
     price: Number(price),
     items_left: Number(quantity),
-    imageURL: productImage.path,
+    image_url: productImage.path,
     description,
     available_sizes: available_sizes.split(","),
   };

@@ -1,3 +1,4 @@
+import { getCartProduct } from "../services/cart-services.js";
 import {
   addItemToCart,
   getCartDetails,
@@ -11,11 +12,21 @@ export const addCartItem = asynErrorHandler(async (req, res) => {
   const item = req.body;
   await addItemToCart(user, item);
   return res.json({
-    state: "success",
+    status: "success",
     message: "Successfully added product to the cart.",
   });
 });
 
+export const getCartItem = asynErrorHandler(async (req, res) => {
+  const user = req.user;
+  const { id } = req.params;
+  const product = await getCartProduct(user, id);
+  return res.status(200).json({
+    status: "success",
+    message: "Successfully fetched cart product.",
+    data: product,
+  });
+});
 export const getCartItems = asynErrorHandler(async (req, res) => {
   const user = req.user;
   const products = await getCartDetails(user);
@@ -42,10 +53,8 @@ export const deleteCartItem = asynErrorHandler(async (req, res) => {
   const user = req.user;
   const { id } = req.params;
   await removeCartItem(user, id);
-  return res
-    .status(204)
-    .json({
-      status: "success",
-      message: "Successfully deleted product from cart",
-    });
+  return res.status(200).json({
+    status: "success",
+    message: "Successfully deleted product from cart",
+  });
 });

@@ -29,6 +29,7 @@ export const getProductById = asynErrorHandler(async (req, res) => {
 
 export const getCategorieProducts = asynErrorHandler(async (req, res) => {
   const queryData = req.query;
+  console.log(queryData)
   const products = await fetchProductsByCategoryAndGender(queryData);
   return res.status(200).json({
     status: "success",
