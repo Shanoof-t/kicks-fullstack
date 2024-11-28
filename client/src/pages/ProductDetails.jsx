@@ -48,6 +48,7 @@ function ProductDetails() {
     } else {
       dispatch(setSizeError(""));
     }
+    
     const { available_sizes, __v, ...cartData } = item;
     const dataToSend = {
       ...cartData,

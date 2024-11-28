@@ -1,24 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addOrder, fetchUserCartDetails } from "./checkoutAPI";
+import { addOrder } from "./checkoutAPI";
 const initialState = {
   loading: false,
-  cartDetails: {
-    totalAmount: 0,
-    cartProducts: [],
-    cartProductCount: 0,
-    error: "",
-  },
-  addOrderData: {
-    userData: [],
-    error: "",
-  },
+  CreateOrdererror: "",
   contactDetails: {
     email: "",
-    firstName: "",
-    lastName: "",
-    address: "",
+    first_name: "",
+    last_name: "",
+    location: "",
     phone: "",
-    paymentMethod: "",
+    payment_method: "",
   },
 };
 const checkoutSlice = createSlice({
@@ -34,28 +25,15 @@ const checkoutSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchUserCartDetails.pending, (state) => {
+      .addCase(addOrder.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchUserCartDetails.fulfilled, (state, action) => {
-        state.loading = false;
-        state.cartDetails.cartProducts = action.payload.cart;
-        state.cartDetails.cartProductCount = action.payload.cartProductCount;
-        state.cartDetails.totalAmount = action.payload.totalAmount;
-      })
-      .addCase(fetchUserCartDetails.rejected, (state, action) => {
-        state.loading = false;
-        state.addOrderData.error = action.error.message;
-      })
-      .addCase(addOrder.pending, (state) => {
-        state.addOrderData.loading = true;
-      })
       .addCase(addOrder.fulfilled, (state) => {
-        state.addOrderData.loading = false;
+        state.loading = false;
       })
       .addCase(addOrder.rejected, (state, action) => {
-        state.addOrderData.loading = false;
-        state.addOrderData.error = action.error.message;
+        state.loading = false;
+        state.CreateOrdererror = action.payload.message;
       });
   },
 });

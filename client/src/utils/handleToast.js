@@ -1,9 +1,13 @@
 import { toast } from "react-toastify";
 
-export const handleToast = (type, message) => {
+export const handleToast = (type, message, option = {}) => {
+  const { onClose } = option;
+  const toastOption = { className: "mt-12", onClose };
   if (type === "success") {
-    toast.success(message, { className: "mt-12" });
+    toast.success(message, toastOption);
   } else if (type === "fail") {
-    toast.error(message, { className: "mt-12" });
+    toast.warning(message, toastOption);
+  } else if (type === "error") {
+    toast.error(message, toastOption);
   }
 };

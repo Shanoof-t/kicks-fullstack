@@ -1,50 +1,58 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Field, Form, Formik } from "formik";
 import { checkoutValidationSchema } from "./checkoutValidationSchema";
-import {
-  addOrder,
-  fetchUserCartDetails,
-} from "../../features/checkout/checkoutAPI";
+import { addOrder } from "../../features/checkout/checkoutAPI";
 import { fetchCartItems } from "../../features/cart/cartAPI";
+import Loading from "../../components/Loading";
+import { handleToast } from "../../utils/handleToast";
+import razorpayCheckoutFlow from "../../utils/razorpayCheckoutFlow";
 
 function Checkout() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const cartDetails = useSelector((state) => state.checkout.cartDetails);
+
   const contactDetails = useSelector((state) => state.checkout.contactDetails);
+  const {
+    cartItems,
+    cartLoading,
+    cartTotalPrice,
+    CartProductCount,
+    cartError,
+  } = useSelector((state) => state.cart);
 
   useEffect(() => {
-    dispatch(fetchUserCartDetails());
-  }, [dispatch]);
+    dispatch(fetchCartItems());
+  }, []);
 
   const handlePlaceOrder = (values) => {
     const user = localStorage.getItem("role");
     if (user !== "user") {
       navigate("/login");
     } else {
-      dispatch(addOrder({ values }))
-        .then(() => {
-          toast.success("Your Order is Placed", {
-            className: "mt-12",
+      dispatch(addOrder({ values })).then(async (res) => {
+        console.log("this is res in checkout page", res);
+        const { data } = res.payload;
+        if (data.status === "placed") {
+          const { status, message } = res.payload;
+          handleToast(status, message, {
             onClose: () => {
-              navigate("/");
-              dispatch(fetchCartItems());
+              navigate("/orderdetails");
+              // dispatch(fetchCartItems());
             },
           });
-        })
-        .catch((err) => {
-          toast.error(err.message, { className: "mt-12" });
-        });
+        } else if (data.status === "pending") {
+          razorpayCheckoutFlow(data, dispatch, navigate)
+        }
+      });
     }
   };
 
+  if (cartLoading) return <Loading />;
   return (
     <div className="min-h-screen py-10 px-6">
-      <ToastContainer />
       <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-10">
         {/* Left: Contact Form */}
         <div className="lg:col-span-1 w-full">
@@ -75,7 +83,7 @@ function Checkout() {
                     type="text"
                     placeholder="First Name*"
                     className="w-full px-4 py-3 bg-transparent border border-black rounded-md"
-                    name="firstName"
+                    name="first_name"
                   ></Field>
                   {errors.firstName && touched.firstName && (
                     <p className="text-red-600">{errors.firstName}</p>
@@ -85,7 +93,7 @@ function Checkout() {
                     type="text"
                     placeholder="Last Name*"
                     className="w-full px-4 py-3 bg-transparent border border-black rounded-md"
-                    name="lastName"
+                    name="last_name"
                   ></Field>
                   {errors.lastName && touched.lastName && (
                     <p className="text-red-600">{errors.lastName}</p>
@@ -95,14 +103,14 @@ function Checkout() {
                     type="text"
                     placeholder="Delivery Address*"
                     className="w-full px-4 py-3 bg-transparent border border-black rounded-md"
-                    name="address"
+                    name="location"
                   ></Field>
                   {errors.address && touched.address && (
                     <p className="text-red-600">{errors.address}</p>
                   )}
 
                   <Field
-                    type="number"
+                    type="text"
                     placeholder="Phone Number"
                     className="w-full px-4 py-3 bg-transparent border border-black rounded-md"
                     name="phone"
@@ -116,32 +124,20 @@ function Checkout() {
                   <h1 className="text-2xl font-bold">Payment Methods</h1>
                   <div className="flex space-x-6">
                     <label className="inline-flex items-center space-x-2">
-                      {/* <Field
-                        type="checkbox"
-                        className="form-checkbox h-4 w-4"
-                        checked={values.paymentMethod === "cash"}
-                        onChange={() => setFieldValue("paymentMethod", "cash")}
-                      ></Field> */}
                       <Field
                         type="radio"
-                        name="paymentMethod"
+                        name="payment_method"
                         className="form-radio h-4 w-4"
-                        value="cash"
+                        value="COD"
                       ></Field>
 
-                      <span>Cash</span>
+                      <span>COD</span>
                     </label>
 
                     <label className="inline-flex items-center space-x-2">
-                      {/* <Field
-                          type="checkbox"
-                          className="form-checkbox h-4 w-4"
-                          checked={values.paymentMethod === "UPI"}
-                          onChange={() => setFieldValue("paymentMethod", "UPI")}
-                        ></Field> */}
                       <Field
                         type="radio"
-                        name="paymentMethod"
+                        name="payment_method"
                         className="form-radio h-4 w-4"
                         value="UPI"
                       ></Field>
@@ -159,7 +155,7 @@ function Checkout() {
                   className="w-full mt-6 px-6 py-3 bg-thirdColor text-white text-lg font-semibold rounded-lg hover:bg-hoverColor transition duration-300"
                   type="submit"
                 >
-                  Place Order ${cartDetails.totalAmount}
+                  Place Order ${cartTotalPrice}
                 </button>
               </Form>
             )}
@@ -172,13 +168,13 @@ function Checkout() {
           <div className="p-6 rounded-lg border border-gray-300">
             <h1 className="text-2xl font-semibold mb-4">Order Summary</h1>
             <div className="flex justify-between text-lg mb-4">
-              <span>{cartDetails.cartProductCount} ITEMS</span>
-              <span>${cartDetails.totalAmount}</span>
+              <span>{CartProductCount} ITEMS</span>
+              <span>${cartTotalPrice}</span>
             </div>
             <hr className="my-4" />
             <div className="flex justify-between text-xl font-semibold">
               <h2>Total</h2>
-              <h2>${cartDetails.totalAmount}</h2>
+              <h2>${cartTotalPrice}</h2>
             </div>
           </div>
 
@@ -186,7 +182,7 @@ function Checkout() {
           <div className="p-6 rounded-lg border border-gray-300 space-y-4">
             <h1 className="text-2xl font-semibold mb-2">Your Order</h1>
             <div className="space-y-2">
-              {cartDetails.cartProducts.map((item) => (
+              {cartItems.map((item) => (
                 <div
                   key={item._id}
                   className="flex justify-between items-center"
@@ -200,7 +196,7 @@ function Checkout() {
             </div>
             <div className="mt-6 flex justify-between text-lg font-semibold">
               <span>Total</span>
-              <span>${cartDetails.totalAmount}</span>
+              <span>${cartTotalPrice}</span>
             </div>
           </div>
         </div>

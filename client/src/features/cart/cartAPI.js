@@ -1,6 +1,4 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-import { userURL } from "../../utils/API_URL";
 import { userApiClient } from "../../api/userApi";
 
 export const fetchCartItems = createAsyncThunk(
