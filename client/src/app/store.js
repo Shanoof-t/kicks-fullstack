@@ -6,7 +6,7 @@ import productDetails from "../features/product_details/productDetailsSlice";
 import register from "../features/register/registerSlice";
 import navbar from "../features/navbar/navbarSlice";
 import checkout from "../features/checkout/checkoutSlice";
-import displayItem from "../features/displayItem/displayItemSlice";
+// import displayItem from "../features/displayItem/displayItemSlice";
 import categorie from "../features/Categorie/categorieSlice";
 import categorieDetails from "../features/categorie_details/categorieDetailsSlice";
 import allProducts from "../features/common/allProducts/allProductsSlice";
@@ -28,7 +28,7 @@ const store = configureStore({
     home,
     navbar,
     checkout,
-    displayItem,
+    // displayItem,
     categorie,
     categorieDetails,
     allProducts,

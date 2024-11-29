@@ -47,7 +47,7 @@ function App() {
   return (
     <>
       <div className={hideComponent ? "" : "container mx-auto"}>
-      <ToastContainer />
+        <ToastContainer />
         {!hideComponent && <Navbar />}
         <Routes>
           {/* User Routes */}
@@ -70,8 +70,7 @@ function App() {
                   <CategorieDetails />
                 </Suspense>
               }
-            >
-            </Route>
+            ></Route>
           </Route>
           <Route
             path="all"
@@ -120,6 +119,7 @@ function App() {
             }
           >
             <Route index element={<DashboardHome />} />
+            {/* <Route path="productlist" element={<ProductsDash />} /> */}
             <Route
               path="productlist/:productCategory"
               element={<ProductsDash />}

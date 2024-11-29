@@ -3,7 +3,7 @@ import {
   addToCart,
   fetchCartItem,
   fetchItem,
-  updateCartSize,
+  // updateCartSize,
 } from "./productDetailsAPI";
 
 const initialState = {
@@ -31,16 +31,16 @@ const productDetailsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(updateCartSize.pending, (state) => {
-        state.productDetailsLoading = true;
-      })
-      .addCase(updateCartSize.fulfilled, (state) => {
-        state.productDetailsLoading = false;
-      })
-      .addCase(updateCartSize.rejected, (state, action) => {
-        state.productDetailsLoading = false;
-        state.updateError = action.error.message;
-      })
+      // .addCase(updateCartSize.pending, (state) => {
+      //   state.productDetailsLoading = true;
+      // })
+      // .addCase(updateCartSize.fulfilled, (state) => {
+      //   state.productDetailsLoading = false;
+      // })
+      // .addCase(updateCartSize.rejected, (state, action) => {
+      //   state.productDetailsLoading = false;
+      //   state.updateError = action.error.message;
+      // })
       .addCase(fetchItem.pending, (state) => {
         state.productDetailsLoading = true;
       })

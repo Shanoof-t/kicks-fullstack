@@ -94,7 +94,7 @@ const HeaderDash = () => {
 
           <button
             className="w-full flex items-center justify-start px-4 py-3 rounded-md text-gray-700 hover:text-white hover:bg-secondaryBlue focus:bg-secondaryBlue focus:text-white transition duration-200"
-            onClick={() => handleCategory("allitems")}
+            onClick={() => handleCategory("all")}
           >
             <img
               src={productImg}
