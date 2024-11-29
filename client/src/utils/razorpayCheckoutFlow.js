@@ -1,4 +1,3 @@
-import { userApiClient } from "../api/userApi";
 import { verifypayment } from "../features/checkout/checkoutAPI";
 import { handleToast } from "./handleToast";
 
@@ -21,7 +20,7 @@ export default async (order, dispatch, navigate) => {
     );
     return;
   }
-  console.log(order.payment_gateway_details.amount);
+
   var options = {
     key: "rzp_test_AxAikKVsPMXHbg",
     amount: order.payment_gateway_details.amount,

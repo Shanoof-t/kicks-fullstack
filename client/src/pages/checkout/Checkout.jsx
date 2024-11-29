@@ -33,8 +33,8 @@ function Checkout() {
       navigate("/login");
     } else {
       dispatch(addOrder({ values })).then(async (res) => {
-        console.log("this is res in checkout page", res);
         const { data } = res.payload;
+        console.log("data>>",data)
         if (data.status === "placed") {
           const { status, message } = res.payload;
           handleToast(status, message, {
@@ -45,12 +45,16 @@ function Checkout() {
           });
         } else if (data.status === "pending") {
           razorpayCheckoutFlow(data, dispatch, navigate)
+          .then(() => {            
+            navigate("/orderdetails");
+          });
         }
       });
     }
   };
 
   if (cartLoading) return <Loading />;
+
   return (
     <div className="min-h-screen py-10 px-6">
       <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-10">

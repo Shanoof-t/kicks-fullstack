@@ -17,11 +17,11 @@ const orderDetailsSlice = createSlice({
       })
       .addCase(orderDetailsFetch.fulfilled, (state, action) => {
         state.orderData.loading = false;
-        state.orderData.data = action.payload.order;
+        state.orderData.data = action.payload;
       })
       .addCase(orderDetailsFetch.rejected, (state, action) => {
         state.orderData.loading = false;
-        state.orderData.error = action.error.message;
+        state.orderData.error = action.payload.message;
       });
   },
 });

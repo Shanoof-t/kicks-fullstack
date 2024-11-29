@@ -17,7 +17,6 @@ export const verifypayment = createAsyncThunk(
   "checkout/verifypayment",
   async ({ response, order }, { rejectWithValue }) => {
     try {
-      console.log("this is from verifypayment", response, order);
       const res = await userApiClient.post("/orders/verify-payment", {
         response,
         order,

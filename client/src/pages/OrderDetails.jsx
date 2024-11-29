@@ -1,17 +1,27 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { orderDetailsFetch } from "../features/order_details/orderDetailsAPI";
 import Loading from "../components/Loading";
+import razorpayCheckoutFlow from "../utils/razorpayCheckoutFlow";
+import { useNavigate } from "react-router-dom";
 function OrderDetails() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const orderdetails = useSelector((state) => state.orderDetails.orderData);
-  const userId = localStorage.getItem("userId");
+  console.log(orderdetails);
   useEffect(() => {
-    dispatch(orderDetailsFetch(userId));
-  }, [userId]);
+    window.scroll(0, 0);
+    dispatch(orderDetailsFetch());
+  }, []);
 
+  const handleRepayment = (_id) => {
+    const order = orderdetails.data.find((order) => order._id === _id);
+    razorpayCheckoutFlow(order, dispatch, navigate).then(() => {
+      navigate("/orderdetails");
+    });
+  };
   if (orderdetails.loading) return <Loading />;
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8 text-center">
@@ -20,15 +30,15 @@ function OrderDetails() {
       <hr className="mb-8 border-gray-300" />
       {orderdetails.data.length === 0 ? (
         <div className="text-center">
-          <h1 className="font-bold text-xl">No orders</h1>
+          <h1 className="font-bold text-xl">{orderdetails.error}</h1>
         </div>
       ) : (
         orderdetails.data.map((order) => {
           return (
-            <div key={order.orderId} className=" rounded-lg mb-8 p-6">
+            <div key={order._id} className=" rounded-lg mb-8 p-6">
               <div>
                 <h1 className="text-3xl font-bold text-thirdColor">
-                  Order ID: {order.orderId}
+                  Order ID: {order._id}
                 </h1>
               </div>
               <hr className="my-4 border-black" />
@@ -42,26 +52,39 @@ function OrderDetails() {
                   <h5 className="text-lg font-medium text-thirdColor">
                     Address
                   </h5>
-                  <p className="text-gray-600">{order.address}</p>
+                  <p className="text-gray-600">
+                    {order.shipping_address.location}
+                  </p>
                   <p className="text-gray-600">
                     <span className="text-thirdColor">Phone : </span>
-                    {order.phone}
+                    {order.shipping_address.phone}
                   </p>
                   <p className="text-gray-600">
                     <span className="text-thirdColor">Payment : </span>
-                    {order.paymentMethod}
+                    {order.payment_method}
                   </p>
+                  <p className="text-gray-600">
+                    <span className="text-thirdColor">Status : </span>
+                    {order.status}
+                  </p>
+                  {order.status === "pending" ? (
+                    <button onClick={() => handleRepayment(order._id)}>
+                      repayment
+                    </button>
+                  ) : (
+                    ""
+                  )}
                 </div>
               </div>
-              {order.product.map((item) => {
+              {order.products.map((item) => {
                 return (
                   <div
-                    key={item.productId}
+                    key={item._id}
                     className="flex justify-between items-center  pb-4 mb-4"
                   >
                     <div className="flex items-center space-x-4">
                       <img
-                        src={item.imageURL}
+                        src={item.image_url}
                         alt={item.name}
                         className="w-40 h-40 object-cover rounded-lg"
                       />
