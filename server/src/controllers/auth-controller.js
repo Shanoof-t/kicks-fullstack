@@ -27,6 +27,6 @@ export const userLogin = asynErrorHandler(async (req, res) => {
   return res.status(200).json({
     status: "success",
     message: "Successfully logged In.",
-    data: { user, role },
+    data: { user },
   });
 });

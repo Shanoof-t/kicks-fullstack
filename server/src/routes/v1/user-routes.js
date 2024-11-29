@@ -10,9 +10,9 @@ import verifyAdmin from "../../middleware/verify-admin-middleware.js";
 const userRoutes = express.Router();
 
 userRoutes.use(authenticateToken);
-userRoutes.use(verifyAdmin);
+// userRoutes.use(verifyAdmin);
 
-userRoutes.route("/").get(listUsers);
+userRoutes.route("/").get(verifyAdmin,listUsers);
 userRoutes.route("/:id").post(updateUser).get(getUser);
 
 export default userRoutes;
