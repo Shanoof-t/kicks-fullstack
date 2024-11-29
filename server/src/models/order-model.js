@@ -15,6 +15,9 @@ const orderSchema = new mongoose.Schema(
       type: String,
       required: [true, "payment method is required"],
     },
+    payment_gateway_details: {
+      type: Object,
+    },
     status: {
       type: String,
       required: [true, "status is required"],
@@ -25,6 +28,7 @@ const orderSchema = new mongoose.Schema(
       required: [true, "total amount is required"],
     },
   },
+
   { timestamps: true }
 );
 

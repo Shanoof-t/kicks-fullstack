@@ -3,10 +3,11 @@ import crypto from "crypto";
 import { User } from "../models/user-model.js";
 import CustomError from "../utils/custom-error.js";
 import { Order } from "../models/order-model.js";
-import razorpay from "../config/razorpay.js";
 import orderHelper from "../helpers/order-helper.js";
 import env from "../config/env_variables.js";
+
 // user order services
+
 export const processOrderCreation = async (user, data) => {
   const { sub } = user;
   if (!data) throw new CustomError("Your details is required", 400);
@@ -54,22 +55,49 @@ export const processOrderCreation = async (user, data) => {
   });
 
   await User.findByIdAndUpdate(sub, { $unset: { cart: 1 } });
-  
+
   if (payment_method === "COD") {
     return { order_id: order._id, payment_method, status, total_amount };
   } else if (payment_method === "UPI") {
     const paymentGatewayDetails = await orderHelper.generateRazorpay(order); //razorpay order payment integration
     if (!paymentGatewayDetails)
       throw new CustomError("payment gateway failed", 500);
+
+    await Order.updateOne(
+      { _id: order._id },
+      { $set: { payment_gateway_details: paymentGatewayDetails } }
+    );
+
     return {
-      order_id: order._id,
+      _id: order._id,
       payment_method,
       status,
       payment_gateway_details: paymentGatewayDetails,
-      user_information: order.shipping_address,
+      shipping_address: order.shipping_address,
       total_amount,
     };
   }
+};
+
+export const processPaymentVerification = async (response, order, user) => {
+  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
+    response;
+
+  let sha = crypto.createHmac("sha256", env.razorpay_key_secret);
+  sha.update(`${razorpay_order_id}|${razorpay_payment_id}`);
+  const generated_signature = sha.digest("hex");
+
+  if (generated_signature !== razorpay_signature)
+    throw new CustomError("Transaction is not legit!");
+
+  const { _id } = order;
+
+  await Order.updateOne(
+    { _id: _id },
+    { $set: { status: "placed" } }
+  );
+
+  return { order_id: razorpay_order_id, payment_id: razorpay_payment_id };
 };
 
 export const retrieveUserOrders = async (user) => {
@@ -113,26 +141,6 @@ export const updatedOrderById = async (id, action) => {
 export const retrieveOrders = async () => {
   const orders = await Order.find();
   return orders;
-};
-
-export const processPaymentVerification = async (response, order, user) => {
-  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
-    response;
-
-  let sha = crypto.createHmac("sha256", env.razorpay_key_secret);
-  sha.update(`${razorpay_order_id}|${razorpay_payment_id}`);
-  const generated_signature = sha.digest("hex");
-
-  if (generated_signature !== razorpay_signature)
-    throw new CustomError("Transaction is not legit!");
-
-  const { order_id } = order;
-
-  await Order.updateOne({ _id: order_id }, { $set: { status: "placed" } });
-
-  await User.findByIdAndUpdate(user.sub, { $unset: { cart: 1 } });
-
-  return { order_id: razorpay_order_id, payment_id: razorpay_payment_id };
 };
 
 // export const retrieveOrderById = async (id) => {
