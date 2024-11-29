@@ -1,11 +1,16 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { userApiClient } from "../../api/userApi";
 
 export const fetchUserProfile = createAsyncThunk(
   "userProfile/fetchUserProfile",
-  async ({ userURL, userID }) => {
-    const res = await axios.get(`${userURL}/${userID}`);
-    return res.data;
+  async (userId, { rejectWithValue }) => {
+    try {
+      const res = await userApiClient.get(`/user/${userId}`);
+      return res.data.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
   }
 );
 

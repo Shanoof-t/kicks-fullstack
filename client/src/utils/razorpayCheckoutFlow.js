@@ -1,3 +1,4 @@
+import { fetchCartItems } from "../features/cart/cartAPI";
 import { verifypayment } from "../features/checkout/checkoutAPI";
 import { handleToast } from "./handleToast";
 
@@ -34,7 +35,7 @@ export default async (order, dispatch, navigate) => {
         handleToast(res.payload.status, res.payload.message, {
           onClose: () => {
             navigate("/orderdetails");
-            // dispatch(fetchCartItems());
+            dispatch(fetchCartItems());
           },
         });
       });

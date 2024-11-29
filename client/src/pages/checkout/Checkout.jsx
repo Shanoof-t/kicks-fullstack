@@ -40,14 +40,14 @@ function Checkout() {
           handleToast(status, message, {
             onClose: () => {
               navigate("/orderdetails");
-              // dispatch(fetchCartItems());
+              dispatch(fetchCartItems());
             },
           });
         } else if (data.status === "pending") {
           razorpayCheckoutFlow(data, dispatch, navigate)
-          .then(() => {            
-            navigate("/orderdetails");
-          });
+          // .then(() => {            
+          //   navigate("/orderdetails");
+          // });
         }
       });
     }

@@ -58,7 +58,7 @@ function ProductDetails() {
     const res = await dispatch(addToCart(dataToSend));
     handleToast(res.payload.status, res.payload.message);
     dispatch(fetchCartItem(productId));
-    // dispatch(fetchCartItems());
+    dispatch(fetchCartItems());
   };
 
   if (productDetailsLoading) return <Loading />;

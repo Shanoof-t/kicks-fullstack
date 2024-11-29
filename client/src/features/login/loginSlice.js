@@ -10,6 +10,7 @@ const initialState = {
     message: "",
     error: "",
     role: "",
+    userId: "",
   },
 };
 const loginSlice = createSlice({
@@ -34,7 +35,8 @@ const loginSlice = createSlice({
       })
       .addCase(userFetch.fulfilled, (state, action) => {
         state.userFetchValues.loading = false;
-        state.userFetchValues.role = action.payload.data.role;
+        state.userFetchValues.role = action.payload.data.user.role;
+        state.userFetchValues.userId = action.payload.data.user._id;
         state.userFetchValues.message = action.payload.message;
       })
       .addCase(userFetch.rejected, (state, action) => {

@@ -33,6 +33,7 @@ function Navbar() {
   const CartProductCount = useSelector((state) => state.cart.CartProductCount);
 
   const [user, setUser] = useState("");
+  
   useEffect(() => {
     const user = localStorage.getItem("userId");
     setUser(user);
@@ -271,9 +272,9 @@ function Navbar() {
                 {isSubmit && filteredItems.length > 0 && (
                   <div className="max-h-60 overflow-auto">
                     {filteredItems.map((value) => (
-                      <div className="m-1 p-1" key={value.id}>
+                      <div className="m-1 p-1" key={value._id}>
                         <Link
-                          to={`/product/${value.id}`}
+                          to={`/product/${value._id}`}
                           onClick={handleItemClick}
                         >
                           <h6 className="text-gray-700 hover:text-secondaryColor">

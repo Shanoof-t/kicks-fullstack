@@ -13,13 +13,15 @@ function Login() {
   const LoginValues = useSelector((state) => state.login.formValues);
   const userFetchValues = useSelector((state) => state.login.userFetchValues);
 
+  
   const handleSubmit = async (values) => {
     dispatch(userFetch(values));
   };
 
   useEffect(() => {
-    if (userFetchValues.role) {
+    if (userFetchValues.role && userFetchValues.userId) {
       localStorage.setItem("role", userFetchValues.role);
+      localStorage.setItem("userId", userFetchValues.userId);
       toast.success(userFetchValues.message, {
         onClose: () => {
           navigate(userFetchValues.role === "user" ? "/" : "/admin", {

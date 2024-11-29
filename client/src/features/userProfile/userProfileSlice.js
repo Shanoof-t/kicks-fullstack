@@ -4,7 +4,7 @@ const initialState = {
   user: null,
   userProfile: {
     loading: false,
-    data: [],
+    data: {},
     error: "",
   },
 };
@@ -27,7 +27,7 @@ const userProfileSlice = createSlice({
       })
       .addCase(fetchUserProfile.rejected, (state, action) => {
         state.userProfile.loading = false;
-        state.userProfile.error = action.error.message;
+        state.userProfile.error = action.payload.message;
       })
       .addCase(updateBlockedUser.pending, (state) => {
         state.userProfile.loading = true;
@@ -39,7 +39,7 @@ const userProfileSlice = createSlice({
       .addCase(updateBlockedUser.rejected, (state, action) => {
         state.userProfile.loading = false;
         state.userProfile.error = action.error.message;
-      })
+      });
   },
 });
 export const { setUserProfileUser } = userProfileSlice.actions;
