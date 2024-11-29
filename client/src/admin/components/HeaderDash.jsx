@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "../../assets/logo/Logo.png";
 import { Outlet, useNavigate } from "react-router-dom";
 import {
@@ -10,21 +10,30 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import dash from "../../assets/icons/dashboaard.svg";
 import productImg from "../../assets/icons/albums.svg";
 import orderListImg from "../../assets/icons/document-text.svg";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAllProductsToheader } from "../../features/dashboard_header/dashboardHeaderApi";
 
 const HeaderDash = () => {
   const navigate = useNavigate();
-  const allitems = useSelector((state) => state.allProducts.items.data);
+  const dispatch = useDispatch();
+  const allitems = useSelector((state) => state.dashBoardHeader.items.data);
   const role = localStorage.getItem("role");
+  useEffect(() => {
+    dispatch(fetchAllProductsToheader());
+  }, [navigate, dispatch]);
 
-  const casualFiltered = allitems.filter(
-    (value) => value.category === "CASUAL"
-  );
-  const footballFiltered = allitems.filter(
-    (value) => value.category === "FOOTBALL"
-  );
-  const runningFiltered = allitems.filter(
-    (value) => value.category === "RUNNING"
+  const [casualCount, footballCount, runningCount] = allitems.reduce(
+    (count, value) => {
+      if (value.category === "CASUAL") {
+        count[0]++;
+      } else if (value.category === "FOOTBALL") {
+        count[1]++;
+      } else if (value.category === "RUNNING") {
+        count[2]++;
+      }
+      return count;
+    },
+    [0, 0, 0]
   );
 
   const [categoryShow, setCategoryShow] = useState(false);
@@ -125,6 +134,7 @@ const HeaderDash = () => {
           </button>
 
           {/* Category Dropdown */}
+
           <div>
             <div
               className="flex justify-between items-center cursor-pointer mt-3"
@@ -147,7 +157,7 @@ const HeaderDash = () => {
                 >
                   <h1 className="text-sm text-gray-600">Casual</h1>
                   <span className="text-white bg-secondaryBlue text-center rounded w-10 h-8 flex items-center justify-center">
-                    {casualFiltered.length}
+                    {casualCount}
                   </span>
                 </div>
                 <div
@@ -156,7 +166,7 @@ const HeaderDash = () => {
                 >
                   <h1 className="text-sm text-gray-600">Football</h1>
                   <span className="text-white bg-secondaryBlue text-center rounded w-10 h-8 flex items-center justify-center">
-                    {footballFiltered.length}
+                    {footballCount}
                   </span>
                 </div>
                 <div
@@ -165,7 +175,7 @@ const HeaderDash = () => {
                 >
                   <h1 className="text-sm text-gray-600">Running</h1>
                   <span className="text-white bg-secondaryBlue text-center rounded w-10 h-8 flex items-center justify-center">
-                    {runningFiltered.length}
+                    {runningCount}
                   </span>
                 </div>
               </div>

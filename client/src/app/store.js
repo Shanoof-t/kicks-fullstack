@@ -19,6 +19,7 @@ import orderList from "../features/orderList/orderListSlice";
 import addProduct from "../features/addProduct/addProductSlice";
 import updateProduct from "../features/updateProduct/updateProductSlice";
 import userProfile from "../features/userProfile/userProfileSlice";
+import dashBoardHeader from "../features/dashboard_header/dashboardHeaderSlice";
 const store = configureStore({
   reducer: {
     login,
@@ -41,6 +42,7 @@ const store = configureStore({
     addProduct,
     updateProduct,
     userProfile,
+    dashBoardHeader,
   },
 });
 

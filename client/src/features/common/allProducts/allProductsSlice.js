@@ -16,6 +16,8 @@ const allProductSlice = createSlice({
     builder
       .addCase(fetchAllProducts.pending, (state) => {
         state.items.loading = true;
+        state.items.data = [];
+        state.items.error = "";
       })
       .addCase(fetchAllProducts.fulfilled, (state, action) => {
         state.items.loading = false;
@@ -27,6 +29,8 @@ const allProductSlice = createSlice({
       })
       .addCase(fetchcategoryProducts.pending, (state) => {
         state.items.loading = true;
+        state.items.data = [];
+        state.items.error = "";
       })
       .addCase(fetchcategoryProducts.fulfilled, (state, action) => {
         state.items.loading = false;
