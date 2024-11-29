@@ -2,122 +2,125 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { orderDetailsFetch } from "../features/order_details/orderDetailsAPI";
 import Loading from "../components/Loading";
-import razorpayCheckoutFlow from "../utils/razorpayCheckoutFlow";
 import { useNavigate } from "react-router-dom";
+import razorpayCheckoutFlow from "../utils/razorpayCheckoutFlow";
+
 function OrderDetails() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const orderdetails = useSelector((state) => state.orderDetails.orderData);
-  console.log(orderdetails);
+
+  const handleRepayment = (_id) => {
+    const order = orderdetails.data.find((order) => order._id === _id);
+    razorpayCheckoutFlow(order, dispatch, navigate);
+  };
+
   useEffect(() => {
     window.scroll(0, 0);
     dispatch(orderDetailsFetch());
   }, []);
 
-  const handleRepayment = (_id) => {
-    const order = orderdetails.data.find((order) => order._id === _id);
-    razorpayCheckoutFlow(order, dispatch, navigate).then(() => {
-      navigate("/orderdetails");
-    });
-  };
   if (orderdetails.loading) return <Loading />;
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="mb-8 text-center">
-        <h1 className="text-3xl font-bold text-gray-800">Orders</h1>
+      <div className="text-center mb-8">
+        <h1 className="text-4xl font-bold text-gray-900">Your Orders</h1>
       </div>
-      <hr className="mb-8 border-gray-300" />
+      <hr className="mb-6 border-gray-300" />
       {orderdetails.data.length === 0 ? (
         <div className="text-center">
-          <h1 className="font-bold text-xl">{orderdetails.error}</h1>
+          <h1 className="font-bold text-xl text-gray-700">
+            {orderdetails.error || "No orders found!"}
+          </h1>
         </div>
       ) : (
-        orderdetails.data.map((order) => {
-          return (
-            <div key={order._id} className=" rounded-lg mb-8 p-6">
-              <div>
-                <h1 className="text-3xl font-bold text-thirdColor">
-                  Order ID: {order._id}
-                </h1>
+        orderdetails.data.map((order) => (
+          <div
+            key={order._id}
+            className=" shadow-md rounded-lg mb-8 p-6 border border-gray-200"
+          >
+            <div className="mb-4">
+              <h1 className="text-2xl font-semibold text-gray-800">
+                Order ID:{" "}
+                <span className="text-primary font-bold">{order._id}</span>
+              </h1>
+            </div>
+            <hr className="my-4 border-gray-300" />
+            <div className="mb-6">
+              <h2 className="text-lg font-semibold text-gray-600 mb-2">
+                Delivery Details
+              </h2>
+              <div className="text-gray-700 space-y-2">
+                <p>
+                  <span className="font-semibold">Address:</span>{" "}
+                  {order.shipping_address.location}
+                </p>
+                <p>
+                  <span className="font-semibold">Phone:</span>{" "}
+                  {order.shipping_address.phone}
+                </p>
+                <p>
+                  <span className="font-semibold">Payment Method:</span>{" "}
+                  {order.payment_method}
+                </p>
+                <p>
+                  <span className="font-semibold">Status:</span>{" "}
+                  <span
+                    className={`${
+                      order.status === "pending"
+                        ? "text-yellow-500"
+                        : "text-green-600"
+                    } font-bold`}
+                  >
+                    {order.status}
+                  </span>
+                </p>
+                {order.status === "pending" && (
+                  <button
+                    onClick={() => handleRepayment(order._id)}
+                    className="w-32 px-4 py-2 text-white bg-thirdColor font-bold rounded hover:bg-hoverColor transition-colors duration-300"
+                  >
+                    Repay Now
+                  </button>
+                )}
               </div>
-              <hr className="my-4 border-black" />
-              <div className="mb-6">
-                <div>
-                  <h1 className="text-xl font-semibold text-thirdColor">
-                    Delivery
+            </div>
+            <h2 className="text-lg font-semibold text-gray-600 mb-4">
+              Products
+            </h2>
+            {order.products.map((item) => (
+              <div
+                key={item._id}
+                className="flex justify-between items-center  p-4 mb-4 rounded-md border border-gray-200"
+              >
+                <div className="flex items-center space-x-4">
+                  <img
+                    src={item.image_url}
+                    alt={item.name}
+                    className="w-24 h-24 object-cover rounded-lg"
+                  />
+                  <div>
+                    <h1 className="text-lg font-medium text-gray-800">
+                      {item.name}
+                    </h1>
+                    <p className="text-gray-600">
+                      Qty:{" "}
+                      <span className="font-semibold text-gray-800">
+                        {item.quantity}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <h1 className="text-lg font-bold text-gray-800">
+                    ${item.price}
                   </h1>
                 </div>
-                <div className="mt-3">
-                  <h5 className="text-lg font-medium text-thirdColor">
-                    Address
-                  </h5>
-                  <p className="text-gray-600">
-                    {order.shipping_address.location}
-                  </p>
-                  <p className="text-gray-600">
-                    <span className="text-thirdColor">Phone : </span>
-                    {order.shipping_address.phone}
-                  </p>
-                  <p className="text-gray-600">
-                    <span className="text-thirdColor">Payment : </span>
-                    {order.payment_method}
-                  </p>
-                  <p className="text-gray-600">
-                    <span className="text-thirdColor">Status : </span>
-                    {order.status}
-                  </p>
-                  {order.status === "pending" ? (
-                    <button onClick={() => handleRepayment(order._id)}>
-                      repayment
-                    </button>
-                  ) : (
-                    ""
-                  )}
-                </div>
               </div>
-              {order.products.map((item) => {
-                return (
-                  <div
-                    key={item._id}
-                    className="flex justify-between items-center  pb-4 mb-4"
-                  >
-                    <div className="flex items-center space-x-4">
-                      <img
-                        src={item.image_url}
-                        alt={item.name}
-                        className="w-40 h-40 object-cover rounded-lg"
-                      />
-                      <div>
-                        <h1 className="text-lg  font-medium text-gray-700">
-                          {item.name}
-                        </h1>
-                      </div>
-                    </div>
-                    <div className="text-right flex space-x-6 items-center">
-                      <div>
-                        <h1 className="text-xl font-semibold text-gray-800">
-                          ${item.price}
-                        </h1>
-                        <h5 className="text-sm text-gray-500">
-                          Qty: {item.quantity}
-                        </h5>
-                      </div>
-                      {/* <div>
-                        <button
-                          className="bg-thirdColor p-4 rounded-xl text-white font-bold hover:bg-hoverColor"
-                          onClick={() => handleCancel(order.id, item.productId)}
-                        >
-                          cancel order
-                        </button>
-                      </div> */}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          );
-        })
+            ))}
+          </div>
+        ))
       )}
     </div>
   );

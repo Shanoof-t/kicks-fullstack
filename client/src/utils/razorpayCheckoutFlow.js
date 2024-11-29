@@ -41,11 +41,11 @@ export default async (order, dispatch, navigate) => {
     },
     prefill: {
       name:
-        order.user_information.first_name +
+        order.shipping_address.first_name +
         " " +
-        order.user_information.last_name,
-      email: order.user_information.email,
-      contact: order.user_information.phone,
+        order.shipping_address.last_name,
+      email: order.shipping_address.email,
+      contact: order.shipping_address.phone,
     },
     notes: {
       address: "Razorpay Corporate Office",
