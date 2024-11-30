@@ -23,7 +23,6 @@ function ProductsDash() {
   const products = useSelector((state) => state.allProducts.items.data);
 
   useEffect(() => {
-    console.log(productCategory);
     if (productCategory === "all") {
       dispatch(fetchAllProducts());
     } else if (productCategory === "CASUAL") {

@@ -1,33 +1,37 @@
-import React, { useState } from "react";
+import React from "react";
 import { Field, Form, Formik } from "formik";
 import { addProductValidation } from "./components/AddProductValidation";
-import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { itemsURL } from "../utils/API_URL";
 import { useDispatch, useSelector } from "react-redux";
 import { setImageUrl } from "../features/addProduct/addProductSlice";
 import { addProduct } from "../features/addProduct/addProductAPI";
+import { handleToast } from "../utils/handleToast";
+
 function AddProduct() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const imageUrl = useSelector((state) => state.addProduct.imageUrl);
-  const handleSubmit = async (values) => {
-    const imageUrlToUse = imageUrl ? imageUrl : values.imageURL;
-    const itemData = {
-      ...values,
-      available_sizes: values.available_sizes.split(","),
-      category: values.category.toUpperCase(),
-      imageURL: imageUrlToUse,
-    };
-    dispatch(addProduct({ itemsURL, itemData }))
-      .then(() => {
-        toast.success("Item Updated", { onClose: () => navigate(-1) });
-        dispatch(setImageUrl(null));
-      })
-      .catch((error) => {
-        toast.error(error.message);
+
+  const image_url = useSelector((state) => state.addProduct.imageUrl);
+
+  const handleSubmit = async (data) => {
+    const formData = new FormData();
+    formData.append("image", data.image);
+    formData.append("name", data.name);
+    formData.append("description", data.description);
+    formData.append("category", data.category);
+    formData.append("brand", data.brand);
+    formData.append("gender", data.gender);
+    formData.append("quantity", data.quantity);
+    formData.append("available_sizes", data.available_sizes);
+    formData.append("price", data.price);
+
+    dispatch(addProduct({ formData })).then((res) => {
+      handleToast(res.payload.status, res.payload.message, {
+        onClose: () => navigate(-1),
       });
+      dispatch(setImageUrl(null));
+    });
   };
 
   const handleDrop = (e) => {
@@ -39,6 +43,7 @@ function AddProduct() {
     };
     reader.readAsDataURL(file);
   };
+
   return (
     <div className="p-3">
       <ToastContainer />
@@ -49,17 +54,15 @@ function AddProduct() {
           category: "",
           brand: "",
           gender: "",
-          items_left: "",
+          quantity: "",
           available_sizes: "",
           price: "",
-          offer_price: "",
-          imageURL: "",
         }}
-        validationSchema={addProductValidation(imageUrl)}
+        validationSchema={addProductValidation(image_url)}
         onSubmit={handleSubmit}
       >
-        {({ errors, handleChange, touched, values }) => (
-          <Form>
+        {({ errors, handleChange, touched, values, setFieldValue }) => (
+          <Form method="post" encType="multipart/form-data">
             <div className="mb-6">
               <h1 className="text-3xl font-bold">Product Details</h1>
             </div>
@@ -108,19 +111,6 @@ function AddProduct() {
                 <div className="mb-4">
                   <h2 className="font-semibold mb-1">Category</h2>
 
-                  {/* <Field
-                    type="text"
-                    name="category"
-                    placeholder="Type category here"
-                    onChange={handleChange}
-                    value={values.category}
-                    className={`bg-transparent border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 
-                      ${
-                        errors.name && touched.name
-                          ? "border-red-500"
-                          : "border-gray-300"
-                      }`}
-                  ></Field> */}
                   <select
                     name="category"
                     onChange={handleChange}
@@ -203,11 +193,11 @@ function AddProduct() {
                   <h2 className="font-semibold mb-1">Stock Quantity</h2>
 
                   <Field
-                    type="number"
-                    name="items_left"
+                    type="test"
+                    name="quantity"
                     placeholder="Type quantity here"
                     onChange={handleChange}
-                    value={values.items_left}
+                    value={values.quantity}
                     className={`bg-transparent border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 
                       ${
                         errors.name && touched.name
@@ -215,8 +205,8 @@ function AddProduct() {
                           : "border-gray-300"
                       }`}
                   ></Field>
-                  {errors.items_left && touched.items_left && (
-                    <small className="text-red-600">{errors.items_left}</small>
+                  {errors.quantity && touched.quantity && (
+                    <small className="text-red-600">{errors.quantity}</small>
                   )}
                 </div>
                 <div className="mb-4">
@@ -250,7 +240,7 @@ function AddProduct() {
                   <h2 className="font-semibold mb-1">Regular Price</h2>
 
                   <Field
-                    type="number"
+                    type="text"
                     name="price"
                     placeholder="Enter regular prices here"
                     onChange={handleChange}
@@ -266,33 +256,14 @@ function AddProduct() {
                     <small className="text-red-600">{errors.price}</small>
                   )}
                 </div>
-                <div className="mb-4">
-                  <h2 className="font-semibold mb-1">
-                    Sale Price <span>(optional)</span>
-                  </h2>
-
-                  <Field
-                    type="number"
-                    name="offer_price"
-                    placeholder="Enter sale price here"
-                    onChange={handleChange}
-                    value={values.offer_price}
-                    className={`bg-transparent border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 
-                      ${
-                        errors.name && touched.name
-                          ? "border-red-500"
-                          : "border-gray-300"
-                      }`}
-                  ></Field>
-                </div>
               </div>
               <div className="w-1/2 p-4">
                 <div className="mb-4">
                   <h2 className="font-semibold mb-1">Preview</h2>
                   <div>
-                    {values.imageURL || imageUrl ? (
+                    {values.image_url || image_url ? (
                       <img
-                        src={values.imageURL || imageUrl}
+                        src={values.image_url || image_url}
                         alt="Preview"
                         className="w-full border border-gray-300 rounded-md object-cover"
                       />
@@ -316,21 +287,27 @@ function AddProduct() {
                   <h2 className="text-center mb-2">OR</h2>
                   <h2 className="font-semibold mb-1">Image URL</h2>
 
-                  <Field
-                    type="text"
-                    name="imageURL"
-                    placeholder="Type image URL here"
-                    onChange={handleChange}
-                    value={values.imageURL}
+                  <input
+                    type="file"
+                    name="image"
                     className={`bg-transparent border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 
                       ${
-                        errors.name && touched.name
+                        errors.image_url && touched.image_url
                           ? "border-red-500"
                           : "border-gray-300"
                       }`}
-                  ></Field>
-                  {errors.imageURL && touched.imageURL && (
-                    <small className="text-red-600">{errors.imageURL}</small>
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      setFieldValue("image", file);
+                      const reader = new FileReader();
+                      reader.onloadend = () => {
+                        dispatch(setImageUrl(reader.result));
+                      };
+                      reader.readAsDataURL(file);
+                    }}
+                  />
+                  {errors.image_url && touched.image_url && (
+                    <small className="text-red-600">{errors.image_url}</small>
                   )}
                 </div>
               </div>

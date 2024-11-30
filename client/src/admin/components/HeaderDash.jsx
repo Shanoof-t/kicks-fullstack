@@ -18,6 +18,7 @@ const HeaderDash = () => {
   const dispatch = useDispatch();
   const allitems = useSelector((state) => state.dashBoardHeader.items.data);
   const role = localStorage.getItem("role");
+  
   useEffect(() => {
     dispatch(fetchAllProductsToheader());
   }, [navigate, dispatch]);

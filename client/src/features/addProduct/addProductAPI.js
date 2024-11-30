@@ -1,10 +1,14 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import { adminApiClient } from "../../api/adminApi";
 
 export const addProduct = createAsyncThunk(
   "addProduct/addProduct",
-  async ({ itemsURL, itemData }) => {
-    const res = await axios.post(itemsURL, itemData);
-    return res.data;
+  async ({ formData }, { rejectWithValue }) => {
+    try {
+      const res = await adminApiClient.post("/products", formData);
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
   }
 );
