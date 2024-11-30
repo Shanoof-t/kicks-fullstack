@@ -6,13 +6,15 @@ import {
   faEllipsis,
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
-
+import Loading from "../components/Loading";
 import { toast, ToastContainer } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  deleteProduct,
   fetchAllProducts,
   fetchcategoryProducts,
 } from "../features/common/allProducts/allProductAPI";
+import { handleToast } from "../utils/handleToast";
 
 function ProductsDash() {
   const [menuToggle, setMenuToggle] = useState(null);
@@ -21,8 +23,9 @@ function ProductsDash() {
   const navigate = useNavigate();
 
   const products = useSelector((state) => state.allProducts.items.data);
+  const loading = useSelector((state) => state.allProducts.items.loading);
 
-  useEffect(() => {
+  function loadProducts() {
     if (productCategory === "all") {
       dispatch(fetchAllProducts());
     } else if (productCategory === "CASUAL") {
@@ -32,19 +35,20 @@ function ProductsDash() {
     } else if (productCategory === "RUNNING") {
       dispatch(fetchcategoryProducts({ productCategory }));
     }
+  }
+
+  useEffect(() => {
+    loadProducts();
   }, [productCategory]);
 
   const handleDeleteProduct = (id) => {
-    // axios
-    //   .delete(`${itemsURL}/${id}`)
-    //   .then(() => {
-    //     toast.success("Item deleted");
-    //     setProducts(products.filter((item) => item.id !== id));
-    //   })
-    //   .catch((err) => {
-    //     toast.error(err.message);
-    //   });
+    dispatch(deleteProduct({ id })).then((res) => {
+      handleToast(res.payload.status, res.payload.message);
+      loadProducts();
+    });
   };
+
+  if (loading) return <Loading />;
 
   return (
     <div className="max-w-screen-lg mx-auto px-4 py-6 lg:px-8 lg:py-8 min-h-screen bg-gray-100 ">
@@ -63,7 +67,7 @@ function ProductsDash() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 ">
-        {products.map((item, index) => (
+        {products.map((item) => (
           <div
             key={`${item._id}`}
             className="bg-white shadow-md rounded-lg overflow-hidden relative"

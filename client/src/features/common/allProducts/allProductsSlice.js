@@ -1,5 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchAllProducts, fetchcategoryProducts } from "./allProductAPI";
+import {
+  deleteProduct,
+  fetchAllProducts,
+  fetchcategoryProducts,
+} from "./allProductAPI";
 
 const initialState = {
   items: {
@@ -37,6 +41,18 @@ const allProductSlice = createSlice({
         state.items.data = action.payload;
       })
       .addCase(fetchcategoryProducts.rejected, (state, action) => {
+        state.items.loading = true;
+        state.items.error = action.payload.message;
+      })
+      .addCase(deleteProduct.pending, (state) => {
+        state.items.loading = true;
+        state.items.data = [];
+        state.items.error = "";
+      })
+      .addCase(deleteProduct.fulfilled, (state, action) => {
+        state.items.loading = false;
+      })
+      .addCase(deleteProduct.rejected, (state, action) => {
         state.items.loading = true;
         state.items.error = action.payload.message;
       });

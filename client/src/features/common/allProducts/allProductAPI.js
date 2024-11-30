@@ -27,3 +27,15 @@ export const fetchcategoryProducts = createAsyncThunk(
     }
   }
 );
+
+export const deleteProduct = createAsyncThunk(
+  "products/deleteProduct",
+  async ({ id }, { rejectWithValue }) => {
+    try {
+      const res = await adminApiClient.delete(`/products/${id}`);
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);

@@ -13,6 +13,7 @@ function AddProduct() {
   const dispatch = useDispatch();
 
   const image_url = useSelector((state) => state.addProduct.imageUrl);
+  const loading = useSelector((state) => state.addProduct.loading);
 
   const handleSubmit = async (data) => {
     const formData = new FormData();
@@ -30,13 +31,14 @@ function AddProduct() {
       handleToast(res.payload.status, res.payload.message, {
         onClose: () => navigate(-1),
       });
-      dispatch(setImageUrl(null));
+      // dispatch(setImageUrl(null));
     });
   };
 
-  const handleDrop = (e) => {
+  const handleImage = (e, setFieldValue) => {
     e.preventDefault();
-    const file = e.dataTransfer.files[0];
+    const file = e.target.files[0];
+    setFieldValue("image", file);
     const reader = new FileReader();
     reader.onloadend = () => {
       dispatch(setImageUrl(reader.result));
@@ -44,6 +46,19 @@ function AddProduct() {
     reader.readAsDataURL(file);
   };
 
+  const handleDrop = (e, setFieldValue) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    setFieldValue("image", file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      dispatch(setImageUrl(reader.result));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  if (loading) return <loading />;
+  
   return (
     <div className="p-3">
       <ToastContainer />
@@ -66,7 +81,7 @@ function AddProduct() {
             <div className="mb-6">
               <h1 className="text-3xl font-bold">Product Details</h1>
             </div>
-            <div className="flex justify-evenly bg-white p-3">
+            <div className="flex justify-evenly  p-3">
               <div className="w-1/2 p-4">
                 <div className="mb-4">
                   <h2 className="font-semibold mb-1">Product Name</h2>
@@ -114,7 +129,7 @@ function AddProduct() {
                   <select
                     name="category"
                     onChange={handleChange}
-                    className="border border-gray-300 rounded-lg p-2  w-full bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="border border-gray-300 rounded-lg p-2  w-full  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
                     <option value="" disabled selected>
                       Categories
@@ -279,7 +294,7 @@ function AddProduct() {
                   <div
                     className="border-2 border-dashed border-gray-400 p-10 text-center mb-4 cursor-pointer hover:border-blue-500 transition-colors duration-300"
                     onDragOver={(e) => e.preventDefault()}
-                    onDrop={handleDrop}
+                    onDrop={(e) => handleDrop(e, setFieldValue)}
                   >
                     <p className="text-gray-500">Drop your image here</p>
                   </div>
@@ -296,15 +311,7 @@ function AddProduct() {
                           ? "border-red-500"
                           : "border-gray-300"
                       }`}
-                    onChange={(e) => {
-                      const file = e.target.files[0];
-                      setFieldValue("image", file);
-                      const reader = new FileReader();
-                      reader.onloadend = () => {
-                        dispatch(setImageUrl(reader.result));
-                      };
-                      reader.readAsDataURL(file);
-                    }}
+                    onChange={(e) => handleImage(e, setFieldValue)}
                   />
                   {errors.image_url && touched.image_url && (
                     <small className="text-red-600">{errors.image_url}</small>
