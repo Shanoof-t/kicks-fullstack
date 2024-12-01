@@ -1,8 +1,6 @@
 import React, { useEffect } from "react";
 import { Field, Form, Formik } from "formik";
 import { addProductValidation } from "./components/AddProductValidation";
-import { itemsURL } from "../utils/API_URL";
-import { toast, ToastContainer } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -13,6 +11,8 @@ import {
   fetchProduct,
   updateProduct,
 } from "../features/updateProduct/updateProductAPI";
+import { handleToast } from "../utils/handleToast";
+import Loading from "../components/Loading";
 
 function UpdateProduct() {
   const navigate = useNavigate();
@@ -22,37 +22,33 @@ function UpdateProduct() {
   const initialInformation = useSelector(
     (state) => state.updateProduct.initialDatas
   );
+  const loading = useSelector(
+    (state) => state.updateProduct.updateProduct.loading
+  );
 
   useEffect(() => {
-    dispatch(fetchProduct({ itemsURL, itemId })).then((res) => {
-      const sizes = res.payload.available_sizes.join(",");
-      dispatch(setInitialInformation(sizes));
-    });
+    dispatch(fetchProduct({ itemId }));
   }, [itemId]);
 
-  const imageUrl = useSelector((state) => state.updateProduct.imageUrl);
+  const image_url = useSelector((state) => state.updateProduct.imageUrl);
 
-  const handleSubmit = async (values) => {
-    const imageUrlToUse = imageUrl ? imageUrl : values.imageURL;
-    const itemData = {
-      ...values,
-      available_sizes: values.available_sizes.split(","),
-      category: values.category.toUpperCase(),
-      imageURL: imageUrlToUse,
-    };
-    dispatch(updateProduct({ itemsURL, itemId, itemData })).then((res) => {
-      if (res.error) {
-        console.log("this is in error", res.error);
-        toast.error(res.error.message);
-      } else {
-        toast.success("Item updated successfully", {
-          className: "mt-12",
-          onClose: () => {
-            navigate(-1);
-            dispatch(updateImageUrl(null));
-          },
-        });
-      }
+  const handleSubmit = async (data) => {
+    console.log("data", data);
+    const formData = new FormData();
+    formData.append("image", data.image);
+    formData.append("name", data.name);
+    formData.append("description", data.description);
+    formData.append("category", data.category);
+    formData.append("brand", data.brand);
+    formData.append("gender", data.gender);
+    formData.append("quantity", data.quantity);
+    formData.append("available_sizes", data.available_sizes);
+    formData.append("price", data.price);
+
+    dispatch(updateProduct({ itemId, formData })).then((res) => {
+      handleToast(res.payload.status, res.payload.message).then(() =>
+        navigate(-1)
+      );
     });
   };
 
@@ -66,21 +62,32 @@ function UpdateProduct() {
     reader.readAsDataURL(file);
   };
 
+  const handleImage = (e, setFieldValue) => {
+    e.preventDefault();
+    const file = e.target.files[0];
+    setFieldValue("image", file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      dispatch(updateImageUrl(reader.result));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  if (loading) return <Loading />;
   return (
     <div className="p-8">
-      <ToastContainer />
       <Formik
         enableReinitialize={true}
         initialValues={initialInformation}
-        validationSchema={addProductValidation(imageUrl)}
+        validationSchema={addProductValidation()}
         onSubmit={handleSubmit}
       >
-        {({ errors, handleChange, touched, values }) => (
-          <Form>
+        {({ errors, handleChange, values, setFieldValue }) => (
+          <Form method="post" encType="multipart/form-data">
             <div className="mb-6">
               <h1 className="text-3xl font-bold">Product Details</h1>
             </div>
-            <div className="flex justify-evenly bg-white p-3 shadow-lg rounded-lg">
+            <div className="flex justify-evenly  p-3">
               <div className="w-1/2 p-4">
                 <div className="mb-4">
                   <h2 className="font-semibold mb-1">Product Name</h2>
@@ -90,67 +97,63 @@ function UpdateProduct() {
                     placeholder="Type name here"
                     onChange={handleChange}
                     value={values.name}
-                    className={`bg-transparent border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      errors.name && touched.name
-                        ? "border-red-500"
-                        : "border-gray-300"
-                    }`}
-                  />
-                  {errors.name && touched.name && (
+                    className={`bg-transparent border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 
+              ${errors.name ? "border-red-500" : "border-gray-300"}`}
+                  ></Field>
+
+                  {errors.name && (
                     <small className="text-red-600">{errors.name}</small>
                   )}
                 </div>
                 <div className="mb-4">
                   <h2 className="font-semibold mb-1">Description</h2>
+
                   <Field
                     type="text"
                     name="description"
                     placeholder="Type description here"
                     onChange={handleChange}
                     value={values.description}
-                    className={`bg-transparent border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      errors.description && touched.description
-                        ? "border-red-500"
-                        : "border-gray-300"
-                    }`}
-                  />
-                  {errors.description && touched.description && (
+                    className={`bg-transparent border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 
+                      ${errors.name ? "border-red-500" : "border-gray-300"}`}
+                  ></Field>
+                  {errors.description && (
                     <small className="text-red-600">{errors.description}</small>
                   )}
                 </div>
                 <div className="mb-4">
                   <h2 className="font-semibold mb-1">Category</h2>
-                  <Field
-                    type="text"
+
+                  <select
                     name="category"
-                    placeholder="Type category here"
                     onChange={handleChange}
-                    value={values.category}
-                    className={`bg-transparent border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      errors.category && touched.category
-                        ? "border-red-500"
-                        : "border-gray-300"
-                    }`}
-                  />
-                  {errors.category && touched.category && (
+                    className="border border-gray-300 rounded-lg p-2  w-full  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="" disabled selected>
+                      Categories
+                    </option>
+                    <option value="CASUAL">Casual</option>
+                    <option value="FOOTBALL">Football</option>
+                    <option value="RUNNING">Running</option>
+                  </select>
+
+                  {errors.category && (
                     <small className="text-red-600">{errors.category}</small>
                   )}
                 </div>
                 <div className="mb-4">
                   <h2 className="font-semibold mb-1">Brand Name</h2>
+
                   <Field
                     type="text"
                     name="brand"
                     placeholder="Type brand name here"
                     onChange={handleChange}
                     value={values.brand}
-                    className={`bg-transparent border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      errors.brand && touched.brand
-                        ? "border-red-500"
-                        : "border-gray-300"
-                    }`}
-                  />
-                  {errors.brand && touched.brand && (
+                    className={`bg-transparent border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 
+                      ${errors.name ? "border-red-500" : "border-gray-300"}`}
+                  ></Field>
+                  {errors.brand && (
                     <small className="text-red-600">{errors.brand}</small>
                   )}
                 </div>
@@ -165,7 +168,7 @@ function UpdateProduct() {
                         onChange={handleChange}
                         checked={values.gender === "MEN"}
                         className="me-2"
-                      />
+                      ></Field>
                       Men
                     </label>
                     <label className="flex items-center">
@@ -176,7 +179,7 @@ function UpdateProduct() {
                         onChange={handleChange}
                         checked={values.gender === "WOMEN"}
                         className="me-2"
-                      />
+                      ></Field>
                       Women
                     </label>
                     <label className="flex items-center">
@@ -187,52 +190,48 @@ function UpdateProduct() {
                         onChange={handleChange}
                         checked={values.gender === "KIDS"}
                         className="me-2"
-                      />
+                      ></Field>
                       Kids
                     </label>
-                    {errors.gender && touched.gender && (
+                    {errors.gender && (
                       <small className="text-red-600">{errors.gender}</small>
                     )}
                   </div>
                 </div>
                 <div className="mb-4">
                   <h2 className="font-semibold mb-1">Stock Quantity</h2>
+
                   <Field
-                    type="number"
-                    name="items_left"
+                    type="test"
+                    name="quantity"
                     placeholder="Type quantity here"
                     onChange={handleChange}
-                    value={values.items_left}
-                    className={`bg-transparent border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      errors.items_left && touched.items_left
-                        ? "border-red-500"
-                        : "border-gray-300"
-                    }`}
-                  />
-                  {errors.items_left && touched.items_left && (
-                    <small className="text-red-600">{errors.items_left}</small>
+                    value={values.quantity}
+                    className={`bg-transparent border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 
+                      ${errors.name ? "border-red-500" : "border-gray-300"}`}
+                  ></Field>
+                  {errors.quantity && (
+                    <small className="text-red-600">{errors.quantity}</small>
                   )}
                 </div>
                 <div className="mb-4">
                   <h2 className="font-semibold mb-1">
                     Sizes{" "}
                     <span className="text-sm text-gray-500">
-                      (Enter sizes separated by commas)
+                      (Enter sizes with ",")
                     </span>
                   </h2>
+
                   <Field
                     type="text"
                     name="available_sizes"
                     placeholder="Enter sizes here"
                     onChange={handleChange}
                     value={values.available_sizes}
-                    className={`bg-transparent border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      errors.available_sizes && touched.available_sizes
-                        ? "border-red-500"
-                        : "border-gray-300"
-                    }`}
-                  />
-                  {errors.available_sizes && touched.available_sizes && (
+                    className={`bg-transparent border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 
+                      ${errors.name ? "border-red-500" : "border-gray-300"}`}
+                  ></Field>
+                  {errors.available_sizes && (
                     <small className="text-red-600">
                       {errors.available_sizes}
                     </small>
@@ -240,49 +239,34 @@ function UpdateProduct() {
                 </div>
                 <div className="mb-4">
                   <h2 className="font-semibold mb-1">Regular Price</h2>
+
                   <Field
-                    type="number"
+                    type="text"
                     name="price"
-                    placeholder="Enter regular price here"
+                    placeholder="Enter regular prices here"
                     onChange={handleChange}
                     value={values.price}
-                    className={`bg-transparent border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      errors.price && touched.price
-                        ? "border-red-500"
-                        : "border-gray-300"
-                    }`}
-                  />
-                  {errors.price && touched.price && (
+                    className={`bg-transparent border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 
+                      ${errors.name ? "border-red-500" : "border-gray-300"}`}
+                  ></Field>
+                  {errors.price && (
                     <small className="text-red-600">{errors.price}</small>
                   )}
-                </div>
-                <div className="mb-4">
-                  <h2 className="font-semibold mb-1">
-                    Sale Price <span>(optional)</span>
-                  </h2>
-                  <Field
-                    type="number"
-                    name="offer_price"
-                    placeholder="Enter sale price here"
-                    onChange={handleChange}
-                    value={values.offer_price}
-                    className="bg-transparent border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
                 </div>
               </div>
               <div className="w-1/2 p-4">
                 <div className="mb-4">
                   <h2 className="font-semibold mb-1">Preview</h2>
                   <div>
-                    {values.imageURL || imageUrl ? (
+                    {values.image_url || image_url ? (
                       <img
-                        src={values.imageURL || imageUrl}
+                        src={values.image_url || image_url}
                         alt="Preview"
-                        className="w-full  border border-gray-300 rounded-md object-cover"
+                        className="w-full border border-gray-300 rounded-md object-cover"
                       />
                     ) : (
-                      <h1 className="w-full h-40 border text-center content-center border-gray-300 rounded-md flex items-center justify-center">
-                        Enter image URL or drop image
+                      <h1 className="w-full h-40 border text-center content-center border-gray-300 rounded-md object-cover">
+                        Enter image url
                       </h1>
                     )}
                   </div>
@@ -290,28 +274,39 @@ function UpdateProduct() {
                 <div className="mb-4">
                   <h2 className="font-semibold mb-1">Add Image</h2>
                   <div
-                    className="border-dashed border-4 border-gray-400 p-8 text-center mb-4 cursor-pointer"
+                    className="border-2 border-dashed border-gray-400 p-10 text-center mb-4 cursor-pointer hover:border-blue-500 hover:bg-gray-50 transition-colors duration-300 rounded-lg"
                     onDragOver={(e) => e.preventDefault()}
-                    onDrop={handleDrop}
+                    onDrop={(e) => handleDrop(e, setFieldValue)}
                   >
-                    <p>Drop your image here</p>
+                    <p className="text-gray-500">
+                      Drag and drop your image here
+                    </p>
+                    <p className="text-sm text-gray-400">
+                      Supported formats: .jpg, .png
+                    </p>
                   </div>
-                  <h2 className="text-center mb-2">OR</h2>
-                  <h2 className="font-semibold mb-1">Image URL</h2>
-                  <Field
-                    type="text"
-                    name="imageURL"
-                    placeholder="Type image URL here"
-                    onChange={handleChange}
-                    value={values.imageURL}
-                    className={`bg-transparent border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      errors.imageURL && touched.imageURL
-                        ? "border-red-500"
-                        : "border-gray-300"
-                    }`}
+
+                  <h2 className="text-center mb-2 font-medium text-gray-600">
+                    OR
+                  </h2>
+
+                  <label
+                    htmlFor="fileInput"
+                    className="block bg-blue-500 text-white text-center py-2 px-4 rounded-md cursor-pointer hover:bg-blue-600 transition duration-200"
+                  >
+                    Choose File
+                  </label>
+                  <input
+                    type="file"
+                    id="fileInput"
+                    name="image"
+                    className="hidden"
+                    onChange={(e) => handleImage(e, setFieldValue)}
                   />
-                  {errors.imageURL && touched.imageURL && (
-                    <small className="text-red-600">{errors.imageURL}</small>
+                  {errors.image && (
+                    <small className="text-red-600 mt-1 block text-sm">
+                      {errors.image}
+                    </small>
                   )}
                 </div>
               </div>

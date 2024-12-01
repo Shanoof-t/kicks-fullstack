@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setImageUrl } from "../features/addProduct/addProductSlice";
 import { addProduct } from "../features/addProduct/addProductAPI";
 import { handleToast } from "../utils/handleToast";
+import Loading from "../components/Loading";
 
 function AddProduct() {
   const navigate = useNavigate();
@@ -57,8 +58,8 @@ function AddProduct() {
     reader.readAsDataURL(file);
   };
 
-  if (loading) return <loading />;
-  
+  if (loading) return <Loading />;
+
   return (
     <div className="p-3">
       <ToastContainer />
@@ -73,7 +74,7 @@ function AddProduct() {
           available_sizes: "",
           price: "",
         }}
-        validationSchema={addProductValidation(image_url)}
+        validationSchema={addProductValidation()}
         onSubmit={handleSubmit}
       >
         {({ errors, handleChange, touched, values, setFieldValue }) => (
@@ -292,29 +293,39 @@ function AddProduct() {
                 <div className="mb-4">
                   <h2 className="font-semibold mb-1">Add Image</h2>
                   <div
-                    className="border-2 border-dashed border-gray-400 p-10 text-center mb-4 cursor-pointer hover:border-blue-500 transition-colors duration-300"
+                    className="border-2 border-dashed border-gray-400 p-10 text-center mb-4 cursor-pointer hover:border-blue-500 hover:bg-gray-50 transition-colors duration-300 rounded-lg"
                     onDragOver={(e) => e.preventDefault()}
                     onDrop={(e) => handleDrop(e, setFieldValue)}
                   >
-                    <p className="text-gray-500">Drop your image here</p>
+                    <p className="text-gray-500">
+                      Drag and drop your image here
+                    </p>
+                    <p className="text-sm text-gray-400">
+                      Supported formats: .jpg, .png
+                    </p>
                   </div>
 
-                  <h2 className="text-center mb-2">OR</h2>
-                  <h2 className="font-semibold mb-1">Image URL</h2>
+                  <h2 className="text-center mb-2 font-medium text-gray-600">
+                    OR
+                  </h2>
 
+                  <label
+                    htmlFor="fileInput"
+                    className="block bg-blue-500 text-white text-center py-2 px-4 rounded-md cursor-pointer hover:bg-blue-600 transition duration-200"
+                  >
+                    Choose File
+                  </label>
                   <input
                     type="file"
+                    id="fileInput"
                     name="image"
-                    className={`bg-transparent border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 
-                      ${
-                        errors.image_url && touched.image_url
-                          ? "border-red-500"
-                          : "border-gray-300"
-                      }`}
+                    className="hidden"
                     onChange={(e) => handleImage(e, setFieldValue)}
                   />
-                  {errors.image_url && touched.image_url && (
-                    <small className="text-red-600">{errors.image_url}</small>
+                  {errors.image && (
+                    <small className="text-red-600 mt-1 block text-sm">
+                      {errors.image}
+                    </small>
                   )}
                 </div>
               </div>

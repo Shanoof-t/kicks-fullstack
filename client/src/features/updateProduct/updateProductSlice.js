@@ -18,11 +18,9 @@ const initialState = {
     category: "",
     brand: "",
     gender: "",
-    items_left: "",
+    quantity: "".toString(),
     available_sizes: "",
     price: "",
-    offer_price: "",
-    imageURL: "",
   },
 };
 const updateProductSlice = createSlice({
@@ -45,6 +43,9 @@ const updateProductSlice = createSlice({
         state.fetchProduct.loading = false;
         state.fetchProduct.data = action.payload;
         state.initialDatas = action.payload;
+        state.initialDatas.quantity = action.payload.items_left;
+        state.initialDatas.available_sizes =
+          action.payload.available_sizes.join(",");
       })
       .addCase(fetchProduct.rejected, (state, action) => {
         state.fetchProduct.loading = false;
@@ -55,7 +56,7 @@ const updateProductSlice = createSlice({
       })
       .addCase(updateProduct.fulfilled, (state, action) => {
         state.updateProduct.loading = false;
-        state.updateProduct.data = action.payload;
+        state.updateProduct.data = action.payload.data;
       })
       .addCase(updateProduct.rejected, (state, action) => {
         state.updateProduct.loading = false;

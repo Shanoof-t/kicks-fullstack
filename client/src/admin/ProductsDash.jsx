@@ -7,7 +7,6 @@ import {
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import Loading from "../components/Loading";
-import { toast, ToastContainer } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import {
   deleteProduct,
@@ -44,7 +43,7 @@ function ProductsDash() {
   const handleDeleteProduct = (id) => {
     dispatch(deleteProduct({ id })).then((res) => {
       handleToast(res.payload.status, res.payload.message);
-      loadProducts();
+      if (res.payload.status === "success") loadProducts();
     });
   };
 
@@ -52,7 +51,6 @@ function ProductsDash() {
 
   return (
     <div className="max-w-screen-lg mx-auto px-4 py-6 lg:px-8 lg:py-8 min-h-screen bg-gray-100 ">
-      <ToastContainer />
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">
           {productCategory === "all" ? "ALL" : productCategory} PRODUCTS

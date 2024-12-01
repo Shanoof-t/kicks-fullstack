@@ -15,7 +15,7 @@ export const addProductValidation = (image_url) => {
         "input must be 2 digit number and separated by comma"
       ),
     price: Yup.string().required("Enter Regular product price"),
-    // image: Yup.object().required("Image is required"),
+    image: Yup.mixed().required("Image is required"),
     // image_url: Yup.string().test(
     //   "imageUrl-or-imageURL",
     //   "Image is required",
