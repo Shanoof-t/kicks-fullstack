@@ -5,12 +5,15 @@ import { allUsersFetch } from "../features/common/allUsers/allUsersAPI";
 
 function Users() {
   const users = useSelector((state) => state.allUsers.data);
+
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(allUsersFetch());
   }, []);
 
   const [userType, setUserType] = useState("allusers");
+
   const activeUsers = users.filter((value) => value.isAllowed);
   const nonActiveUsers = users.filter((value) => !value.isAllowed);
 
@@ -61,7 +64,7 @@ function Users() {
         </select>
       </div>
 
-      <div className="overflow-x-auto bg-white p-6 rounded-lg shadow-md">
+      <div className="overflow-x-auto p-6 ">
         <table className="min-w-full table-auto">
           <thead className="bg-gray-200">
             <tr>

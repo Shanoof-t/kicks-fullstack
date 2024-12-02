@@ -19,17 +19,21 @@ function UserList({ value }) {
   return user.map((value) => {
     return (
       <tr
-        key={value.id}
+        key={value._id}
         className="hover:bg-gray-100 cursor-pointer"
-        onClick={() => navigate(`/admin/userprofile/${value.id}`)}
+        onClick={() => navigate(`/admin/userprofile/${value._id}`)}
       >
-        <td className="border px-4 py-2 text-sm text-gray-600">{value.id}</td>
-        <td className="border px-4 py-2 text-sm text-gray-600">{`${value.firstName} ${value.lastName}`}</td>
-        <td className="border px-4 py-2 text-sm text-gray-600">{value.email}</td>
+        <td className="border px-4 py-2 text-sm text-gray-600">{value._id}</td>
+        <td className="border px-4 py-2 text-sm text-gray-600">{`${value.first_name} ${value.last_name}`}</td>
+        <td className="border px-4 py-2 text-sm text-gray-600">
+          {value.email}
+        </td>
         <td className="border px-4 py-2 text-sm">
           <span
             className={`${
-              value.isAllowed ? "bg-green-200 text-green-800" : "bg-red-200 text-red-800"
+              value.isAllowed
+                ? "bg-green-200 text-green-800"
+                : "bg-red-200 text-red-800"
             } px-2 py-1 rounded-full text-xs`}
           >
             {value.isAllowed ? "Active" : "NonActive"}

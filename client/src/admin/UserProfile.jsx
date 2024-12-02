@@ -3,95 +3,87 @@ import { useParams } from "react-router-dom";
 import { userURL } from "../utils/API_URL";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserProfileUser } from "../features/userProfile/userProfileSlice";
-import { fetchUserProfile, updateBlockedUser } from "../features/userProfile/userProfileAPI";
+import {
+  fetchUserProfileBYId,
+  updateBlockedUser,
+} from "../features/userProfile/userProfileAPI";
 import { allUsersFetch } from "../features/common/allUsers/allUsersAPI";
 import { setUsers } from "../features/common/allUsers/allUsersSlice";
+import Loading from "../components/Loading";
+import { handleToast } from "../utils/handleToast";
 
 function UserProfile() {
   const { userID } = useParams();
   const dispatch = useDispatch();
 
-  const users = useSelector((state) => state.allUsers.data);
-  const user = useSelector((state) => state.userProfile.user);
+  const user = useSelector((state) => state.userProfile.userProfile.data);
+  const loading = useSelector((state) => state.userProfile.userProfile.loading);
 
   useEffect(() => {
-    dispatch(allUsersFetch());
-  }, []);
+    dispatch(fetchUserProfileBYId(userID));
+  }, [userID]);
 
-  useEffect(() => {
-    const userData = users.find((value) => value.id === userID);
-    if (userData) {
-      dispatch(setUserProfileUser(userData));
-    } else {
-      dispatch(fetchUserProfile({ userURL, userID })).then((res) => {
-        dispatch(setUserProfileUser(res.payload));
+  const handleBlock = (action) => {
+    dispatch(updateBlockedUser({ userID, action })).then((res) => {
+      console.log("thos is res block", res);
+      const { status, message } = res.payload;
+      handleToast(status, message).then(() => {
+        dispatch(fetchUserProfileBYId(userID));
       });
-    }
-  }, [users, userID]);
-
-  const handleBlock = (id) => {
-    dispatch(updateBlockedUser({ userURL, id, user }))
-      .then(() => {
-        dispatch(
-          setUsers(
-            users.map((value) =>
-              value.id === id
-                ? { ...value, isAllowed: !value.isAllowed }
-                : value
-            )
-          )
-        );
-      })
-      
+    });
+    // .then(() => {
+    //   dispatch(
+    //     setUsers(
+    //       users.map((value) =>
+    //         value.id === id ? { ...value, isAllowed: !value.isAllowed } : value
+    //       )
+    //     )
+    //   );
+    // });
   };
 
-  if (!user) {
-    return (
-      <div className="flex justify-center items-center min-h-screen bg-gray-100">
-        <h1 className="text-xl text-gray-600">Loading....</h1>
+  if (loading) return <Loading />;
+  return (
+    <div className="p-6 bg-gray-100 min-h-screen">
+      {/* User Details Section */}
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold text-gray-700">User Details</h1>
       </div>
-    );
-  } else {
-    return (
-      <div className="p-6 bg-gray-100 min-h-screen">
-        {/* User Details Section */}
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-700">User Details</h1>
-        </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-md mb-8">
-          <h1 className="font-bold text-xl text-gray-800">{`User ID: ${user.id}`}</h1>
-          <div className="space-y-2 mt-4">
-            <h1 className="text-lg text-gray-600">
-              <span className="font-semibold">Name:</span>{" "}
-              {`${user.firstName} ${user.lastName}`}
-            </h1>
-            <h1 className="text-lg text-gray-600">
-              <span className="font-semibold">Email:</span> {user.email}
-            </h1>
-          </div>
-          <div className="mt-4">
-            {user.isAllowed ? (
-              <button
-                className="bg-red-700 text-white font-semibold py-2 px-4 rounded-md hover:bg-red-800 transition duration-300"
-                onClick={() => handleBlock(user.id)}
-              >
-                Block User
-              </button>
-            ) : (
-              <button
-                className="bg-green-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-green-700 transition duration-300"
-                onClick={() => handleBlock(user.id)}
-              >
-                Unblock User
-              </button>
-            )}
-          </div>
+      <div className=" p-6  mb-8">
+        <h1 className="font-bold text-xl text-gray-800">{`User ID: ${user._id}`}</h1>
+        <div className="space-y-2 mt-4">
+          <h1 className="text-lg text-gray-600">
+            <span className="font-semibold">Name:</span>{" "}
+            {`${user.first_name} ${user.last_name}`}
+          </h1>
+          <h1 className="text-lg text-gray-600">
+            <span className="font-semibold">Email:</span> {user.email}
+          </h1>
         </div>
+        <div className="mt-4">
+          {user.isAllowed ? (
+            <button
+              className="bg-red-700 text-white font-semibold py-2 px-4 rounded-md hover:bg-red-800 transition duration-300"
+              onClick={() => handleBlock("block")}
+            >
+              Block User
+            </button>
+          ) : (
+            <button
+              className="bg-green-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-green-700 transition duration-300"
+              onClick={() => handleBlock("unblock")}
+            >
+              Unblock User
+            </button>
+          )}
+        </div>
+      </div>
 
-        {/* User Cart Section */}
-        <div className="bg-white p-6 rounded-lg shadow-md mb-8">
-          <h1 className="text-2xl font-bold text-gray-700 mb-4">Cart</h1>
+      {/* User Cart Section */}
+      <div className="p-6 mt-8">
+        <h1 className="text-2xl font-bold text-gray-700 mb-4">Cart</h1>
+        {user.cart && user.cart.length > 0 ? (
           <table className="min-w-full table-auto border border-gray-300">
             <thead className="bg-gray-200">
               <tr>
@@ -111,14 +103,14 @@ function UserProfile() {
             </thead>
             <tbody>
               {user.cart.map((item) => (
-                <tr key={item.id} className="hover:bg-gray-100">
+                <tr key={item._id} className="hover:bg-gray-100">
                   <td className="border px-4 py-2 text-sm text-gray-600">
-                    {item.id}
+                    {item._id}
                   </td>
                   <td className="border px-4 py-2 text-sm text-gray-600">
                     <div className="flex items-center space-x-4">
                       <img
-                        src={item.imageURL}
+                        src={item.image_url}
                         alt={item.name}
                         className="w-12 h-12 object-cover rounded"
                       />
@@ -135,11 +127,20 @@ function UserProfile() {
               ))}
             </tbody>
           </table>
-        </div>
+        ) : (
+          <div className=" p-4 rounded-md text-gray-700">
+            <h2 className="font-semibold text-xl">No items in the cart</h2>
+            <p className="mt-2 text-sm">
+              This user has no items in their cart yet.
+            </p>
+          </div>
+        )}
+      </div>
 
-        {/* User Orders Section */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h1 className="text-2xl font-bold text-gray-700 mb-4">Orders</h1>
+      {/* User Orders Section */}
+      <div className="p-6 mt-8">
+        <h1 className="text-2xl font-bold text-gray-700 mb-4">Orders</h1>
+        {user.order && user.order.length > 0 ? (
           <table className="min-w-full table-auto border border-gray-300">
             <thead className="bg-gray-200">
               <tr>
@@ -159,15 +160,15 @@ function UserProfile() {
             </thead>
             <tbody>
               {user.order.map((order) =>
-                order.product.map((product) => (
+                order.products.map((product) => (
                   <tr key={product.productId} className="hover:bg-gray-100">
                     <td className="border px-4 py-2 text-sm text-gray-600">
-                      {product.productId}
+                      {product._id}
                     </td>
                     <td className="border px-4 py-2 text-sm text-gray-600">
                       <div className="flex items-center space-x-4">
                         <img
-                          src={product.imageURL}
+                          src={product.image_url}
                           alt={product.name}
                           className="w-12 h-12 object-cover rounded"
                         />
@@ -185,10 +186,17 @@ function UserProfile() {
               )}
             </tbody>
           </table>
-        </div>
+        ) : (
+          <div className=" p-4 rounded-md text-gray-700">
+            <h2 className="font-semibold text-xl">No orders placed yet</h2>
+            <p className="mt-2 text-sm">
+              This user has not placed any orders yet.
+            </p>
+          </div>
+        )}
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 export default UserProfile;

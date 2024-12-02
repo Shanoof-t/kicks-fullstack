@@ -1,11 +1,14 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-import { userURL } from "../../../utils/API_URL";
+import { adminApiClient } from "../../../api/adminApi";
 
 export const allUsersFetch = createAsyncThunk(
   "allUsers/allUsersFetch",
-  async () => {
-    const res = await axios.get(userURL);
-    return res.data.filter((value) => !value.isAdmin);
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await adminApiClient.get("/users");
+      return res.data.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
   }
 );

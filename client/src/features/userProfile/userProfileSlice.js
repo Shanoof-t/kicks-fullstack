@@ -1,5 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchUserProfile, updateBlockedUser } from "./userProfileAPI";
+import {
+  fetchUserProfile,
+  fetchUserProfileBYId,
+  updateBlockedUser,
+} from "./userProfileAPI";
 const initialState = {
   user: null,
   userProfile: {
@@ -26,6 +30,17 @@ const userProfileSlice = createSlice({
         state.userProfile.data = action.payload;
       })
       .addCase(fetchUserProfile.rejected, (state, action) => {
+        state.userProfile.loading = false;
+        state.userProfile.error = action.payload.message;
+      })
+      .addCase(fetchUserProfileBYId.pending, (state) => {
+        state.userProfile.loading = true;
+      })
+      .addCase(fetchUserProfileBYId.fulfilled, (state, action) => {
+        state.userProfile.loading = false;
+        state.userProfile.data = action.payload;
+      })
+      .addCase(fetchUserProfileBYId.rejected, (state, action) => {
         state.userProfile.loading = false;
         state.userProfile.error = action.payload.message;
       })
