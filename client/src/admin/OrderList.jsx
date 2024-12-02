@@ -13,25 +13,49 @@ function OrderList() {
 
   useEffect(() => {
     dispatch(fetchAllOrder());
-    dispatch(allUsersFetch());
+    // dispatch(allUsersFetch());
   }, []);
+
   useEffect(() => {
     if (orders) {
       dispatch(setOrderList(orders));
     }
-  }, [users]);
+  }, [orders]);
+
   const handleStatusSelector = (e) => {
     const { value } = e.target;
     if (value === "allorder") {
       dispatch(setOrderList(orders));
     } else if (value === "delivered") {
-      const deliveredOrders = orders.filter((value) => !value.status);
+      const deliveredOrders = orders.filter(
+        (value) => value.status === "delivered"
+      );
       dispatch(setOrderList(deliveredOrders));
+    } else if (value === "placed") {
+      const placedOrders = orders.filter((value) => value.status === "placed");
+      dispatch(setOrderList(placedOrders));
     } else if (value === "pending") {
-      const pendingOrders = orders.filter((value) => value.status);
+      const pendingOrders = orders.filter(
+        (value) => value.status === "pending"
+      );
       dispatch(setOrderList(pendingOrders));
     }
   };
+
+  // if (orderList.length === 0)
+  //   return (
+  //     <div className="min-h-screen p-6 flex justify-center items-center ">
+  //       <div className="text-center">
+  //         <h1 className="text-xl font-semibold text-gray-700 mb-4">
+  //           Order List
+  //         </h1>
+  //         <p className="text-sm text-gray-500">
+  //           No orders have been placed yet.
+  //         </p>
+  //       </div>
+  //     </div>
+  //   );
+
   return (
     <div className="min-h-screen p-6 ">
       <div className="mb-6">
@@ -44,6 +68,7 @@ function OrderList() {
         >
           <option value="allorder">All Orders</option>
           <option value="delivered">Delivered</option>
+          <option value="placed">Placed</option>
           <option value="pending">Pending</option>
         </select>
       </div>
@@ -66,21 +91,21 @@ function OrderList() {
           <tbody className="text-center">
             {orderList.map((order) => (
               <tr
-                key={order.orderId}
-                onClick={() => navigate(`/admin/order/${order.orderId}`)}
+                key={order._id}
+                onClick={() => navigate(`/admin/order/${order._id}`)}
                 className="cursor-pointer hover:bg-gray-100 transition duration-200"
               >
                 <td className="border-b border-gray-200 py-3 px-4">
-                  {`${order.firstName} ${order.lastName}`}
+                  {`${order.shipping_address.first_name} ${order.shipping_address.last_name}`}
                 </td>
                 <td className="border-b border-gray-200 py-3 px-4">
-                  {order.orderId.slice(0, 5)}
+                  {order._id.slice(0, 5)}
                 </td>
                 <td className="border-b border-gray-200 py-3 px-4">
-                  {order.date}
+                  {order.createdAt}
                 </td>
                 <td className="border-b border-gray-200 py-3 px-4">
-                  {order.paymentMethod}
+                  {order.payment_method}
                 </td>
                 <td className="border-b border-gray-200 py-3 px-4">
                   <span
@@ -90,11 +115,11 @@ function OrderList() {
                         : "bg-green-100 text-green-700"
                     }`}
                   >
-                    {order.status ? "Pending" : "Delivered"}
+                    {order.status}
                   </span>
                 </td>
                 <td className="border-b border-gray-200 py-3 px-4">
-                  ${order.amount}
+                  ${order.total_amount}
                 </td>
               </tr>
             ))}

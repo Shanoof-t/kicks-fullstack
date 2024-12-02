@@ -13,46 +13,55 @@ import { fetchOrderUser, UpdateUserOrder } from "../features/order/orderAPI";
 import { useEffect } from "react";
 import { fetchAllOrder } from "../features/common/allOrders/allOrdersAPI";
 import { allUsersFetch } from "../features/common/allUsers/allUsersAPI";
+import Loading from "../components/Loading";
 
 function Order() {
   const { orderID } = useParams();
   const dispatch = useDispatch();
-  const orders = useSelector((state) => state.allOrders.data);
-  const order = orders.find((value) => value.orderId === orderID);
+  // const orders = useSelector((state) => state.allOrders.data);
+  // const order = orders.find((value) => value.orderId === orderID);
+  const order = useSelector((state) => state.order.userData.data);
+  const loading = useSelector((state) => state.order.userData.loading);
+  console.log(order);
+  // useEffect(() => {
+  //   dispatch(fetchAllOrder());
+  //   dispatch(allUsersFetch());
+  // }, []);
   useEffect(() => {
-    dispatch(fetchAllOrder());
-    dispatch(allUsersFetch());
-  }, []);
-  const handleDelivered = (orderId, userId) => {
-    dispatch(fetchOrderUser({ userURL, userId }))
-      .then((res) => {
-        const currData = res.payload;
-        const updatedData = currData.order.map((value) =>
-          value.orderId === orderId ? { ...value, status: false } : value
-        );
-        dispatch(UpdateUserOrder({ userURL, userId, updatedData }))
-          .then(() => {
-            dispatch(
-              setOrders(
-                orders.map((value) =>
-                  value.orderId === orderId
-                    ? { ...value, status: false }
-                    : value
-                )
-              )
-            );
-            toast.success("Order Delivered!");
-          })
-          .catch((err) => {
-            console.log(err.message);
-          });
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
-  };
+    dispatch(fetchOrderUser({ orderID }));
+  }, [orderID]);
 
-  if (!order)
+  const handleDelivered = (orderId, userId) => {
+    // dispatch(fetchOrderUser({ userURL, userId }))
+    //   .then((res) => {
+    //     const currData = res.payload;
+    //     const updatedData = currData.order.map((value) =>
+    //       value.orderId === orderId ? { ...value, status: false } : value
+    //     );
+    //     dispatch(UpdateUserOrder({ userURL, userId, updatedData }))
+    //       .then(() => {
+    //         dispatch(
+    //           setOrders(
+    //             orders.map((value) =>
+    //               value.orderId === orderId
+    //                 ? { ...value, status: false }
+    //                 : value
+    //             )
+    //           )
+    //         );
+    //         toast.success("Order Delivered!");
+    //       })
+    //       .catch((err) => {
+    //         console.log(err.message);
+    //       });
+    //   })
+    //   .catch((err) => {
+    //     console.log(err.message);
+    //   });
+  };
+  
+  if (loading) return <Loading />;
+  if (order.length === 0)
     return <div className="text-center text-gray-700">Order not found.</div>;
 
   return (
@@ -67,29 +76,26 @@ function Order() {
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <h2 className="font-semibold text-gray-700">
-                Order ID:{" "}
-                <span className="font-normal">{order.orderId.slice(0, 5)}</span>
+                Order ID: <span className="font-normal">{order._id}</span>
               </h2>
               <div className="bg-secondaryColor text-white p-2 rounded-md text-center ml-4">
-                <span className="font-medium">
-                  {order.status ? "Pending" : "Delivered"}
-                </span>
+                <span className="font-medium">{order.status}</span>
               </div>
             </div>
             <div>
               <button
                 className="bg-blue-500 text-white p-2 rounded-md text-center hover:bg-blue-600 transition duration-300"
-                onClick={() => handleDelivered(order.orderId, order.userId)}
+                onClick={() => handleDelivered(order._id, order.userId)}
               >
                 Mark as Delivered
-              </button>
+              </button> 
             </div>
           </div>
         </div>
 
         <div className="flex items-center space-x-3 mb-6">
           <FontAwesomeIcon icon={faCalendar} className="text-gray-500" />
-          <span className="text-gray-700">{order.date}</span>
+          <span className="text-gray-700">{order.createdAt}</span>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -102,13 +108,13 @@ function Order() {
             <div>
               <p>
                 <strong>Full Name:</strong>{" "}
-                {`${order.firstName} ${order.lastName}`}
+                {`${order.shipping_address.first_name} ${order.shipping_address.last_name}`}
               </p>
               <p>
-                <strong>Email:</strong> {order.email}
+                <strong>Email:</strong> {order.shipping_address.email}
               </p>
               <p>
-                <strong>Phone:</strong> {order.phone}
+                <strong>Phone:</strong> {order.shipping_address.phone}
               </p>
             </div>
             <Link to={`/admin/userprofile/${order.userId}`}>
@@ -126,11 +132,10 @@ function Order() {
             </div>
             <div>
               <p>
-                <strong>Payment Method:</strong> {order.paymentMethod}
+                <strong>Payment Method:</strong> {order.payment_method}
               </p>
               <p>
-                <strong>Status:</strong>{" "}
-                {order.status ? "Pending" : "Delivered"}
+                <strong>Status:</strong> {order.status}
               </p>
             </div>
             <Link to={`/admin/userprofile/${order.userId}`}>
@@ -148,7 +153,7 @@ function Order() {
             </div>
             <div>
               <p>
-                <strong>Address:</strong> {order.address}
+                <strong>Address:</strong> {order.shipping_address.location}
               </p>
             </div>
             <Link to={`/admin/userprofile/${order.userId}`}>
@@ -181,18 +186,19 @@ function Order() {
             </tr>
           </thead>
           <tbody>
-            {order.product.map((prdct) => (
-              <tr key={prdct.productId} className="border-b hover:bg-gray-100">
-                <td className="py-3 px-4">{prdct.name}</td>
-                <td className="py-3 px-4">{prdct.productId}</td>
-                <td className="py-3 px-4">{prdct.quantity}</td>
-                <td className="py-3 px-4">${prdct.price}</td>
-              </tr>
-            ))}
+            {order.products &&
+              order.products.map((prdct) => (
+                <tr key={prdct._id} className="border-b hover:bg-gray-100">
+                  <td className="py-3 px-4">{prdct.name}</td>
+                  <td className="py-3 px-4">{prdct._id}</td>
+                  <td className="py-3 px-4">{prdct.quantity}</td>
+                  <td className="py-3 px-4">${prdct.price}</td>
+                </tr>
+              ))}
           </tbody>
         </table>
         <div className="mt-4 text-right text-xl font-semibold text-gray-700">
-          Total: ${order.amount}
+          Total: ${order.total_amount}
         </div>
       </div>
     </div>
