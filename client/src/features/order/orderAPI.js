@@ -16,10 +16,11 @@ export const fetchOrderUser = createAsyncThunk(
 
 export const UpdateUserOrder = createAsyncThunk(
   "order/UpdateUserOrder",
-  async ({ userURL, userId, updatedData }) => {
-    const res = await axios.patch(`${userURL}/${userId}`, {
-      order: updatedData,
-    });
-    return res.data;
+  async ({ action, orderID }, { rejectWithValue }) => {
+    try {
+      const res = await adminApiClient.post(`/orders/${orderID}`, { action });
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
   }
 );

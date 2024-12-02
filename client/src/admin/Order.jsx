@@ -5,68 +5,39 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useParams } from "react-router-dom";
-import { userURL } from "../utils/API_URL";
-import { toast, ToastContainer } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { setOrders } from "../features/common/allOrders/allOrdersSlice";
 import { fetchOrderUser, UpdateUserOrder } from "../features/order/orderAPI";
 import { useEffect } from "react";
-import { fetchAllOrder } from "../features/common/allOrders/allOrdersAPI";
-import { allUsersFetch } from "../features/common/allUsers/allUsersAPI";
 import Loading from "../components/Loading";
+import { handleToast } from "../utils/handleToast";
 
 function Order() {
   const { orderID } = useParams();
   const dispatch = useDispatch();
-  // const orders = useSelector((state) => state.allOrders.data);
-  // const order = orders.find((value) => value.orderId === orderID);
+
   const order = useSelector((state) => state.order.userData.data);
   const loading = useSelector((state) => state.order.userData.loading);
-  console.log(order);
-  // useEffect(() => {
-  //   dispatch(fetchAllOrder());
-  //   dispatch(allUsersFetch());
-  // }, []);
+
   useEffect(() => {
     dispatch(fetchOrderUser({ orderID }));
   }, [orderID]);
 
-  const handleDelivered = (orderId, userId) => {
-    // dispatch(fetchOrderUser({ userURL, userId }))
-    //   .then((res) => {
-    //     const currData = res.payload;
-    //     const updatedData = currData.order.map((value) =>
-    //       value.orderId === orderId ? { ...value, status: false } : value
-    //     );
-    //     dispatch(UpdateUserOrder({ userURL, userId, updatedData }))
-    //       .then(() => {
-    //         dispatch(
-    //           setOrders(
-    //             orders.map((value) =>
-    //               value.orderId === orderId
-    //                 ? { ...value, status: false }
-    //                 : value
-    //             )
-    //           )
-    //         );
-    //         toast.success("Order Delivered!");
-    //       })
-    //       .catch((err) => {
-    //         console.log(err.message);
-    //       });
-    //   })
-    //   .catch((err) => {
-    //     console.log(err.message);
-    //   });
+  const handleDelivered = (action) => {
+    dispatch(UpdateUserOrder({ action, orderID })).then((res) => {
+      const { status, messsage } = res.payload;
+      handleToast(status, messsage).then(() => {
+        dispatch(fetchOrderUser({ orderID }));
+      });
+    });
   };
-  
+
   if (loading) return <Loading />;
+
   if (order.length === 0)
     return <div className="text-center text-gray-700">Order not found.</div>;
 
   return (
     <div className="p-8 bg-gray-50 min-h-screen">
-      <ToastContainer />
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-gray-800">Order Details</h1>
       </div>
@@ -85,10 +56,10 @@ function Order() {
             <div>
               <button
                 className="bg-blue-500 text-white p-2 rounded-md text-center hover:bg-blue-600 transition duration-300"
-                onClick={() => handleDelivered(order._id, order.userId)}
+                onClick={() => handleDelivered("delivered")}
               >
                 Mark as Delivered
-              </button> 
+              </button>
             </div>
           </div>
         </div>

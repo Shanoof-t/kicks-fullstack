@@ -28,7 +28,7 @@ const orderSlice = createSlice({
       })
       .addCase(UpdateUserOrder.fulfilled, (state, action) => {
         state.userData.loading = false;
-        state.userData.data = action.payload;
+        // state.userData.data = action.payload;
       })
       .addCase(UpdateUserOrder.rejected, (state, action) => {
         state.userData.loading = false;
