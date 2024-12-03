@@ -19,6 +19,7 @@ export const UpdateUserOrder = createAsyncThunk(
   async ({ action, orderID }, { rejectWithValue }) => {
     try {
       const res = await adminApiClient.post(`/orders/${orderID}`, { action });
+      return res.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }

@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const userApiClient = axios.create({
   baseURL: "http://localhost:8080/api/v1",
-  timeout: 10000,
+  timeout: 100000,
   timeoutErrorMessage: "axios is timeout ",
 });
 

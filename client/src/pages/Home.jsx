@@ -1,9 +1,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faArrowUpRightFromSquare,
-} from "@fortawesome/free-solid-svg-icons";
+import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -41,7 +39,7 @@ function Home() {
           <p className="text-white text-xs sm:text-sm md:text-lg font-semibold mb-2 sm:mb-4">
             Nike introduces the new Air Max for ultimate comfort and style.
           </p>
-          <Link to="product/16">
+          <Link to="product/674ec45526ee2a376744a0fa">
             <button className="bg-thirdColor p-3 sm:p-4 text-xs sm:text-sm md:text-base text-white font-bold rounded-lg hover:bg-hoverColor transition duration-300 shadow-md">
               SHOP NOW
             </button>

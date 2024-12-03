@@ -281,9 +281,6 @@ function UpdateProduct() {
                     <p className="text-gray-500">
                       Drag and drop your image here
                     </p>
-                    <p className="text-sm text-gray-400">
-                      Supported formats: .jpg, .png
-                    </p>
                   </div>
 
                   <h2 className="text-center mb-2 font-medium text-gray-600">

@@ -24,10 +24,11 @@ function Order() {
 
   const handleDelivered = (action) => {
     dispatch(UpdateUserOrder({ action, orderID })).then((res) => {
+      console.log(res.payload)
       const { status, messsage } = res.payload;
-      handleToast(status, messsage).then(() => {
-        dispatch(fetchOrderUser({ orderID }));
-      });
+      console.log("in order",status,messsage)
+      if (status === "success") dispatch(fetchOrderUser({ orderID }))
+      handleToast(status, messsage);
     });
   };
 

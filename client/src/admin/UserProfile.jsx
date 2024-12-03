@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { userURL } from "../utils/API_URL";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserProfileUser } from "../features/userProfile/userProfileSlice";
 import {

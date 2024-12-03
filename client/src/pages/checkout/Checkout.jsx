@@ -33,8 +33,8 @@ function Checkout() {
       navigate("/login");
     } else {
       dispatch(addOrder({ values })).then(async (res) => {
+        console.log(res)
         const { data } = res.payload;
-        console.log("data>>",data)
         if (data.status === "placed") {
           const { status, message } = res.payload;
           handleToast(status, message, {
@@ -44,10 +44,7 @@ function Checkout() {
             },
           });
         } else if (data.status === "pending") {
-          razorpayCheckoutFlow(data, dispatch, navigate)
-          // .then(() => {            
-          //   navigate("/orderdetails");
-          // });
+          razorpayCheckoutFlow(data, dispatch, navigate);
         }
       });
     }

@@ -32,7 +32,7 @@ function AddProduct() {
       handleToast(res.payload.status, res.payload.message, {
         onClose: () => navigate(-1),
       });
-      // dispatch(setImageUrl(null));
+      dispatch(setImageUrl(null));
     });
   };
 
@@ -299,9 +299,6 @@ function AddProduct() {
                   >
                     <p className="text-gray-500">
                       Drag and drop your image here
-                    </p>
-                    <p className="text-sm text-gray-400">
-                      Supported formats: .jpg, .png
                     </p>
                   </div>
 

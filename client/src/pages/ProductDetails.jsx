@@ -48,17 +48,19 @@ function ProductDetails() {
     } else {
       dispatch(setSizeError(""));
     }
-    
+
     const { available_sizes, __v, ...cartData } = item;
     const dataToSend = {
       ...cartData,
       size,
     };
 
-    const res = await dispatch(addToCart(dataToSend));
-    handleToast(res.payload.status, res.payload.message);
-    dispatch(fetchCartItem(productId));
-    dispatch(fetchCartItems());
+    dispatch(addToCart(dataToSend)).then((res) => {
+      console.log(res)
+      handleToast(res.payload.status, res.payload.message);
+      dispatch(fetchCartItem(productId));
+      dispatch(fetchCartItems());
+    });
   };
 
   if (productDetailsLoading) return <Loading />;
