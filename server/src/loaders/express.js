@@ -1,8 +1,8 @@
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import defaultRouter from "../middleware/default-router.js"
-import globalErrorHandler from "../utils/global-error-handler.js"
-import routes from "./routes.js"
+import defaultRouter from "../middleware/default-router.js";
+import globalErrorHandler from "../utils/global-error-handler.js";
+import routes from "./routes.js";
 import morgan from "../config/morgan.js";
 
 export default ({ app, express }) => {
@@ -13,6 +13,7 @@ export default ({ app, express }) => {
       credentials: true,
     })
   );
+
   app.use(cookieParser());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));

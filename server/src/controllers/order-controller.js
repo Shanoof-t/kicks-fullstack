@@ -40,6 +40,7 @@ export const getOrder = asynErrorHandler(async (req, res) => {
 export const updateOrder = asynErrorHandler(async (req, res) => {
   const { id } = req.params;
   const { action } = req.body;
+  console.log(req.body);
   const updatedOrder = await updatedOrderById(id, action);
   res.status(200).json({
     status: "success",

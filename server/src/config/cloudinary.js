@@ -8,5 +8,5 @@ cloudinary.config({
   api_key,
   api_secret,
 });
-
+  
 export default cloudinary;

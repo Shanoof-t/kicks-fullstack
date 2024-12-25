@@ -84,7 +84,7 @@ const registerSchema = new mongoose.Schema({
         },
       },
     ],
-    // default: [],
+    default: [],
   },
   Permissions: {
     type: [String],

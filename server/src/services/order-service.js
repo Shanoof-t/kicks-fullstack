@@ -92,10 +92,7 @@ export const processPaymentVerification = async (response, order, user) => {
 
   const { _id } = order;
 
-  await Order.updateOne(
-    { _id: _id },
-    { $set: { status: "placed" } }
-  );
+  await Order.updateOne({ _id: _id }, { $set: { status: "placed" } });
 
   return { order_id: razorpay_order_id, payment_id: razorpay_payment_id };
 };
@@ -125,7 +122,7 @@ export const retrieveOrderById = async (id) => {
 export const updatedOrderById = async (id, action) => {
   if (!action) throw new CustomError("Order action must be needed", 400);
 
-  if (!["pending", "delivered"].includes(action))
+  if (!["pending", "delivered", "placed"].includes(action))
     throw new CustomError("Action must be pending or delivered", 400);
 
   const updatedOrder = await Order.updateOne(

@@ -13,6 +13,7 @@ export const createUser = async (userData) => {
 
   const hashedPassword = await bcrypt.hash(password, 10);
   const role = "user";
+  
   const user = await User.create({
     first_name,
     last_name,

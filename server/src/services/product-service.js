@@ -2,7 +2,7 @@ import { Product } from "../models/product-model.js";
 import CustomError from "../utils/custom-error.js";
 
 export const fetchAllProducts = async () => {
-  const products = await Product.find();
+  const products = await Product.find()
   return products;
 };
 
@@ -18,6 +18,7 @@ export const fetchProductsByCategoryAndGender = async (queryData) => {
   if (!category && !gender) throw new CustomError("Invalid query", 400);
 
   let products = [];
+
   if (category && gender) {
     products = await Product.aggregate([{ $match: { gender, category } }]);
   } else if (category) {

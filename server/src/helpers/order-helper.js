@@ -5,7 +5,7 @@ export default {
     return new Promise((resolve, reject) => {
       const { total_amount } = order;
       const options = {
-        amount: total_amount,
+        amount: total_amount * 100,
         currency: "INR",
         receipt: `order_rcpt_${Date.now()}`,
       };

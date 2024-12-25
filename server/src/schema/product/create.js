@@ -9,4 +9,5 @@ export default Joi.object({
   quantity: Joi.string().required().min(0),
   description: Joi.string().required(),
   available_sizes: Joi.string().required(),
+  // image: Joi.string().required(),
 });

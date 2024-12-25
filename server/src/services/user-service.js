@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { User } from "../models/user-model.js";
 import CustomError from "../utils/custom-error.js";
 
@@ -7,13 +8,26 @@ export const fetchAllUsers = async () => {
 };
 
 export const fetchUserById = async (id) => {
-  const user = await User.findOne({ _id: id });
+  const user = await User.aggregate([
+    { $match: { _id: new mongoose.Types.ObjectId(id) } },
+    {
+      $lookup: {
+        from: "orders",
+        localField: "_id",
+        foreignField: "userId",
+        as: "order",
+      },
+    },
+  ]);
+
   if (!user)
     throw new CustomError(`User is not existing with this id ${id}`, 404);
-  return user;
+
+  return user[0];
 };
 
 export const updateUserById = async (id, action) => {
+  console.log(id, action);
   if (!id) throw new CustomError("User id is required", 400);
 
   if (!["block", "unblock"].includes(action))

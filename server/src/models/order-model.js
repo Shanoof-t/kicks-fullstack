@@ -2,7 +2,10 @@ import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema(
   {
-    userId: { type: String, required: [true, "user id is required"] },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: [true, "user id is required"],
+    },
     products: { type: Array, required: [true, "products is required"] },
     shipping_address: {
       email: { type: String, required: [true, "email is required"] },

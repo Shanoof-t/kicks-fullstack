@@ -24,7 +24,7 @@ productRouter
   .post(
     authenticateToken,
     verifyAdmin,
-    upload.single("product-image"),
+    upload.single("image"),
     validator(schema.createProduct),
     createProduct
   );
@@ -37,7 +37,7 @@ productRouter
   .put(
     authenticateToken,
     verifyAdmin,
-    upload.single("product-image"),
+    upload.single("image"),
     validator(schema.createProduct),
     updateProduct
   )
