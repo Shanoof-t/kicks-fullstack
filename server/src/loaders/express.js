@@ -8,7 +8,7 @@ import morgan from "../config/morgan.js";
 export default ({ app, express }) => {
   app.use(
     cors({
-      origin: "http://localhost:3000",
+      origin: true,
       methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
       credentials: true,
     })
