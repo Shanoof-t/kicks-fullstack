@@ -23,12 +23,11 @@ function Cart() {
     cartLoading,
     cartTotalPrice,
     CartProductCount,
-    cartError,
   } = useSelector((state) => state.cart);
 
   useEffect(() => {
     dispatch(fetchCartItems());
-  }, []);
+  }, [dispatch]);
 
   const handleQuantity = (id, action) => {
     dispatch(updateCartQuantity({ id, action })).then((res) => {

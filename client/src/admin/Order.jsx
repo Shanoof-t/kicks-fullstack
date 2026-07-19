@@ -20,7 +20,7 @@ function Order() {
 
   useEffect(() => {
     dispatch(fetchOrderUser({ orderID }));
-  }, [orderID]);
+  }, [orderID,dispatch]);
 
   const handleDelivered = (action) => {
     dispatch(UpdateUserOrder({ action, orderID })).then((res) => {

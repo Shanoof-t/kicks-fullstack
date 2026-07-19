@@ -14,7 +14,7 @@ function UserList({ value }) {
     } else if (userType === "nonActiveUser") {
       setUser(nonActiveUsers);
     }
-  }, [userType, value]);
+  }, [userType, users, activeUsers, nonActiveUsers]);
 
   return user.map((value) => {
     return (

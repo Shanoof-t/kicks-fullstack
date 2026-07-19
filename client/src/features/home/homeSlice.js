@@ -1,8 +1,3 @@
-import {
-  faChevronLeft,
-  faChevronRight,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   settings: {

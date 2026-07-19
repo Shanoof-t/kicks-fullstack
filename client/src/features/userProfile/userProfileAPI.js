@@ -1,5 +1,4 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 import { userApiClient } from "../../api/userApi";
 import { adminApiClient } from "../../api/adminApi";
 

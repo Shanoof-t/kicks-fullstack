@@ -11,8 +11,8 @@ const loadRazorpayScript = () => {
     document.body.appendChild(script);
   });
 };
-
-export default async (order, dispatch, navigate) => {
+  
+export default async function razorpayCheckoutFlow(order, dispatch, navigate) {
   const isScriptLoaded = await loadRazorpayScript();
   if (!isScriptLoaded) {
     handleToast(

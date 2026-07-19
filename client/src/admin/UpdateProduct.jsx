@@ -4,7 +4,6 @@ import { addProductValidation } from "./components/AddProductValidation";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  setInitialInformation,
   updateImageUrl,
 } from "../features/updateProduct/updateProductSlice";
 import {
@@ -28,7 +27,7 @@ function UpdateProduct() {
 
   useEffect(() => {
     dispatch(fetchProduct({ itemId }));
-  }, [itemId]);
+  }, [itemId,dispatch]);
 
   const image_url = useSelector((state) => state.updateProduct.imageUrl);
 

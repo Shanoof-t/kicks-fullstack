@@ -20,12 +20,12 @@ function Checkout() {
     cartLoading,
     cartTotalPrice,
     CartProductCount,
-    cartError,
+    
   } = useSelector((state) => state.cart);
 
   useEffect(() => {
     dispatch(fetchCartItems());
-  }, []);
+  }, [dispatch]);
 
   const handlePlaceOrder = (values) => {
     const user = localStorage.getItem("role");

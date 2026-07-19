@@ -14,7 +14,7 @@ function AllProducts() {
 
   useEffect(() => {
     dispatch(fetchAllProducts());
-  }, []);
+  }, [dispatch]);
 
   if (loading) {
     return <Loading />;

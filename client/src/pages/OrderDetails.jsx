@@ -18,7 +18,7 @@ function OrderDetails() {
   useEffect(() => {
     window.scroll(0, 0);
     dispatch(orderDetailsFetch());
-  }, []);
+  }, [dispatch]);
 
   if (orderdetails.loading) return <Loading />;
 

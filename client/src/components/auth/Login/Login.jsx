@@ -31,7 +31,7 @@ function Login() {
         },
       });
     }
-  }, [userFetchValues.role]);
+  }, [userFetchValues.role, userFetchValues.message, userFetchValues.userId, dispatch, navigate]);
 
   return (
     <div className="flex flex-col items-center justify-center h-screen  ">

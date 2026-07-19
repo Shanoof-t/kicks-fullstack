@@ -31,11 +31,11 @@ function ProductDetails() {
     size,
     productDetailsLoading,
     sizeError,
-    updateError,
+    
     fetchError,
-    addCartError,
+    
     cartExistingItem,
-    cartExistingItemError,
+    
   } = useSelector((state) => state.productDetails);
 
   const handleCart = async () => {

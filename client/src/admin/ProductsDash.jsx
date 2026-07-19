@@ -1,8 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faCirclePlus,
   faEllipsis,
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
@@ -24,7 +23,7 @@ function ProductsDash() {
   const products = useSelector((state) => state.allProducts.items.data);
   const loading = useSelector((state) => state.allProducts.items.loading);
 
-  function loadProducts() {
+  const loadProducts = useCallback(() => {
     if (productCategory === "all") {
       dispatch(fetchAllProducts());
     } else if (productCategory === "CASUAL") {
@@ -34,11 +33,11 @@ function ProductsDash() {
     } else if (productCategory === "RUNNING") {
       dispatch(fetchcategoryProducts({ productCategory }));
     }
-  }
+  }, [productCategory, dispatch]);
 
   useEffect(() => {
     loadProducts();
-  }, [productCategory]);
+  }, [loadProducts]);
 
   const handleDeleteProduct = (id) => {
     dispatch(deleteProduct({ id })).then((res) => {

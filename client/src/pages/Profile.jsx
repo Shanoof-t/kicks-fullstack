@@ -11,7 +11,7 @@ function Profile() {
   
   useEffect(() => {
     dispatch(fetchUserProfile(localStorage.getItem("userId")));
-  }, []);
+  }, [dispatch]);
   
   const handleOrderNavigation = () => {
     navigate("/orderdetails");

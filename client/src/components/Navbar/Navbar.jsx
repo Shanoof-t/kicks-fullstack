@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import logo from "../../assets/logo/Logo.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -43,7 +43,7 @@ function Navbar() {
     if (user) {
       dispatch(fetchCartItems(user));
     }
-  }, [user, fetchCartItems]);
+  }, [user, dispatch]);
 
   useEffect(() => {
     dispatch(fetchAllItem_navbar());
@@ -61,7 +61,7 @@ function Navbar() {
     } else {
       dispatch(setFillteredItems([]));
     }
-  }, [allItems, searchText]);
+  }, [allItems, searchText,dispatch]);
 
   const handleProfile = () => {
     localStorage.length === 0 ? navigate("/login") : navigate("/profile");
@@ -108,7 +108,7 @@ function Navbar() {
   const handleSearchSubmit = useCallback((e) => {
     e.preventDefault();
     dispatch(setIsSubmit(true));
-  }, []);
+  }, [dispatch]);
 
   const handleItemClick = () => {
     dispatch(

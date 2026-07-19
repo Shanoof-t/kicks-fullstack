@@ -1,10 +1,9 @@
 import {
   faBagShopping,
   faIndianRupeeSign,
-  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import ReactApexChart from "react-apexcharts";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllOrder } from "../features/common/allOrders/allOrdersAPI";
@@ -18,7 +17,7 @@ function DashboardHome() {
   useEffect(() => {
     dispatch(fetchAllOrder());
     dispatch(fetchStats());
-  }, []);
+  }, [dispatch]);
 
   const totalRevenue = useSelector((state) => state.dashboardHome.totalRevenue);
   const totalProductPurchased = useSelector(
@@ -27,7 +26,7 @@ function DashboardHome() {
 
   useEffect(() => {
     dispatch(setOrderDetails({ totalOrders: orders.length }));
-  }, [orders]);
+  }, [orders,dispatch]);
 
   const initialChartData = {
     series: [
@@ -66,7 +65,7 @@ function DashboardHome() {
 
   const [chartData, setChartData] = useState(initialChartData);
 
-  const updateChartData = () => {
+  const updateChartData = useCallback(() => {
     const salesByDate = orders.reduce((acc, order) => {
       const date = new Date(order.createdAt).getTime();
       acc[date] = (acc[date] || 0) + order.total_amount;
@@ -90,14 +89,14 @@ function DashboardHome() {
         },
       },
     }));
-  };
+  }, [orders]);
 
   useEffect(() => {
     const interval = setInterval(() => {
       updateChartData();
     }, 1000);
     return () => clearInterval(interval);
-  }, [orders]);
+  }, [updateChartData]);
 
   return (
     <div className="px-4 py-6 lg:px-8 lg:py-8 min-h-screen bg-gray-100">

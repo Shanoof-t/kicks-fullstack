@@ -10,7 +10,7 @@ function Users() {
 
   useEffect(() => {
     dispatch(allUsersFetch());
-  }, []);
+  }, [dispatch]);
 
   const [userType, setUserType] = useState("allusers");
 

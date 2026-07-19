@@ -1,4 +1,4 @@
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import Cart from "./pages/Cart";
@@ -13,7 +13,7 @@ import Users from "./admin/Users";
 import OrderList from "./admin/OrderList";
 import Order from "./admin/Order";
 import UserProfile from "./admin/UserProfile";
-import React, { lazy, Suspense, useEffect } from "react";
+import React, { lazy, Suspense } from "react";
 import Loading from "./components/Loading";
 import Register from "./components/auth/Register/Register";
 import Login from "./components/auth/Login/Login";
@@ -26,7 +26,6 @@ const CategorieDetails = React.lazy(() => import("./pages/CategorieDetails"));
 const ProductDetails = React.lazy(() => import("./pages/ProductDetails"));
 const AllProduct = React.lazy(() => import("./pages/AllProducts"));
 function App() {
-  const navigate = useNavigate();
   const location = useLocation();
   const hideComponent =
     location.pathname === "/login" ||

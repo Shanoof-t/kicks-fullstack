@@ -7,7 +7,7 @@ function ProductCard({ item }) {
       <div className="border rounded-lg overflow-hidden duration-300">
         <img
           src={item.image_url}
-          alt={`${item.name} image`}
+          alt={`${item.name} product`}
           className="w-full h-60 object-cover border-5 border-white rounded-3xl"
         />
         <div className="p-4">

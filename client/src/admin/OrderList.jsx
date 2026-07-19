@@ -1,26 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setOrderList } from "../features/orderList/orderListSlice";
 import { fetchAllOrder } from "../features/common/allOrders/allOrdersAPI";
-import { allUsersFetch } from "../features/common/allUsers/allUsersAPI";
 function OrderList() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const orders = useSelector((state) => state.allOrders.data);
-  const users = useSelector((state) => state.allUsers.data);
   const orderList = useSelector((state) => state.orderList.orderList);
 
   useEffect(() => {
     dispatch(fetchAllOrder());
     // dispatch(allUsersFetch());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (orders) {
       dispatch(setOrderList(orders));
     }
-  }, [orders]);
+  }, [orders,dispatch]);
 
   const handleStatusSelector = (e) => {
     const { value } = e.target;

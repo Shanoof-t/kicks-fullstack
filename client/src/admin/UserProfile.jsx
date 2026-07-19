@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setUserProfileUser } from "../features/userProfile/userProfileSlice";
 import {
   fetchUserProfileBYId,
   updateBlockedUser,
 } from "../features/userProfile/userProfileAPI";
-import { allUsersFetch } from "../features/common/allUsers/allUsersAPI";
-import { setUsers } from "../features/common/allUsers/allUsersSlice";
 import Loading from "../components/Loading";
 import { handleToast } from "../utils/handleToast";
 
@@ -20,7 +17,7 @@ function UserProfile() {
 
   useEffect(() => {
     dispatch(fetchUserProfileBYId(userID));
-  }, [userID]);
+  }, [userID,dispatch]);
 
   const handleBlock = (action) => {
     dispatch(updateBlockedUser({ userID, action })).then((res) => {

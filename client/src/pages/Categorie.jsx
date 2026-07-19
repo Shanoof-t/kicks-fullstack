@@ -10,7 +10,7 @@ function Categorie() {
   useEffect(() => {
     window.scrollTo(0, 0);
     navigate(`CASUAL`);
-  }, [categorieGender]);
+  }, [categorieGender,navigate]);
 
   const categories = useMemo(() => ["CASUAL", "FOOTBALL", "RUNNING"], []);
 
