@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const adminApiClient = axios.create({
-  baseURL: "http://localhost:8080/api/v1/admin",
+  baseURL: process.env.REACT_APP_API_USER_URL + "/admin",
   timeout: 100000,
   timeoutErrorMessage: "axios is timeout ",
 });
